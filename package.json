@@ -1,18 +1,42 @@
 {
-  "name": "geosight",
+  "name": "geoSight",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/styled": "^11.11.0",
+    "@pbe/react-yandex-maps": "^1.2.5",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.70",
-    "@types/react": "^18.2.47",
-    "@types/react-dom": "^18.2.18",
+    "@types/node": "^16.18.59",
+    "@types/react": "^18.2.31",
+    "@types/react-dom": "^18.2.14",
+    "@types/react-redux": "^7.1.28",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/redux": "^3.6.0",
+    "@types/redux-thunk": "^2.1.0",
+    "axios": "^1.5.1",
+    "emoji-picker-react": "^4.5.3",
+    "jwt-decode": "^4.0.0",
+    "maplibre-gl": "^3.6.2",
+    "moment": "^2.29.4",
+    "primereact": "^10.5.1",
+    "query-string": "^8.1.0",
     "react": "^18.2.0",
+    "react-calendar": "^4.7.0",
     "react-dom": "^18.2.0",
+    "react-input-date": "^1.0.12",
+    "react-input-mask": "^2.0.4",
+    "react-loading-skeleton": "^3.3.1",
+    "react-modal": "^3.16.1",
+    "react-redux": "^8.1.3",
+    "react-router-dom": "^6.21.2",
     "react-scripts": "5.0.1",
+    "react-yandex-maps": "^4.6.0",
+    "redux": "^4.2.1",
+    "redux-thunk": "^2.4.2",
+    "sass": "^1.69.4",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -39,5 +63,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-input-mask": "^3.0.4",
+    "@types/react-modal": "^3.16.3",
+    "tailwindcss": "^3.4.1"
   }
 }

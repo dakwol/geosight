@@ -1,0 +1,114 @@
+@use "../../../scss/" as *;
+
+$error-bg: #fffbfa;
+$error-border: #fda29b;
+$error-color: #b42318;
+
+$success-bg: #f6fef9;
+$success-border: #75e0a7;
+$success-color: #067647;
+
+$warning-bg: #fffdfa;
+$warning-border: #ffb868;
+$warning-color: #ee8915;
+
+.error-message {
+  display: inline-block;
+  padding: 8rem 8rem 16rem 8rem;
+  border-radius: 12rem;
+  color: #fff;
+  font-size: 14rem;
+  position: fixed;
+  bottom: 16rem;
+  right: 16rem;
+  width: 343rem;
+  z-index: 1001;
+  background-color: $error-bg;
+  border: 1px solid $error-border;
+}
+
+.error-message.success {
+  background-color: $success-bg;
+  border: 1px solid $success-border;
+
+  .errMessage {
+    span {
+      @include fnt(14, 20, $success-color, 600);
+    }
+    @include fnt(14, 20, $success-color, 400);
+  }
+  .errButton {
+    color: #079455;
+  }
+}
+
+.error-message.error {
+  background-color: $error-bg;
+  border: 1px solid $error-border;
+}
+
+.error-message.warning {
+  background-color: $warning-bg;
+  border: 1px solid $warning-border;
+
+  .errMessage {
+    span {
+      @include fnt(14, 20, $warning-color, 600);
+    }
+    @include fnt(14, 20, $warning-color, 400);
+  }
+  .errButton {
+    color: $warning-color;
+  }
+}
+
+.errHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .svgImage {
+    width: 36rem;
+    height: 36rem;
+  }
+
+  img {
+    width: 20rem;
+    height: 20rem;
+    object-fit: cover;
+  }
+}
+
+.errMessage {
+  margin-top: 8rem;
+  margin-bottom: 12rem;
+  margin-left: 8rem;
+  display: flex;
+  flex-direction: column;
+  @include fnt(14, 20, $error-color, 400);
+  span {
+    @include fnt(14, 20, $error-color, 600);
+    
+  }
+}
+
+.errButton {
+  @include fnt(14, 20, #d92d20, 600);
+  cursor: pointer;
+  margin-left: 8rem;
+}
+
+.animated-error {
+  animation: errorPopup 0.5s cubic-bezier(0, 0, 0.15, 0.97);
+}
+
+@keyframes errorPopup {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

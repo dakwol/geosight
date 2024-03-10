@@ -1,0 +1,78 @@
+@use "../../scss/" as *;
+
+.titleModal{
+    @include fnt(32, 54, $color: $black, $weight: 700)
+}
+
+.containerUserInfoAvatar{
+    display: flex;
+    gap: 14rem;
+    align-items: center;
+    margin-top: 20rem;
+    transition: .3s ease-in-out;
+
+    
+    &.redact{
+        transition: .3s ease-in-out;
+        justify-content: center;
+    }
+
+    .avatar{
+        width: 100rem;
+        height: 100rem;
+
+    }
+
+    .userName{
+        max-width: 200rem;
+        overflow: hidden;
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
+
+        @include fnt(24, 28, $color: $black, $weight: 700)
+    }
+}
+
+.containerUserInfo{
+    display: flex;
+    flex-direction: column;
+    gap: 12rem;
+    margin-top: 24rem;
+
+    .userInfo{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+
+        label{
+            @include fnt(14, 22, $weight:400, $color:$gray-500);
+        }
+
+        h4{
+            @include fnt(16, 22, $weight:400, $color:$black);
+        }
+    }
+}
+
+.footerModal{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4rem;
+    margin-top: 14rem;
+
+    .logoutButton{
+        background-color: inherit;
+        display: flex;
+        flex-direction: row-reverse;
+        color: $black;
+        padding: 8rem 0;
+        gap: 8rem;
+    }
+}
+
+.formUser{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12rem;
+}

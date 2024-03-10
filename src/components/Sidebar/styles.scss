@@ -1,0 +1,122 @@
+@use "../../scss/" as *;
+.sidebar__box {
+    width: 180rem;
+    height: 100%;
+    transition: 0.1s linear;
+    &.active {
+        width: 44rem;
+    }
+}
+
+.sidebar {
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    width: 252rem;
+    height: 100%;
+    background-color: $white;
+    transition: 0.1s linear;
+    user-select: none;
+    padding: 32rem 4rem;
+    img {
+        display: flex;
+        width: 24rem;
+        height: 24rem;
+    }
+   
+    .sidebarContainer{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        border-right:1rem solid $gray-100 ;
+        padding-right: 10rem;
+    }
+   
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 100%;
+        overflow: hidden;
+        width: 100%;
+
+        .sidebar__nav{
+            display: flex;
+            flex-direction: column;
+            gap: 18rem;
+        }
+    }
+    .nanItem {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+        color: $black-btn;
+        opacity: 0.8;
+
+        span{
+            @include fnt(10, 22, $weight: 500, $color: $gray-500);
+        }
+        img {
+            width: 22rem;
+            height: 22rem;
+        }
+        &.active {
+            opacity: 1;
+            .display {
+                color: $gray-900;
+                font-variation-settings: "wght" 600;
+            }
+        }
+    }
+
+    .avatarUser{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 18rem;
+      
+
+        img{
+            width: 30rem;
+            height: 30rem;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2rem solid inherit;
+            transition: .1s ease-in-out;
+
+            &:hover{
+                border: 2rem solid $bluelog
+            }
+        }
+    }
+
+    .sidebar__footerLink {
+        @include fnt(12, 16, $wg-gray);
+    }
+    .display {
+        opacity: 1;
+        pointer-events: none;
+        transition: opacity 0.1s linear;
+        @include fnt(14, 16);
+    }
+    .hidden {
+        position: absolute;
+        transform: translateY(-200%);
+        pointer-events: none;
+        transition: opacity 0.1s linear;
+    }
+}
+
+.bigModal{
+    max-width: 552rem !important;
+    max-height: 500rem !important;
+}

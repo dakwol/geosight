@@ -1,0 +1,89 @@
+$purp-blue: #7285e4;
+$gradient: linear-gradient(45deg, #2CE 0%, #4c92d9 100%);
+$txt-color: #2c2d2e;
+$white: #ffffff;
+$sidebar: #f3f3f5;
+$lg-gray: #ecedf0;
+$sg-gray: #e0e1e6;
+$wg-gray: #e6e7eb;
+$gray-20: #f9f9fa;
+$gray-25: #FCFCFD;
+$gray-50: #f9fafb;
+$gray-100: #f2f4f7;
+$gray-200: #eaecf0;
+$gray-300: #d0d5dd;
+$gray-400: #98a2b3;
+$gray-500: #667085;
+$gray-600: #475467;
+$gray-700: #344054;
+$gray-800: #1d2939;
+$gray-900: #101828;
+$data-gray: #919399;
+$purple: #528bff;
+$switch: #EAECF0;
+$success-400: #47cd89;
+$pink: #2ed3b7;
+$grin: #a3a3a3;
+$blue: #2787f5;
+$blue-100: #5CA2FF;
+$media-50: #f5f9ff;
+$media-100: #E3EDFF;
+$media-200: #c6d0ff;
+$media-300: #8dafff;
+$media-400: #5482FF;
+$media-500: #3762FF;
+$media-600: #1a40ff;
+$media-700: #1735e0;
+$media-800: #142bc0;
+$blue-500: #2E90FA;
+$blue-dark-200: #B2CCFF;
+$blue-dark-500: #2970FF;
+$blue-dark-800: #0040C1;
+
+$bluelog: #026FEB;
+
+$cyan-400: #2CE;
+$green-400: #3ccb7f;
+$media-blue: $media-600;
+$black-blue: $media-600;
+$orange: #ee8208;
+$orange-500: #EF6820;
+$weekend: #eb5757;
+$red: #ed0a34;
+$redButton: #d92d20;
+$lg-blue: #37aee2;
+$lg-blue-100: #e0f2fe;
+$text-gray: #919399;
+$black-btn: #2c2d2e;
+$ros-500: #f63d68;
+$ros-600: #e31b54;
+$black: $black-btn;
+$box-shadow: 0px 4px 12px rgba(5, 13, 51, 0.2);
+$box-shadow-xs: 0px 1px 2px rgba(16, 24, 40, 0.05);
+$box-shadow-lg:
+    0px 12px 16px -4px rgba(16, 24, 40, 0.08),
+    0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+$box-shadow-gradient: 0px 4px 20px rgba(188, 166, 255, 0.8);
+$header-height: 8rem;
+$border-radius: 30px;
+$mobile-width: 600px;
+$tablet-width: 1024px;
+$laptop-width: 1440px;
+$hd-width: 1920px;
+
+// fonts
+
+@font-face {
+    font-family: "GolosUi";
+    src:
+        url("../assets/fonts/Golos-UI-VF/golos-ui_vf.woff2") format("woff2"),
+        url("../assets/fonts/Golos-UI-VF/golos-ui_vf.woff") format("woff");
+}
+@font-face {
+    font-family: "GolosText";
+    src:
+        url("../assets/fonts/Golos-Text-VF/golos-text_vf.woff2") format("woff2"),
+        url("../assets/fonts/Golos-Text-VF/golos-text_vf.woff") format("woff");
+}
+$fontUI: "GolosUi";
+$fontText: "GolosText";

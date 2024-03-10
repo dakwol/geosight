@@ -1,0 +1,121 @@
+@use "../../scss/" as *;
+
+.containerToggle{
+    display: flex;
+    align-items: center;
+    p{
+        margin-top: 0;
+        margin-left: 6rem;
+        @include fnt(16, 24, $color: $gray-800, $weight: 400, $font: $fontUI)
+    }
+}
+.switch {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 28rem;
+    height: 16rem;
+    background-color: $switch;
+    border-radius: 8rem;
+    outline: 1rem solid $gray-300;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    cursor: pointer;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    width: 28rem;
+    height: 16rem;
+    display: flex;
+    padding: 2rem;
+}
+
+.slider:before {
+    content: "";
+    height: 12rem;
+    width: 12rem;
+    background-color: $white;
+    -webkit-transition: 0.4s;
+    box-shadow:
+        0px 1px 3px rgba(16, 24, 40, 0.1),
+        0px 1px 2px rgba(16, 24, 40, 0.06);
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background: $blue;
+    &.gradient {
+        background: $gradient;
+        background-size: 150% 150%;
+        animation: gradientAnimation 5s ease-in-out infinite;
+    }
+    &.white {
+        background: $white;
+    }
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+input:checked + .slider::before {
+    background-color: $white;
+}
+input:checked + .slider.vk::before {
+    background-color: $blue;
+}
+input:checked + .slider.ok::before {
+    background-color: $orange;
+}
+input:checked + .slider.tg::before {
+    background-color: $lg-blue;
+}
+input:checked + .slider.mediaIs::before {
+    background-color: $media-600;
+}
+input:checked + .slider.mediaHold::before {
+    background-color: $green-400;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    transform: translateX(100%);
+}
+
+/* Rounded sliders */
+
+.slider.round {
+    border-radius: 34rem;
+}
+.slider.dark {
+    background-color: $gray-500;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.checkboxText {
+    @include fnt(14, 16, $data-gray, $font: $fontUI);
+    margin-left: 6rem;
+    &._bold {
+        font-variation-settings: "wght" 600;
+    }
+    &._black {
+        color: $black;
+    }
+}

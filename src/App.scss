@@ -1,0 +1,276 @@
+        @use "./scss/" as *;
+        @font-face {
+            font-family: 'GolosUi', sans-serif;
+            src: local('Golos-UI-VF'), url("./assets/fonts/Golos-UI-VF/golos-ui_vf.woff") format('woff'), url("./assets/fonts/Golos-UI-VF/golos-ui_vf.woff2") format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'GolosText', sans-serif;
+            src: local('Golos-Text-VF'), url("./assets/fonts/Golos-Text-VF/golos-text_vf.woff") format('woff'), url("./assets/fonts/Golos-Text-VF/golos-text_vf.woff2") format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html {
+            //font-size: 1.2px;
+            font-size: clamp(1px, calc(100 * 100vw / 1920 / 100), 1.33px);
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            @include hd {
+                width: calc((100 * 1920 / 100));
+            }
+            @include laptop {
+                width: calc((100 * 1440 / 100));
+            }
+            @include tablet {
+                width: calc((100 * 1024 / 100));
+            }
+            @include mobile {
+                width: calc((100 * 375 / 100));
+            }
+        }
+        /* Стилизация полосы прокрутки (браузеры, поддерживающие WebKit) */
+        
+         ::-webkit-scrollbar {
+            width: 8rem;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background-color: $white;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background-color: $gray-200;
+            border-radius: 8rem;
+            transition: .2s linear;
+            &:hover {
+                background: linear-gradient(180deg, #3F3F46 0%, #131316 100%);
+                background-size: 150% 150%;
+                animation: gradientAnimation 5s ease-in-out infinite;
+            }
+        }
+        /* Стилизация полосы прокрутки (браузеры, не поддерживающие WebKit) */
+        
+        body {
+            scrollbar-width: thin;
+            scrollbar-color: $gray-200 #f0f0f0;
+        }
+        
+        body::-webkit-scrollbar {
+            width: 8rem;
+        }
+        
+        body::-webkit-scrollbar-track {
+            background-color: $white;
+        }
+        
+        body::-webkit-scrollbar-thumb {
+            background-color: $gray-200;
+            border-radius: 8rem;
+            transition: .2s linear;
+            &:hover {
+                background: linear-gradient(180deg, #3F3F46 0%, #131316 100%);
+                background-size: 150% 150%;
+                animation: gradientAnimation 1s ease-in-out infinite;
+            }
+        }
+        
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            100% {
+                background-position: 0% 0%;
+            }
+        }
+        
+        body {
+            font-family: "GolosVF";
+            font-weight: 400;
+            line-height: 1.5;
+            width: 100%;
+            height: 100%;
+            background-color: $white;
+            color: $txt-color;
+        }
+        
+        #root {
+            // display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        
+        iframe {
+            display: none !important;
+        }
+        
+        a {
+            text-decoration: none;
+            color: unset;
+        }
+        
+        button,
+        input {
+            outline: 0;
+        }
+        
+        ul {
+            list-style-type: none;
+        }
+        
+        img {
+            max-width: 100%;
+        }
+        
+        iframe {
+            border: 0;
+        }
+        
+        .container {
+            max-width: 1660px;
+            margin: auto;
+        }
+        
+        .d-none {
+            display: none !important;
+        }
+        
+        $indents: 0,
+        2,
+        3,
+        4,
+        8,
+        12,
+        16,
+        24,
+        28,
+        32,
+        48,
+        54;
+        .m {
+            @each $margin in $indents {
+                &-#{$margin} {
+                    margin: #{$margin}rem !important;
+                }
+                &t-#{$margin} {
+                    margin-top: #{$margin}rem !important;
+                }
+                &b-#{$margin} {
+                    margin-bottom: #{$margin}rem !important;
+                }
+                &l-#{$margin} {
+                    margin-left: #{$margin}rem !important;
+                }
+                &r-#{$margin} {
+                    margin-right: #{$margin}rem !important;
+                }
+                &y-#{$margin} {
+                    margin-top: #{$margin}rem !important;
+                    margin-bottom: #{$margin}rem !important;
+                }
+                &x-#{$margin} {
+                    margin-right: #{$margin}rem !important;
+                    margin-left: #{$margin}rem !important;
+                }
+            }
+        }
+        
+        .p {
+            @each $padding in $indents {
+                &-#{$padding} {
+                    padding: #{$padding}rem !important;
+                }
+                &t-#{$padding} {
+                    padding-top: #{$padding}rem !important;
+                }
+                &b-#{$padding} {
+                    padding-bottom: #{$padding}rem !important;
+                }
+                &l-#{$padding} {
+                    padding-left: #{$padding}rem !important;
+                }
+                &r-#{$padding} {
+                    padding-right: #{$padding}rem !important;
+                }
+                &y-#{$padding} {
+                    padding-top: #{$padding}rem !important;
+                    padding-bottom: #{$padding}rem !important;
+                }
+                &x-#{$padding} {
+                    padding-right: #{$padding}rem !important;
+                    padding-left: #{$padding}rem !important;
+                }
+            }
+        }
+        
+        .section {
+            padding: 0 2rem;
+        }
+        
+        .section__header {
+            @include flex(center,
+            space-between);
+        }
+        
+        .main {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            width: 100%;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .justify-sb {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        h1 {
+            font-size: 16rem;
+        }
+        
+        body,
+        p,
+        span,
+        label,
+        a {
+            @include fnt()
+        }
+        
+        .containerPage {
+            width: 100%;
+            height: 100%;
+        }
+
+        .gridFull{
+            grid-column: 1/3;
+        }
+        
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: $fontUI;
+        }
+
+        .relative {
+            position: relative;
+        }

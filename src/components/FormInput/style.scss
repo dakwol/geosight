@@ -1,0 +1,354 @@
+@use "../../scss/" as *;
+
+@mixin input() {
+    padding: 8rem 12rem 8rem 12rem;
+    border: 1rem solid rgba(0, 16, 61, 0.12);
+    border-radius: 4rem;
+    @include fnt(14, 20, $gray-900, 400);
+    transition: .15s linear;
+    outline: none;
+    height: 36rem;
+    // &:focus{
+    //     outline: initial;
+    //     box-shadow: 0px 0px 0px 4px #F2F4F7, 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    //     border: 1rem solid rgba(0, 16, 61, 0.12);
+    // }
+
+    // &.error{
+    //     border: 1rem solid #FDA29B;
+    //     &:focus{
+    //         outline: none;
+    //         box-shadow: 0px 0px 0px 4px #FEE4E2, 0px 1px 2px 0px rgba(16, 24, 40, 0.05)
+    //     }
+    // }
+    &:disabled {
+        color: $gray-500;
+        background-color: $gray-100;
+    }
+}
+
+.formHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.copyContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p{
+        color: $blue;
+        font-family: $fontText;
+        font-weight: 400;
+        font-size: 12rem;
+        margin-left: 2rem;
+    }
+
+    &.active{
+        p{
+            color: $gray-500;
+        }
+    }
+}
+.reqInput {
+    &:nth-child(2) {
+        margin-top: 12rem;
+    }
+}
+.reqForm__title {
+    @include fnt($weight: 600, $font: $fontText);
+}
+
+.inputContainer{
+    position: relative;
+
+    .flexInput{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+
+        .formInput{
+            @include input();
+            @include fnt(14, 20, $txt-color, 400, $font: $fontText);
+        
+            &.paddingIco{
+                padding: 8rem 8rem 8rem 30rem;
+            }
+        
+            &.timeDateIco{
+                padding: 8rem 8rem 8rem 30rem;
+            }
+
+            &.friendly{
+                border-radius: 8rem;
+                padding: 10rem 12rem;
+                height: 44rem;
+            }
+        }
+
+    }
+
+    .leftIconInpit{
+        position: absolute;
+        display: flex;
+        align-items: center;
+        margin-left: 8rem;
+        
+        img{
+            width: 16rem;
+            height: 16rem;
+        }
+    }
+
+    .rightIconInpit{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 11rem;
+        display: flex;
+        align-items: center;
+    }
+
+    p{
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12rem;
+        line-height: 16rem;
+        color: $redButton;
+        margin-left: 10rem;
+        margin-top: 4rem;
+    }
+}
+
+
+
+.formTextAreaContainer {
+    position: relative;
+    width: 100%;
+    height: 96rem;
+}
+
+.formTextAreaContainer textarea {
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scrolling */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.formTextAreaContainer textarea::-webkit-scrollbar {
+    width: 0; /* Hide the scrollbar in WebKit browsers */
+}
+
+
+.formTextArea{
+    @include input();
+    padding: 8rem 14rem 18rem 14rem;
+    width: 100%;
+    height: 96rem;
+    resize: none;
+}
+
+.characterCount{
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    bottom: 4rem;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12rem;
+    line-height: 13rem;
+    color: $switch;
+    width: 100%;
+    padding: 0 7rem;
+
+    img{
+        cursor: pointer;
+        background-color: $white;
+        border-radius: 50%;
+    }
+
+    .emoji__container, .question__container{
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .question__container{
+        img{
+            margin-left: 4rem;
+        }
+    }
+
+    .emoji{
+        position: absolute;
+        z-index: 100;
+
+        aside.EmojiPickerReact.epr-main{
+            position: absolute;
+            top: 0;
+            left: 20rem;
+        }
+        .EmojiPickerReact .Flex.FlexRow{
+            display: none;
+        }
+    }
+}
+
+.copy__container{
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    top: -20rem;
+    cursor: pointer;
+    p{
+        font-size: 12rem;
+        line-height: 16rem;
+        font-style: normal;
+        font-weight: 400;
+        color: $text-gray;
+
+        &.active{
+            color: $blue;
+        }
+    }
+}
+
+.subTitileFormInput{
+    @include fnt(12, 20, $text-gray, 500);
+    margin-left: 12rem;
+
+    &.required{}
+
+    .requiredStar{
+        @include fnt(12, 16, $red, 500);
+    }
+}
+
+.daysOfWeekButtons{
+    margin-top: 4rem;
+}
+
+.dayButton{
+    background-color: $gray-50;
+    border: 0;
+    border-radius: 4rem;
+    padding: 7rem 17rem;
+    margin-right: 4rem;
+    cursor: pointer;
+    @include fnt(12, 12, $gray-900);
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+
+    &:last-child{
+        margin-right: 0;
+    }
+
+    &:hover{
+        background-color: $gray-200;
+    }
+
+    &.selected{
+        background-color: $data-gray;
+        color: $white;
+    }
+}
+
+.bigInput{
+    margin-bottom: 16rem;
+
+    .subTitileFormInput{
+        @include fnt(14, 16, $gray-700, 500);
+    }
+
+    .inputContainer{
+        position: relative;
+        .formInput{
+            border-radius: 8rem;
+            padding: 10rem 12rem;
+    
+            font-style: normal;
+            @include fnt(14, 20, $text-gray, 400, $font: $fontText);
+        }
+    }
+
+    .phoneInput{
+        width: 100%;
+        padding: 12rem 12rem;
+        border: 1rem solid rgba(0, 16, 61, 0.12);
+        border-radius: 8rem;
+        color: #919399;
+        font-size: 14rem;
+        transition: 0.15s linear;
+        color: #2C2D2E;
+        outline: none;
+      }
+      
+
+}
+.phoneInput{
+    width: 100%;
+    padding: 8rem 12rem 8rem 8rem;
+    border: 1rem solid rgba(0, 16, 61, 0.12);
+    border-radius: 8rem;
+    color: #919399;
+    font-size: 14rem;
+    transition: 0.15s linear;
+    color: #2C2D2E;
+    outline: none;
+  }
+  .smallInput{
+    width: 275rem;
+    margin-bottom: 12rem;
+  }
+
+  .calendar-container{
+    z-index: 100000000;
+  }
+
+.counterContainer{
+    display: flex;
+    gap: 2rem;
+    .countText{
+        padding:8rem;
+        background-color: $white;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 42rem;
+        @include fnt(14, 24, $weight:400, $font: $fontText, $color: $gray-800);
+    }
+
+    .buttonCount{
+        padding: 8rem;
+        background-color: $gray-50;
+
+        &:first-child{
+            border-radius: 8rem 0rem 0rem 8rem;
+        }
+        &:last-child{
+            border-radius: 0rem 8rem 8rem 0rem;
+        }
+
+        &:hover{
+            background-color: $white;
+        }
+      
+        object{
+            margin-right: 0;
+        }
+    }
+}

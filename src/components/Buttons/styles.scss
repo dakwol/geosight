@@ -1,0 +1,333 @@
+@use "../../scss/" as *;
+.sbButton {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    width: 100%;
+    background-color: $sg-gray;
+}
+
+
+.button__container {
+    background-color: $black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12rem 24rem;
+    border-radius: 12rem;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    @include fnt(14,22, $color: $white);
+    transition: .1s linear;
+    &.iconContainer {
+        padding: 8rem 24rem 8rem 12rem;
+    }
+    object {
+        margin-right: 10rem;
+        width: 24rem;
+        height: 24rem;
+        pointer-events: none;
+    }
+    .circleNumber{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: -10rem;
+        background-color: $white;
+        border-radius: 50%;
+        width: 22rem;
+        height: 22rem;
+        border: 2rem solid #0CC;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        @include fnt(14, 24, $weight: 500, $color: $txt-color);
+    }
+    &:hover {
+        background-color: $blue;
+    }
+
+    .tooltip {
+        transition: .3s ease-in-out;
+        position: absolute;
+        top: -40rem;
+        background-color: $blue-dark-800;
+        padding: 8rem 12rem;
+        border-radius: 8rem;
+        @include fnt(12, 18, $weight: 600, $color: $white, $font: $fontUI);
+        display: inline-block;
+        white-space: nowrap;
+        z-index: 100;
+
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: -16rem; /* Расстояние до треугольника */
+            left: 50%; /* По центру */
+            border-width: 8rem;
+            border-style: solid;
+            border-color: transparent transparent $blue-dark-800 transparent;
+            transform: translateX(-50%) rotateZ(180deg); /* Центрирование по горизонтали */
+          }
+      }
+      
+}
+
+.deleteButton__container {
+    background-color: inherit;
+    border: none;
+    color: $red;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
+}
+
+@mixin button() {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    border: none;
+    background-color: transparent;
+    transition: background-color .2s ease-in-out, border-color .2s ease-in-out, box-shadow .2s ease-in-out;
+    &._icon-left {
+        flex-direction: row-reverse;
+    }
+    span {
+        transition: color .2s ease-in-out, font-variation-settings .2s ease-in-out;
+        font: {
+            family: $fontUI;
+            variation-settings: "wght" 500;
+        }
+    }
+    svg use {
+        transition: stroke .2s ease-in-out;
+    }
+    &._reverse {
+        flex-direction: row-reverse;
+    }
+    // &::before,
+    // &::after {
+    //     content: '';
+    //     flex: none;
+    //     display: block;
+    // }
+    &[disabled] {
+        opacity: .3;
+        pointer-events: none;
+    }
+}
+
+@mixin button-sizes() {
+    font-size: 14rem;
+    line-height: 20rem;
+    padding: 10rem;
+    border-radius: 8rem;
+    span {
+        padding: 0 6rem;
+    }
+    svg {
+        @include size(20);
+    }
+    &._round {
+        padding: 4rem;
+        border-radius: 14rem;
+        span {
+            font-size: 12rem;
+            line-height: 16rem;
+            font-variation-settings: "wght" 400;
+            padding: 0 4rem;
+        }
+        svg {
+            @include size(16);
+        }
+    }
+    &._sm {
+        padding: 8rem;
+        span {
+            font-size: 14rem;
+            line-height: 20rem;
+            padding: 0 4rem;
+        }
+    }
+    &._lg {
+        padding: 12rem;
+        span {
+            font-size: 16rem;
+            line-height: 20rem;
+            padding: 0 8rem;
+        }
+    }
+    &._xl {
+        padding: 18rem;
+        span {
+            font-size: 18rem;
+            line-height: 24rem;
+            padding: 0 12rem;
+        }
+        svg {
+            @include size(24);
+        }
+    }
+    &._block {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.btn {
+    @include button();
+    background: $media-600;
+    cursor: pointer;
+    span {
+        color: #fff;
+    }
+    &:hover {
+        background-color: $media-700;
+    }
+    &:active {
+        background-color: $media-600;
+        box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px $gray-100;
+    }
+    @include button-sizes();
+}
+
+.btn-gr {
+    @include button();
+    background: linear-gradient(90deg, #E31B53 0%, #2E90FA 50%, #F63D68 50%, #53B1FD 100%);
+    background-size: 200%;
+    background-position: 100%;
+    transition: background-position 0.3s ease-in-out;
+    span {
+        color: #fff;
+    }
+    &:hover {
+        background-position: 0%;
+    }
+    &:active {
+        background-color: $media-600;
+        box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px $gray-100;
+    }
+    @include button-sizes();
+}
+
+.btn-secondary {
+    @include button();
+    background-color: #FFFFFF;
+    border: 1px solid $media-200;
+    span {
+        color: $media-600;
+    }
+    svg use {
+        stroke: $media-600;
+    }
+    &:hover {
+        background-color: $media-50;
+        border-color: $media-300;
+    }
+    &:active {
+        background-color: #ffffff;
+        box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px $gray-100;
+    }
+    &._gray {
+        span {
+            color: $gray-700;
+        }
+        svg use {
+            stroke: $gray-700;
+        }
+        border-color: $gray-300;
+        &:hover {
+            background-color: $gray-50;
+            border-color: $gray-300;
+        }
+    }
+    @include button-sizes();
+}
+
+.btn-teritary {
+    @include button();
+    span {
+        color: $media-600;
+    }
+    svg use {
+        stroke: $media-700;
+    }
+    &:hover {
+        span {
+            font-variation-settings: "wght" 700;
+        }
+    }
+    &._gray {
+        span {
+            color: $gray-700;
+        }
+        svg use {
+            stroke: $gray-700;
+        }
+    }
+    @include button-sizes();
+    border-radius: 0;
+}
+
+.btn-outline {
+    @include button();
+    background-color: transparent;
+    border: 1px solid $media-600;
+    span {
+        color: $media-600;
+    }
+    svg use {
+        stroke: $media-600;
+    }
+    &:hover {
+        background-color: $media-600;
+        span {
+            color: #fff;
+        }
+        svg use {
+            stroke: #fff;
+        }
+    }
+    @include button-sizes();
+}
+
+.btn-link {
+    @include button();
+    @include button-sizes();
+    span {
+        color: $media-600;
+    }
+    svg use {
+        stroke: $media-600;
+    }
+    &:hover {
+        span {
+            font-variation-settings: "wght" 700;
+        }
+    }
+    &._black {
+        color: $gray-700;
+    }
+    &._gray {
+        span {
+            color: $gray-400;
+        }
+        svg use {
+            stroke: $gray-400;
+        }
+        &:hover {
+            span {
+                color: $gray-700;
+            }
+            svg use {
+                stroke: $gray-700;
+            }
+        }
+    }
+    border-radius: 0;
+    padding: 0 !important;
+}

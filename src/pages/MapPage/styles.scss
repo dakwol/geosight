@@ -1,0 +1,22 @@
+@use "../../scss/" as *;
+
+.MapPageContainer{
+    display: flex;
+}
+
+.searchContainer{
+    position: absolute;
+    top: 30rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500rem;
+    height: 30rem;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .inputSearch{
+        width: 188rem;
+    }
+}

@@ -1,0 +1,24 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="40" height="40" rx="4" fill="url(#paint0_linear_5353_41049)"/>
+<path d="M32 32H8V16L20 8L32 16V32Z" fill="white"/>
+<defs>
+<linearGradient id="paint0_linear_5353_41049" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00CCCC"/>
+<stop offset="0.0666667" stop-color="#00CBCC"/>
+<stop offset="0.133333" stop-color="#00CACC"/>
+<stop offset="0.2" stop-color="#00C6CC"/>
+<stop offset="0.266667" stop-color="#00C2CC"/>
+<stop offset="0.333333" stop-color="#00BCCC"/>
+<stop offset="0.4" stop-color="#00B5CC"/>
+<stop offset="0.466667" stop-color="#00AECC"/>
+<stop offset="0.533333" stop-color="#00A6CC"/>
+<stop offset="0.6" stop-color="#009FCC"/>
+<stop offset="0.666667" stop-color="#0098CC"/>
+<stop offset="0.733333" stop-color="#0092CC"/>
+<stop offset="0.8" stop-color="#008ECC"/>
+<stop offset="0.866667" stop-color="#008ACC"/>
+<stop offset="0.933333" stop-color="#0089CC"/>
+<stop offset="1" stop-color="#0088CC"/>
+</linearGradient>
+</defs>
+</svg>
