@@ -1,0 +1,33 @@
+@use "../../scss/" as *;
+
+.headerAdmin__container{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logoAdmin{
+        cursor: pointer;
+    }
+
+    .searchLogoContainer{
+        display: flex;
+        align-items: center;
+        gap: 30rem;
+    }
+
+    .nav{
+        display: flex;
+        gap: 24rem;
+        align-items: center;
+        margin-right: 48rem;
+
+        .navItem {
+            @include fnt(16, 22, $color: $black);
+
+            &.active{
+                color: $blue;
+            }
+        }
+    }
+}

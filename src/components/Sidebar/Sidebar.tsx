@@ -5,6 +5,10 @@ import "./styles.scss";
 import Modal from "../Modal/Modal";
 import ProfileComponent from "../ProfileComponent/ProfileComponent";
 import { IUser } from "../../models/IUser";
+import Skeleton from "react-loading-skeleton";
+import SidebarLayers from "./SidebarLayers/SidebarLayers";
+import SidebarFilter from "./SidebarFilter/SidebarFilter";
+import SidebarMap from "./SidebarMap/SidebarMap";
 
 const Sidebar = ({ sbData, pageType }: any) => {
   const [isActive, setIsActive] = useState(() => {
@@ -23,10 +27,47 @@ const Sidebar = ({ sbData, pageType }: any) => {
 
   const [isOpenModal, setIsOpenModal] = useState<string>("");
   const [typeModal, setTypeModal] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<number | null>(0); // Состояние для отслеживания активного элемента
 
   useEffect(() => {
     localStorage.setItem("sidebarState", JSON.stringify(isActive));
   }, [isActive]);
+
+  const buttonTabsSidebar = [
+    {
+      id: 1,
+      name: "",
+      component: <SidebarLayers />,
+      active: false,
+      ico: icons.layers,
+      activeIco: icons.layersActive,
+    },
+    {
+      id: 2,
+      name: "",
+      component: <SidebarFilter />,
+      active: false,
+      ico: icons.filterAlt,
+      activeIco: icons.filterAltActive,
+    },
+    {
+      id: 3,
+      name: "",
+      component: <SidebarMap />,
+      active: false,
+      ico: icons.map,
+      activeIco: icons.mapActive,
+    },
+  ];
+
+  // Обработчик клика для элементов в боковой панели
+  const handleSidebarItemClick = (index: number) => {
+    setActiveTab(index); // Устанавливаем активный элемент при клике
+  };
+
+  console.log("====================================");
+  console.log("sbData", sbData);
+  console.log("====================================");
 
   return (
     <Fragment>
@@ -68,9 +109,13 @@ const Sidebar = ({ sbData, pageType }: any) => {
               <nav className="sidebar__nav">
                 {sbData.map((e: any, i: React.Key | null | undefined) => (
                   <div
-                    onClick={(e) => {
-                      setIsOpenModal("e.name");
-                    }}
+                    onClick={
+                      e.id === 1
+                        ? e.navigate
+                        : (value) => {
+                            setIsOpenModal(`${value}`);
+                          }
+                    }
                     key={i}
                     className={`nanItem ${i === active ? "active" : ""} `}
                   >
@@ -91,12 +136,48 @@ const Sidebar = ({ sbData, pageType }: any) => {
                 }}
                 className="avatarUser"
               >
-                <img src={icons.Logo}></img>
+                {storedUser.avatar ? (
+                  <img src={storedUser.avatar}></img>
+                ) : (
+                  <Skeleton
+                    circle
+                    width={30}
+                    height={30}
+                    style={{ cursor: "pointer" }}
+                  />
+                )}
               </div>
             </div>
           </div>
-          <div>
-            <h1>1</h1>
+          <div className="sidebarRight">
+            <h1 className="titleSidebar">Название</h1>
+            <div className="tubSidebar">
+              {buttonTabsSidebar.map((item, index) => (
+                <div
+                  key={item.id}
+                  className={`buttonIco ${activeTab === index ? "active" : ""}`}
+                  onClick={() => handleSidebarItemClick(index)}
+                >
+                  {item.ico && (
+                    <img
+                      src={activeTab === index ? item.activeIco : item.ico}
+                      alt="Icon"
+                      style={isActive ? { marginRight: 0 } : {}}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div>
+              {buttonTabsSidebar.map((item, index) => (
+                <div
+                  key={item.id}
+                  className={`${activeTab === index ? "active" : ""}`}
+                >
+                  {activeTab === index ? item.component : null}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

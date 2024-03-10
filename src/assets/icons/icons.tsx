@@ -55,6 +55,13 @@ import plus from "./plus.svg";
 import LogoGeo from "./LogoGeo.svg";
 import adminPanelSettings from "./admin_panel_settings.svg";
 import iosShare from "./ios_share.svg";
+import layers from "./layers.svg";
+import filterAlt from "./filter_alt.svg";
+import filterAltActive from "./filter_altActive.svg";
+import map2 from "./map2.svg";
+import mapActive from "./mapActive.svg";
+import layersActive from "./layersActive.svg";
+import logoAdmin from "./logoAdmin.svg";
 export default {
   geosIco,
   bikLogo,
@@ -113,4 +120,11 @@ export default {
   LogoGeo,
   adminPanelSettings,
   iosShare,
+  layers,
+  filterAlt,
+  filterAltActive,
+  map2,
+  mapActive,
+  layersActive,
+  logoAdmin,
 };

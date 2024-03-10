@@ -13,6 +13,9 @@ export const API_USER_MODEL = {
     methods: {
         login:{
             url: 'login/'
+        },
+        getUsersCompanies:{
+            url: 'companies/'
         }
     },
 }

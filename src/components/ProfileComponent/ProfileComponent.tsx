@@ -69,7 +69,7 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
   const renderUserForm = () => {
     return (
       <div className="formUser">
-        {optionUserUpdate &&
+        {optionUserUpdate ? (
           fieldToArray(optionUserUpdate)?.map((item, index) => {
             if (item.key === "id" || item.key === "avatar") {
               return;
@@ -97,7 +97,15 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
                 )}
               </Fragment>
             );
-          })}
+          })
+        ) : (
+          <>
+            <Skeleton count={1} height={"60rem"} borderRadius={12} />
+            <Skeleton count={1} height={"60rem"} borderRadius={12} />
+            <Skeleton count={1} height={"60rem"} borderRadius={12} />
+            <Skeleton count={1} height={"60rem"} borderRadius={12} />
+          </>
+        )}
       </div>
     );
   };
@@ -164,6 +172,7 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
             text={"Выйти"}
             onClick={() => {}}
           /> */}
+          <div></div>
           <Buttons
             text={"Сохранить изменения"}
             className="redactButton"

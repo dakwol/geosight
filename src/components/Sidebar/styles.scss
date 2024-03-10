@@ -11,8 +11,6 @@
 .sidebar {
     position: fixed;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     z-index: 100;
     width: 252rem;
     height: 100%;
@@ -119,4 +117,38 @@
 .bigModal{
     max-width: 552rem !important;
     max-height: 500rem !important;
+}
+
+.tubSidebar{
+    display: flex;
+    align-items: center;
+    gap: 20rem;
+    margin-top: 14rem;
+}
+
+.sidebarRight{
+    padding: 0 4rem;
+    width: 100%;
+
+    .titleSidebar{
+        @include fnt(16, 22, $weight:700, $color: $black);
+    }
+
+    .buttonIco{
+        cursor: pointer;
+        padding:4rem;
+        &.active{
+            border-bottom: 2rem;
+            border-bottom-color: $blue;
+        }
+    }
+
+    .containerSidebarRight{
+        margin-top: 14rem;
+    }
+
+    .titleSidebarMenu{
+        @include fnt(16, 22, $weight:700, $color: $black);
+        margin-bottom: 12rem;
+    }
 }
