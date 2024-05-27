@@ -5,3 +5,9 @@
     height: 100vh;
     padding: 28rem 32rem;
 }
+
+.gridModal{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12rem;
+}

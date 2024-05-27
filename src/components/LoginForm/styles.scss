@@ -126,3 +126,18 @@
         @include fnt(16, 20, $weight: 400, $font: $fontText, $color: $gray-400);
     }
 }
+
+.loginResetCotntainer{
+    display: flex;
+    flex-direction: column;
+    gap: 34rem;
+
+    h1{
+        margin: 0;
+    }
+
+    p{
+        @include fnt(14, 24, $font: $fontText, $color: $gray-800);
+        text-align: center;
+    }
+}

@@ -62,6 +62,7 @@ import map2 from "./map2.svg";
 import mapActive from "./mapActive.svg";
 import layersActive from "./layersActive.svg";
 import logoAdmin from "./logoAdmin.svg";
+import photo_camera from "./photo_camera.svg";
 export default {
   geosIco,
   bikLogo,
@@ -127,4 +128,5 @@ export default {
   mapActive,
   layersActive,
   logoAdmin,
+  photo_camera,
 };

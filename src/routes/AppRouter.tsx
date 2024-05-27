@@ -18,22 +18,14 @@ const AppRouter = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      const storedUser = JSON.parse(
-        localStorage.getItem("account") || "{}"
-      ) as IUser;
-      dispatch(AuthActionCreators.setUser(storedUser));
-      const storedRoute = localStorage.getItem("currentRoute");
-      if (storedRoute) {
-        setInitialRoute(storedRoute);
-      } else {
-        navigate(RouteNames.MAP);
-      }
+    const storedRoute = localStorage.getItem("currentRoute");
+
+    if (storedRoute) {
+      setInitialRoute(storedRoute);
     } else {
-      navigate(RouteNames.LOGIN);
-      // navigate(RouteNames.MAP);
+      setInitialRoute(RouteNames.MAP);
     }
-  }, [isAuthenticated]);
+  }, []);
 
   useEffect(() => {
     const handleRouteChange = () => {

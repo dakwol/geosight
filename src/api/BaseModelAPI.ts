@@ -7,6 +7,7 @@ interface APIResponse<T> {
     success: boolean;
     data?: T | null;
     message: string;
+    [key:string]:any
 }
 
 interface BaseModelAPIParams {
@@ -14,6 +15,7 @@ interface BaseModelAPIParams {
     id?: string;
     urlParams?: string;
     body?: any;
+    [key:string]:any
 }
 
 class BaseModelAPI {

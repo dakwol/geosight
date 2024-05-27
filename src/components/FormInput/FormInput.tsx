@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.scss";
 import icons from "../../assets/icons/icons";
 import EmojiPicker from "emoji-picker-react";
@@ -8,8 +8,22 @@ import ToggleButton from "../ToggleButton/ToggleButton";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Checkbox from "../Checkbox/Checkbox";
-import { getFormatedDate, getHtmlFormatDate } from "../UI/functions/functions";
+import {
+  locale,
+  addLocale,
+  updateLocaleOption,
+  updateLocaleOptions,
+  localeOption,
+  localeOptions,
+} from "primereact/api";
+import {
+  getFormatedDate,
+  getFormattedStandartDate,
+  getHtmlFormatDate,
+  transformDate,
+} from "../UI/functions/functions";
 import Buttons from "../Buttons/Buttons";
+import { Calendar } from "primereact/calendar";
 
 type FormInputProps = {
   id?: string;
@@ -19,22 +33,26 @@ type FormInputProps = {
   style: string;
   value: string | undefined;
   onChange: (value: string, isChecked?: boolean) => void;
-  onFocus?: (value: string, isChecked?: boolean) => void;
+  onCheck?: (isChecked: boolean) => void;
+  onClick?: (value: any, isChecked?: boolean) => void;
   subInput: string | undefined;
   required: boolean;
   error: string | boolean;
   description?: string | undefined;
   disabled?: boolean;
   ico?: string | undefined;
-  icoRight?: string | undefined;
   question?: boolean;
   options?: string[] | undefined;
   mask?: string | undefined;
   keyData: string;
+  rightIco?: string;
   checked?: boolean | undefined;
   loading?: boolean;
   friedlyInput?: boolean;
   isFormSubmitted?: boolean;
+  helpText?: string;
+  emoji?: boolean;
+  copy?: boolean;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -45,13 +63,14 @@ const FormInput: React.FC<FormInputProps> = ({
   style,
   value,
   onChange,
+  onCheck,
+  onClick,
   subInput,
   required,
   error,
   description,
   disabled,
   ico,
-  icoRight,
   question,
   options,
   mask,
@@ -59,7 +78,11 @@ const FormInput: React.FC<FormInputProps> = ({
   checked,
   loading,
   friedlyInput,
+  helpText,
   isFormSubmitted,
+  emoji,
+  rightIco,
+  copy,
 }) => {
   const [isLoading, setIsLoading] = useState(loading);
   const [valueSet, setValueSet] = useState(
@@ -69,9 +92,7 @@ const FormInput: React.FC<FormInputProps> = ({
   const [isActive, setIsActive] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
   const [isErr, setIsErr] = useState(error);
-
-  const [date, setDate] = useState(value ? getFormatedDate(value) : "");
-  const [count, setCount] = useState(1); // Используйте useState для создания состояния
+  const [date, setDate] = useState(value ? transformDate(value) : "");
 
   useEffect(() => {
     setIsLoading(loading);
@@ -88,24 +109,13 @@ const FormInput: React.FC<FormInputProps> = ({
 
     if (newValue === "") {
       setIsErr(true);
+      setTimeout(() => setIsErr(false), 1000);
     } else {
       setIsErr(false);
     }
 
     setValueSet(newValue);
     onChange(newValue);
-  };
-
-  const handleMinusClick = () => {
-    if (count > 1) {
-      setCount(count - 1);
-      onChange(String(count - 1));
-    }
-  };
-
-  const handlePlusClick = () => {
-    setCount(count + 1);
-    onChange(String(count + 1));
   };
 
   const handleEmojiSelect = (emoji: { emoji: string }) => {
@@ -145,17 +155,6 @@ const FormInput: React.FC<FormInputProps> = ({
     onChange(phoneNumber.slice(1));
   };
 
-  const handleChangeData = (event: any) => {
-    setDate(event);
-    if (date === "") {
-      setIsErr(true);
-    } else {
-      setIsErr(false);
-    }
-    console.log("sadada", event);
-    onChange(getHtmlFormatDate(event));
-  };
-
   const handleLink = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
 
@@ -177,6 +176,16 @@ const FormInput: React.FC<FormInputProps> = ({
     //@ts-ignore
     setValueSet(isChecked);
     onChange("", isChecked);
+    //@ts-ignore
+    onCheck(isChecked);
+  };
+
+  const [dateValue, setDateValue] = useState<string>("");
+
+  const handleChangeData = (event: string) => {
+    setDate(event);
+    console.log("event", event);
+    onChange(getFormattedStandartDate(event));
   };
 
   const [skeletonHeight, setSkeletonHeight] = useState("100%");
@@ -191,6 +200,51 @@ const FormInput: React.FC<FormInputProps> = ({
       setSkeletonWidth(`${inputContainerRect.width}px`);
     }
   }, []);
+
+  addLocale("ru", {
+    firstDayOfWeek: 1,
+    dayNames: [
+      "Воскресенье",
+      "Понедельник",
+      "Вторник",
+      "Среда",
+      "Четверг",
+      "Пятница",
+      "Суббота",
+    ],
+    dayNamesShort: ["Вос", "Пон", "Втор", "Сред", "Четв", "Пят", "Суб"],
+    dayNamesMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+    monthNames: [
+      "Январь",
+      "Февраль",
+      "Март",
+      "Апрель",
+      "Май",
+      "Июнь",
+      "Июль",
+      "Август",
+      "Сентябрь",
+      "Октябрь",
+      "Ноябрь",
+      "Декабрь",
+    ],
+    monthNamesShort: [
+      "Янв",
+      "Фев",
+      "Март",
+      "Апр",
+      "Май",
+      "Июнь",
+      "Июль",
+      "Авг",
+      "Сеп",
+      "Окт",
+      "Ноя",
+      "Дек",
+    ],
+    today: "Сегодня",
+    clear: "Очистить",
+  });
 
   return (
     <>
@@ -214,7 +268,7 @@ const FormInput: React.FC<FormInputProps> = ({
                   <span className="requiredStar">{required && "*"}</span>
                 </label>
               )}
-              {textArea && valueSet.length > 0 && (
+              {textArea && copy && valueSet?.length > 0 && (
                 <div
                   className={`copyContainer ${isCopy ? "" : "active"}`}
                   onClick={handleCopy}
@@ -237,7 +291,7 @@ const FormInput: React.FC<FormInputProps> = ({
                       case "phone":
                         return (
                           <InputMask
-                            mask="+7 (999) 999-99-99"
+                            mask={mask ? mask : "+7 (999) 999-99-99"}
                             maskChar="_"
                             placeholder="+7"
                             className={`formInput ${isErr ? "error" : ""} ${
@@ -247,6 +301,9 @@ const FormInput: React.FC<FormInputProps> = ({
                             onChange={(
                               e: React.ChangeEvent<HTMLInputElement>
                             ) => handlePhoneChange(e)}
+                            pattern={mask}
+                            disabled={disabled}
+                            onClick={(e) => onClick && onClick(e)}
                           />
                         );
                       case "email":
@@ -254,9 +311,7 @@ const FormInput: React.FC<FormInputProps> = ({
                           <InputMask
                             mask={mask || ""}
                             maskChar="_"
-                            id={type}
-                            type={type}
-                            placeholder="example@mail.ru"
+                            placeholder="example@example.com"
                             className={`formInput ${isErr ? "error" : ""} ${
                               ico ? "paddingIco" : ""
                             } ${friedlyInput && "friendly"}`}
@@ -312,38 +367,54 @@ const FormInput: React.FC<FormInputProps> = ({
                         );
                       case "date":
                         return (
-                          <InputMask
-                            mask={"9999-99-99"}
-                            alwaysShowMask={false}
+                          <Calendar
+                            mask="99.99.9999"
                             //@ts-ignore
-                            permanents={[2, 5]}
-                            maskChar=""
-                            placeholder=""
-                            className={`formInput ${isErr ? "error" : ""} ${
-                              ico ? "paddingIco" : ""
-                            }`}
-                            disabled={disabled || false}
+                            value={date}
+                            onChange={(e: any) => handleChangeData(e.value)}
+                            dateFormat="dd.mm.yy"
+                            inputClassName={`formInput ${
+                              isErr ? "error" : ""
+                            } ${ico ? "paddingIco" : ""}`}
+                            panelClassName={"classPanel"}
+                            locale="ru"
                           />
                         );
 
+                      // case "dateButton":
+                      //   return (
+                      //     <DateInput
+                      //       closeOnSelect={true}
+                      //       date={date}
+                      //       format="DDMMYYYY"
+                      //       separator="-"
+                      //       placeholder={placeholder || "дд-мм-гггг"}
+                      //       onChange={(e: any) => handleChangeData(e)}
+                      //       className={`formInput ${isErr ? "error" : ""} ${
+                      //         ico ? "paddingIco" : ""
+                      //       } ${friedlyInput && "friendly"}`}
+                      //       disabled={disabled || false}
+                      //     />
+                      //   );
                       case "counter":
                         return (
                           <div className="counterContainer">
-                            <Buttons
-                              ico={icons.minus}
-                              text={""}
-                              className="buttonCount"
-                              onClick={handleMinusClick}
-                            ></Buttons>
-                            <b className="countText">{count}</b>
-                            <Buttons
-                              ico={icons.plus}
-                              text={""}
-                              className="buttonCount"
-                              onClick={handlePlusClick}
-                            ></Buttons>
+                            {/* <Buttons
+                                ico={icons.minus}
+                                text={""}
+                                className="buttonCount"
+                                onClick={handleMinusClick}
+                              ></Buttons>
+                              <b className="countText">{count}</b>
+                              <Buttons
+                                ico={icons.plus}
+                                text={""}
+                                className="buttonCount"
+                                onClick={handlePlusClick}
+                              ></Buttons> */}
                           </div>
                         );
+
                       default:
                         return mask ? (
                           <InputMask
@@ -376,8 +447,7 @@ const FormInput: React.FC<FormInputProps> = ({
                   })()
                 ) : (
                   <FormSelector
-                    //@ts-ignore
-                    value={value}
+                    value={valueSet}
                     //@ts-ignore
                     options={options}
                     //@ts-ignore
@@ -386,35 +456,41 @@ const FormInput: React.FC<FormInputProps> = ({
                     //@ts-ignore
                     error={isErr}
                     ico={ico}
+                    friendlyInput={friedlyInput}
+                    placeholder={placeholder}
                   />
                 )
               ) : (
                 <>
                   <textarea
                     onBlur={handleChange}
-                    className="formTextArea"
+                    className={`formTextArea ${friedlyInput && "friendly"}`}
                     value={valueSet}
                     onChange={handleChange}
                     onClick={() => setIsActive(false)}
                   />
-                  <div className="characterCount">
-                    <div className="emoji__container">
-                      <div className="emoji">
-                        <img
-                          src={icons.Smileys}
-                          onClick={() => setIsActive(!isActive)}
-                          alt="Emoji"
-                        />
-                        {isActive && (
-                          <EmojiPicker
-                            onEmojiClick={handleEmojiSelect}
-                            searchDisabled
+                  {emoji && (
+                    <div className="characterCount">
+                      <div className="emoji__container">
+                        <div className="emoji">
+                          <img
+                            src={icons.Smileys}
+                            onClick={() => setIsActive(!isActive)}
+                            alt="Emoji"
                           />
-                        )}
+                          {isActive && (
+                            <EmojiPicker
+                              onEmojiClick={handleEmojiSelect}
+                              searchDisabled
+                            />
+                          )}
+                        </div>
+                      </div>
+                      <div className="question__container">
+                        {valueSet.length}
                       </div>
                     </div>
-                    <div className="question__container">{valueSet.length}</div>
-                  </div>
+                  )}
                 </>
               )}
               {question && (
@@ -425,13 +501,14 @@ const FormInput: React.FC<FormInputProps> = ({
                   />
                 </div>
               )}
-              {icoRight && (
+              {rightIco && (
                 <div className="rightIconInpit">
-                  <img src={icoRight} alt="Icon" />
+                  <img src={rightIco} alt="Icon" />
                 </div>
               )}
             </div>
             {isErr && <p>{description}</p>}
+            {helpText && <label className="helpText">{helpText}</label>}
           </div>
         </div>
       )}

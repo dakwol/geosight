@@ -2,6 +2,7 @@
   "name": "geoSight",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8001",
   "dependencies": {
     "@emotion/styled": "^11.11.0",
     "@pbe/react-yandex-maps": "^1.2.5",
@@ -18,6 +19,7 @@
     "@types/redux-thunk": "^2.1.0",
     "axios": "^1.5.1",
     "emoji-picker-react": "^4.5.3",
+    "express": "^4.19.2",
     "jwt-decode": "^4.0.0",
     "maplibre-gl": "^3.6.2",
     "moment": "^2.29.4",

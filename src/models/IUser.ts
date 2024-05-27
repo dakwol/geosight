@@ -20,3 +20,14 @@ export interface IUserOption {
     patronymic?: IOptionInput;
     password: IOptionInput;
 }
+export interface IUserCreateOption {
+    id: IOptionInput;
+    company: IOptionInput;
+    email: IOptionInput;
+    first_name: IOptionInput;
+    last_name: IOptionInput;
+    is_send_email: IOptionInput;
+    phone_number: IOptionInput;
+    password: IOptionInput;
+    role: IOptionInput;
+}

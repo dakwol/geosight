@@ -60,7 +60,7 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
         {value ? (
           <h4>{value}</h4>
         ) : (
-          <Skeleton circle width={100} height={100} />
+          <Skeleton count={1} height={"30rem"} width={300} borderRadius={12} />
         )}
       </div>
     );
@@ -110,16 +110,20 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
     );
   };
 
+  console.log("====================================");
+  console.log("userData", userData);
+  console.log("====================================");
+
   const ViewContent: FC = () => {
     return (
       <div>
         <h1 className="titleModal">Личный кабинет</h1>
         <div className="containerUserInfoAvatar">
-          {userData.avatar ? (
-            <img src={userData.avatar} className="avatar" alt="User Avatar" />
-          ) : (
-            <Skeleton circle width={100} height={100} />
-          )}
+          <img
+            src={userData.avatar ? userData.avatar : icons.photoNone}
+            className="avatar"
+            alt="User Avatar"
+          />
           {userData.first_name && userData.last_name ? (
             <h1 className="userName">{`${userData.last_name} ${userData.first_name}`}</h1>
           ) : (
@@ -157,21 +161,26 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
       <div>
         <h1 className="titleModal">Редактировать профиль</h1>
         <div className="containerUserInfoAvatar redact">
-          {userData.avatar ? (
-            <img src={userData.avatar} className="avatar" alt="User Avatar" />
-          ) : (
-            <Skeleton circle width={100} height={100} />
-          )}
+          <img
+            src={userData.avatar ? userData.avatar : icons.photoNone}
+            className="avatar"
+            alt="User Avatar"
+          />
+          <div className="redactPhoto">
+            <img src={icons.photo_camera}></img>
+          </div>
         </div>
         <div className="containerUserInfo">{renderUserForm()}</div>
 
         <div className="footerModal">
-          {/* <Buttons
+          <Buttons
             ico={icons.logOut}
             className="logoutButton"
-            text={"Выйти"}
-            onClick={() => {}}
-          /> */}
+            text={"Назад"}
+            onClick={() => {
+              setIsType("view");
+            }}
+          />
           <div></div>
           <Buttons
             text={"Сохранить изменения"}

@@ -6,7 +6,7 @@ import Tables from "../../components/Tables/Tables";
 const MapListPage: FC = () => {
   return (
     <div className="grayPageContainer">
-      <HeaderAdmin />
+      <HeaderAdmin title={"Создать карту"} onClick={() => {}} />
       <Tables data={[]} headers={[]} totals={[]} />
     </div>
   );

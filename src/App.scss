@@ -131,9 +131,31 @@
         ul {
             list-style-type: none;
         }
+
+        ::selection {
+            background-color: #3F3F46; 
+            color: white;
+        }
+
+        ::-moz-selection {
+            background-color: #3F3F46;
+            color: white;
+        }
         
         img {
             max-width: 100%;
+            pointer-events: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         
         iframe {

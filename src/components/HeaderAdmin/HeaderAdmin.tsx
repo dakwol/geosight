@@ -1,20 +1,25 @@
-import React from "react";
+import React, { FC } from "react";
 import "./styles.scss";
 import icons from "../../assets/icons/icons";
 import FormInput from "../FormInput/FormInput";
 import { RouteNames, navDate } from "../../routes";
 import { Link, useNavigate } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
-const HeaderAdmin = () => {
+
+interface IProps {
+  title: string;
+  onClick: () => void;
+}
+
+const HeaderAdmin: FC<IProps> = ({ title, onClick }) => {
   const navigation = useNavigate();
+  console.log("HeaderAdmin onClick", onClick); // Отладочное сообщение
   return (
     <div className="headerAdmin__container">
       <div className="searchLogoContainer">
-        <img
-          className="logoAdmin"
-          src={icons.logoAdmin}
-          onClick={() => navigation(RouteNames.MAP)}
-        ></img>
+        <div onClick={() => navigation(RouteNames.MAP)}>
+          <img className="logoAdmin" src={icons.logoAdmin}></img>
+        </div>
         <FormInput
           style={"inputSearch"}
           value={undefined}
@@ -30,7 +35,6 @@ const HeaderAdmin = () => {
           keyData={""}
           placeholder="Поиск"
           friedlyInput
-          icoRight={icons.search}
         />
       </div>
       <div className="nav">
@@ -46,12 +50,7 @@ const HeaderAdmin = () => {
           </Link>
         ))}
       </div>
-      <Buttons
-        text={"Создать пользователя"}
-        onClick={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-      />
+      <Buttons text={title} onClick={() => onClick()} />
     </div>
   );
 };

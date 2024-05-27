@@ -15,12 +15,34 @@
     &.redact{
         transition: .3s ease-in-out;
         justify-content: center;
+        position: relative;
+        width: fit-content;
+        margin: 20rem auto 0;
+
+        .redactPhoto{
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem;
+            background-color: $blue;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            cursor: pointer;
+            transition: .2s ease-in-out;
+
+            &:hover{
+                background-color: $blue-700;
+            }
+        }
     }
 
     .avatar{
         width: 100rem;
         height: 100rem;
-
+        border-radius: 100%;
+        object-fit: cover;
     }
 
     .userName{

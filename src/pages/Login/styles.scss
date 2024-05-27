@@ -15,10 +15,25 @@
     width: 70%;
 }
 
-.logoGeoContainer{
+.logoGeoContainer {
     width: 30%;
-    background-color: $blue-500;
+    background: linear-gradient(200deg, #b3c9e3 0%, #1975d9 45.5%, #0c73e8 100%);
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: gradientShift 5s infinite;
+    background-size: 200% 200%;
 }
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+

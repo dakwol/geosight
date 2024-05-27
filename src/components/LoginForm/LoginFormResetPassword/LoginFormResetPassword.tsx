@@ -37,8 +37,12 @@ const LoginFormResetPassword: FC<LoginFormResetPasswordProps> = ({
     }
   };
   return (
-    <>
+    <div className="loginResetCotntainer">
       <h1>Восстановление аккаунта</h1>
+      <p>
+        Пожалуйста, введите адрес электронной почты, связанный с вашей учетной
+        записью, и мы отправим письмо с кодом для восстановления.
+      </p>
       <FormInput
         style={""}
         value={undefined}
@@ -69,7 +73,7 @@ const LoginFormResetPassword: FC<LoginFormResetPasswordProps> = ({
       >
         Вернуться назад
       </p>
-    </>
+    </div>
   );
 };
 

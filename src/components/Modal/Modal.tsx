@@ -1,31 +1,41 @@
-import React, { FC, Fragment, useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import "./styles.scss";
 
 interface ModalProps {
   content: React.ReactNode;
+  isOpen: boolean;
+  classModal?: string;
+  classBgModal?: string;
   onClose: () => void;
-  isVisible: boolean;
-  styleModal: string;
 }
 
-const Modal: FC<ModalProps> = ({ isVisible, content, onClose, styleModal }) => {
+const Modal: FC<ModalProps> = ({
+  content,
+  onClose,
+  isOpen,
+  classModal,
+  classBgModal,
+}) => {
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
+    isOpen
+      ? (document.body.style.overflow = "hidden")
+      : (document.body.style.overflow = "auto");
+  }, [isOpen]);
 
   return (
-    <Fragment>
+    <>
       <div
-        className={`modalContainerBg ${isVisible && "active"}`}
+        className={`modalContainerBg ${
+          isOpen && `active ${classBgModal && classBgModal}`
+        }`}
         onClick={onClose}
       ></div>
-      <div className={`modal ${isVisible && "active"} ${styleModal}`}>
+      <div
+        className={`modal ${isOpen && "active"} ${classModal && classModal}`}
+      >
         {content}
       </div>
-    </Fragment>
+    </>
   );
 };
 

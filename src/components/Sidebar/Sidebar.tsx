@@ -88,8 +88,7 @@ const Sidebar = ({ sbData, pageType }: any) => {
           }
         })()}
         onClose={() => [setIsOpenModal(""), setTypeModal("")]}
-        isVisible={isOpenModal != ""}
-        styleModal={typeModal === "redact" ? "bigModal" : ""}
+        isOpen={isOpenModal != ""}
       />
 
       <div

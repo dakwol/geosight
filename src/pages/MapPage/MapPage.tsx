@@ -25,7 +25,6 @@ const MapPage: FC = () => {
           keyData={""}
           placeholder="Поиск"
           friedlyInput
-          icoRight={icons.search}
         />
       </div>
       <MapComponent />
