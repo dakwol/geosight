@@ -1,0 +1,101 @@
+@use "../../../scss/" as *;
+
+.containerAddLayer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12rem;
+
+    .titleSidebarMenu{
+        margin: 0;
+    }
+
+    .addLayerButton{
+        background-color: $gray-100;
+        @include fnt(12, 14, $weight: 500, $color: $blue, $font: $fontText);
+        padding: 8rem 18rem !important;
+    
+        object{
+            width: 10rem;
+        }
+
+        &:hover{
+            background-color: $gray-300;
+        }
+    }
+}
+
+
+
+.containerLayers{
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+}
+
+.containerLayer{
+    padding: 14rem 20rem;
+    border-radius: 12rem;
+    border: 1rem solid $gray-100;
+    transition: .2s ease-in-out;
+}
+
+.containerNameLayer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .layerName{
+        @include fnt(16, 22, $weight: 500, $color: $txt-color, $font: $fontText);
+        white-space: nowrap; /* Текст не переносится */
+        overflow: hidden; /* Обрезаем всё за пределами блока */
+        text-overflow: ellipsis;
+        max-width: 110rem;
+    }
+
+    .containerLayerButton{
+        display: flex;
+        align-items: center;
+        gap: 4rem;
+
+        .layerButton{
+            width: 24rem;
+            height: 24rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: .2s ease-in-out;
+
+            .layerButtonImg{
+                width: 16rem;
+                height: 16rem;
+            }
+
+            &:hover{
+                background-color: $gray-100;
+                border-radius: 100%;
+            }
+
+            .expandButton{
+                transform: rotateZ(180deg);
+                transition: .2s ease-in-out;
+
+                &.active{
+                    transform: rotateZ(0);
+                }
+            }
+        }
+    }
+}
+
+.layerDescriptionContainer{
+    border-top: 1rem solid $gray-100;
+    padding-top: 4rem;
+    margin-top: 8rem;
+    .labelDescriptionLayer{
+        @include fnt(14, 20, $weight: 400, $color: $text-gray, $font: $fontText);
+    }
+    .descriptionLayer{
+        @include fnt(16, 20, $weight: 400, $color: $txt-color, $font: $fontText);
+    }
+}

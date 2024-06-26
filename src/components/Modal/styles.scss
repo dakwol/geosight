@@ -67,4 +67,13 @@
         grid-gap: 16rem;
         flex-direction: column;
     }
+
+    .xCloseButton{
+        position: absolute;
+        right: 16rem;
+        top: 16rem;
+        z-index: 10000;
+        cursor: pointer;
+        pointer-events: all;
+    }
 }

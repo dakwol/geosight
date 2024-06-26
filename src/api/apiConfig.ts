@@ -1,6 +1,6 @@
 const apiConfig = {
-    baseUrl: 'http://localhost:8001/api/',
-    baseUrlMedia: 'http://51.250.126.124:8093/media/',
+    baseUrl: 'http://5.35.92.166:8001/api/',
+    baseUrlMedia: 'http://5.35.92.166:8001/media/',
     apiKey: ''
 }
 

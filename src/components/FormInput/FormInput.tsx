@@ -34,9 +34,11 @@ type FormInputProps = {
   value: string | undefined;
   onChange: (value: string, isChecked?: boolean) => void;
   onCheck?: (isChecked: boolean) => void;
+  onSearch?: (value: any) => void;
   onClick?: (value: any, isChecked?: boolean) => void;
   subInput: string | undefined;
   required: boolean;
+  multiple?: boolean;
   error: string | boolean;
   description?: string | undefined;
   disabled?: boolean;
@@ -64,9 +66,11 @@ const FormInput: React.FC<FormInputProps> = ({
   value,
   onChange,
   onCheck,
+  onSearch,
   onClick,
   subInput,
   required,
+  multiple,
   error,
   description,
   disabled,
@@ -452,6 +456,11 @@ const FormInput: React.FC<FormInputProps> = ({
                     options={options}
                     //@ts-ignore
                     disabled={disabled}
+                    //@ts-ignore
+                    onScroll={(e) => onScroll && onScroll(e)}
+                    onSearch={(e) => onSearch && onSearch(e)}
+                    multiple={multiple}
+                    //@ts-ignore
                     onChange={(e) => onChange(e)}
                     //@ts-ignore
                     error={isErr}

@@ -10,6 +10,7 @@ import { AuthActionCreators } from "../../store/reducers/auth/action-creator";
 import UserApiRequest from "../../api/User/Users";
 import { fieldToArray } from "../UI/functions/functions";
 import { DataPressActionCreators } from "../../store/reducers/dataPressItem/action-creator";
+import apiConfig from "../../api/apiConfig";
 
 interface IUserDataProps {
   avatar: string;
@@ -120,7 +121,11 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
         <h1 className="titleModal">Личный кабинет</h1>
         <div className="containerUserInfoAvatar">
           <img
-            src={userData.avatar ? userData.avatar : icons.photoNone}
+            src={
+              userData.avatar
+                ? `${apiConfig.baseUrlMedia}${userData.avatar.slice(23)}`
+                : icons.photoNone
+            }
             className="avatar"
             alt="User Avatar"
           />
@@ -162,7 +167,13 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
         <h1 className="titleModal">Редактировать профиль</h1>
         <div className="containerUserInfoAvatar redact">
           <img
-            src={userData.avatar ? userData.avatar : icons.photoNone}
+            src={
+              userData.avatar
+                ? userData.avatar
+                  ? `${apiConfig.baseUrlMedia}${userData.avatar.slice(23)}`
+                  : icons.photoNone
+                : icons.photoNone
+            }
             className="avatar"
             alt="User Avatar"
           />

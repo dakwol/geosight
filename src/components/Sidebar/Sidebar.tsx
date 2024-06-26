@@ -9,8 +9,9 @@ import Skeleton from "react-loading-skeleton";
 import SidebarLayers from "./SidebarLayers/SidebarLayers";
 import SidebarFilter from "./SidebarFilter/SidebarFilter";
 import SidebarMap from "./SidebarMap/SidebarMap";
+import apiConfig from "../../api/apiConfig";
 
-const Sidebar = ({ sbData, pageType }: any) => {
+const Sidebar = ({ sbData, pageType, mapData }: any) => {
   const [isActive, setIsActive] = useState(() => {
     const storedState = localStorage.getItem("sidebarState");
     return storedState ? JSON.parse(storedState) : false;
@@ -37,7 +38,9 @@ const Sidebar = ({ sbData, pageType }: any) => {
     {
       id: 1,
       name: "",
-      component: <SidebarLayers />,
+      component: (
+        <SidebarLayers mapDataId={mapData.id} mapDataLayers={mapData.layers} />
+      ),
       active: false,
       ico: icons.layers,
       activeIco: icons.layersActive,
@@ -64,10 +67,6 @@ const Sidebar = ({ sbData, pageType }: any) => {
   const handleSidebarItemClick = (index: number) => {
     setActiveTab(index); // Устанавливаем активный элемент при клике
   };
-
-  console.log("====================================");
-  console.log("sbData", sbData);
-  console.log("====================================");
 
   return (
     <Fragment>
@@ -136,7 +135,11 @@ const Sidebar = ({ sbData, pageType }: any) => {
                 className="avatarUser"
               >
                 {storedUser.avatar ? (
-                  <img src={storedUser.avatar}></img>
+                  <img
+                    src={`${apiConfig.baseUrlMedia}${storedUser.avatar.slice(
+                      23
+                    )}`}
+                  ></img>
                 ) : (
                   <Skeleton
                     circle
@@ -149,7 +152,11 @@ const Sidebar = ({ sbData, pageType }: any) => {
             </div>
           </div>
           <div className="sidebarRight">
-            <h1 className="titleSidebar">Название</h1>
+            {mapData?.name ? (
+              <h1 className="titleSidebar">{mapData?.name || ""}</h1>
+            ) : (
+              <Skeleton count={1} height={40} borderRadius={12} />
+            )}
             <div className="tubSidebar">
               {buttonTabsSidebar.map((item, index) => (
                 <div

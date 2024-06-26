@@ -1,0 +1,13 @@
+@use "../../scss/" as *;
+
+.containerFilePicker{
+    background-color: $gray-100;
+    text-align: center;
+    padding: 40rem;
+    border-radius: 8rem;
+    border: 2rem solid $gray-100;
+
+    &.active{
+        border: 2rem solid $blue;
+    }
+}

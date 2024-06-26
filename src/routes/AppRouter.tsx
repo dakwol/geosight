@@ -23,9 +23,9 @@ const AppRouter = () => {
     if (storedRoute) {
       setInitialRoute(storedRoute);
     } else {
-      setInitialRoute(RouteNames.MAP);
+      setInitialRoute(RouteNames.LOGIN);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -78,11 +78,11 @@ const AppRouter = () => {
 
   return (
     <>
-      {isAuthenticated && window.location.pathname === "/" && (
+      {/* {isAuthenticated && window.location.pathname === "/" && (
         <Sidebar sbData={sidebarData} pageType={undefined} />
-      )}
+      )} */}
       <Routes>
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={""} />
         {publicRoutes.map((route) => (
           <Route
             path={route.path}
@@ -90,20 +90,22 @@ const AppRouter = () => {
             key={route.path}
           />
         ))}
-        {privateRoutes.map((route) => (
-          <Route
-            path={route.path}
-            element={<route.element />}
-            key={route.path}
-          />
-        ))}
-        {adminRoutes.map((route) => (
-          <Route
-            path={route.path}
-            element={<route.element />}
-            key={route.path}
-          />
-        ))}
+        {isAuthenticated &&
+          privateRoutes.map((route) => (
+            <Route
+              path={route.path}
+              element={<route.element />}
+              key={route.path}
+            />
+          ))}
+        {isAuthenticated &&
+          adminRoutes.map((route) => (
+            <Route
+              path={route.path}
+              element={<route.element />}
+              key={route.path}
+            />
+          ))}
       </Routes>
     </>
   );

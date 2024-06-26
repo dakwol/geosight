@@ -63,6 +63,10 @@ import mapActive from "./mapActive.svg";
 import layersActive from "./layersActive.svg";
 import logoAdmin from "./logoAdmin.svg";
 import photo_camera from "./photo_camera.svg";
+import visibility from "./visibility.svg";
+import expand_more from "./expand_more.svg";
+import mapLoading from "./mapLoading.svg";
+import dontvisibility from "./dontvisibility.svg";
 export default {
   geosIco,
   bikLogo,
@@ -129,4 +133,8 @@ export default {
   layersActive,
   logoAdmin,
   photo_camera,
+  visibility,
+  expand_more,
+  mapLoading,
+  dontvisibility,
 };

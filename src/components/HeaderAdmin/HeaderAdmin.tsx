@@ -13,18 +13,17 @@ interface IProps {
 
 const HeaderAdmin: FC<IProps> = ({ title, onClick }) => {
   const navigation = useNavigate();
-  console.log("HeaderAdmin onClick", onClick); // Отладочное сообщение
   return (
     <div className="headerAdmin__container">
       <div className="searchLogoContainer">
-        <div onClick={() => navigation(RouteNames.MAP)}>
-          <img className="logoAdmin" src={icons.logoAdmin}></img>
+        <div className="logoAdmin" onClick={() => navigation(RouteNames.MAP)}>
+          <img src={icons.logoAdmin}></img>
         </div>
         <FormInput
           style={"inputSearch"}
           value={undefined}
           onChange={function (
-            value: string,
+            value: string | string[],
             isChecked?: boolean | undefined
           ): void {
             throw new Error("Function not implemented.");
@@ -50,7 +49,7 @@ const HeaderAdmin: FC<IProps> = ({ title, onClick }) => {
           </Link>
         ))}
       </div>
-      <Buttons text={title} onClick={() => onClick()} />
+      <Buttons text={title} onClick={onClick} />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { FC, useEffect } from "react";
 import "./styles.scss";
+import icons from "../../assets/icons/icons";
 
 interface ModalProps {
   content: React.ReactNode;
@@ -33,6 +34,11 @@ const Modal: FC<ModalProps> = ({
       <div
         className={`modal ${isOpen && "active"} ${classModal && classModal}`}
       >
+        <img
+          className="xCloseButton"
+          src={icons.xClosed}
+          onClick={onClose}
+        ></img>
         {content}
       </div>
     </>

@@ -5,7 +5,7 @@ import axiosClient from './axiosClient';
 
 interface APIResponse<T> {
     success: boolean;
-    data?: T | null;
+    data?: any | null;
     message: string;
     [key:string]:any
 }

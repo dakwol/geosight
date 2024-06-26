@@ -2,12 +2,13 @@
 
 .headerAdmin__container{
     width: 100%;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 400rem 1fr 200rem;
     align-items: center;
 
     .logoAdmin{
         cursor: pointer;
+        width: 150rem;
     }
 
     .searchLogoContainer{
@@ -20,7 +21,7 @@
         display: flex;
         gap: 24rem;
         align-items: center;
-        margin-right: 48rem;
+        justify-content: center;
 
         .navItem {
             @include fnt(16, 22, $color: $black);

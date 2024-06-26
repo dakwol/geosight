@@ -10,26 +10,39 @@ type Option = {
 
 type FormSelectorProps = {
   options: Option[];
-  onChange: (value: string) => void;
+  onChange: (value: string | string[]) => void;
+  onScroll?: () => void;
+  onSearch?: (value: string) => void;
   error: boolean;
   ico: string | undefined;
   style: string;
   value: string;
   disabled: boolean;
+  friendlyInput: boolean | undefined;
+  multiple?: boolean | undefined;
+  placeholder: string | undefined;
 };
 
 const FormSelector: React.FC<FormSelectorProps> = ({
   options,
   onChange,
+  onScroll,
+  onSearch,
   error,
   ico,
   style,
   value,
   disabled,
+  friendlyInput,
+  placeholder,
+  multiple,
 }) => {
-  const [selectedOption, setSelectedOption] = useState(
-    value === null ? "" : value
-  );
+  const [selectedOption, setSelectedOption] = useState("");
+
+  useEffect(() => {
+    setSelectedOption(value === undefined ? "" : value);
+  }, [value]);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [activeOption, setActiveOption] = useState("");
@@ -38,11 +51,43 @@ const FormSelector: React.FC<FormSelectorProps> = ({
   const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
   const formSelectorRef = useRef<HTMLDivElement | null>(null);
 
+  const formSelectorOptionRef = useRef<HTMLDivElement | null>(null);
+  const debounceSearch = useRef<NodeJS.Timeout | null>(null);
+
+  const handleScroll = () => {
+    if (
+      formSelectorOptionRef.current &&
+      formSelectorOptionRef.current.scrollHeight -
+        formSelectorOptionRef.current.scrollTop ===
+        formSelectorOptionRef.current.clientHeight
+    ) {
+      onScroll && onScroll();
+      setFilteredOptions(options);
+    }
+  };
+
   const handleOptionChange = (option: Option) => {
-    setSelectedOptions([option.value]);
-    setSelectedOption(option.display_name);
-    onChange(option.value);
-    setIsOpen(!isOpen);
+    if (multiple) {
+      // Проверяем, была ли уже выбрана эта опция
+      const isSelected = selectedOptions.includes(option.value);
+
+      if (isSelected) {
+        // Если опция уже выбрана, удаляем её из выбранных
+        setSelectedOptions((prev) =>
+          prev.filter((item) => item !== option.value)
+        );
+        onChange(selectedOptions.filter((item) => item !== option.value));
+      } else {
+        // Если опция не была выбрана ранее, добавляем её в выбранные
+        setSelectedOptions((prev) => [...prev, option.value]);
+        onChange([...selectedOptions, option.value]);
+      }
+    } else {
+      setSelectedOptions([option.value]);
+      setSelectedOption(option.display_name);
+      onChange(option.value);
+      setIsOpen(false);
+    }
   };
 
   const handleInputClick = () => {
@@ -55,7 +100,18 @@ const FormSelector: React.FC<FormSelectorProps> = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
     setIsOpen(true);
-    setSelectedOption(inputValue);
+    setSelectedOption(inputValue); // Обновляем введенное значение в поле
+
+    if (debounceSearch.current) {
+      clearTimeout(debounceSearch.current);
+    }
+
+    debounceSearch.current = setTimeout(() => {
+      if (onSearch) {
+        onSearch(inputValue);
+      }
+    }, 500);
+
     setFilteredOptions(
       options.filter((option) =>
         option.display_name.toLowerCase().includes(inputValue.toLowerCase())
@@ -80,8 +136,12 @@ const FormSelector: React.FC<FormSelectorProps> = ({
     };
   }, []);
 
+  console.log("====================================");
+  console.log("options", options);
+  console.log("====================================");
+
   useEffect(() => {
-    const foundOption = options.find((item) => item.value === selectedOption);
+    const foundOption = options?.find((item) => item.value === selectedOption);
     if (foundOption) {
       setSelectedOption(foundOption.display_name);
     }
@@ -93,11 +153,22 @@ const FormSelector: React.FC<FormSelectorProps> = ({
         <input
           className={`formSelector ${error ? "error" : ""} ${
             ico ? "paddingIco" : ""
-          }`}
-          value={selectedOption}
+          } ${friendlyInput && "friendly"}`}
+          value={
+            multiple
+              ? selectedOptions
+                  .map(
+                    (option) =>
+                      options.find((opt) => opt.value === option)
+                        ?.display_name || ""
+                  )
+                  .join(", ")
+              : selectedOption
+          }
           onClick={handleInputClick}
           onChange={handleInputChange}
           disabled={disabled}
+          placeholder={placeholder}
         />
         <img
           src={icons.chevronDown}
@@ -107,7 +178,11 @@ const FormSelector: React.FC<FormSelectorProps> = ({
         />
       </div>
       {isOpen && (
-        <div className={"optionsContainer"}>
+        <div
+          className={"optionsContainer"}
+          ref={formSelectorOptionRef}
+          onScroll={onScroll && handleScroll}
+        >
           {filteredOptions.map((option) => (
             <div
               key={option.id}

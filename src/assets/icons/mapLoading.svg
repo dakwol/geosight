@@ -1,0 +1,321 @@
+<svg id="eAWVISqL1Ph1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 0 1920 1080" shape-rendering="geometricPrecision" text-rendering="geometricPrecision"
+    style="background-color:#ddd">
+    <style>
+        #eAWVISqL1Ph2_ts {
+            animation: eAWVISqL1Ph2_ts__ts 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph2_ts__ts {
+            0% {
+                transform: translate(441.817217px, 657.412055px) scale(0.033241, 0.033303)
+            }
+
+            40% {
+                transform: translate(441.817217px, 657.412055px) scale(1.013146, 1.014977)
+            }
+
+            100% {
+                transform: translate(441.817217px, 657.412055px) scale(1.013146, 1.014977)
+            }
+        }
+
+        #eAWVISqL1Ph2 {
+            animation: eAWVISqL1Ph2_c_o 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph2_c_o {
+            0% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+
+            70% {
+                opacity: 1
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+
+        #eAWVISqL1Ph3_ts {
+            animation: eAWVISqL1Ph3_ts__ts 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph3_ts__ts {
+            0% {
+                transform: translate(427.350185px, 209.050733px) scale(0.033602, 0.035336)
+            }
+
+            30% {
+                transform: translate(427.350185px, 209.050733px) scale(1.02408, 1.076941)
+            }
+
+            70% {
+                transform: translate(427.350185px, 209.050733px) scale(0.996478, 1.029195)
+            }
+
+            100% {
+                transform: translate(427.350185px, 209.050733px) scale(0.996478, 1.029195)
+            }
+        }
+
+        #eAWVISqL1Ph3 {
+            animation: eAWVISqL1Ph3_c_o 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph3_c_o {
+            0% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+
+            70% {
+                opacity: 1
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+
+        #eAWVISqL1Ph4_ts {
+            animation: eAWVISqL1Ph4_ts__ts 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph4_ts__ts {
+            0% {
+                transform: translate(763.35867px, 387.555241px) scale(0.033241, 0.033303)
+            }
+
+            50% {
+                transform: translate(763.35867px, 387.555241px) scale(1.013146, 1.014977)
+            }
+
+            100% {
+                transform: translate(763.35867px, 387.555241px) scale(1.013146, 1.014977)
+            }
+        }
+
+        #eAWVISqL1Ph4 {
+            animation: eAWVISqL1Ph4_c_o 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph4_c_o {
+            0% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+
+            70% {
+                opacity: 1
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+
+        #eAWVISqL1Ph5_ts {
+            animation: eAWVISqL1Ph5_ts__ts 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph5_ts__ts {
+            0% {
+                transform: translate(1347.55524px, 326.462789px) scale(0.033241, 0.033303)
+            }
+
+            40% {
+                transform: translate(1347.55524px, 326.462789px) scale(1.013146, 1.014977)
+            }
+
+            100% {
+                transform: translate(1347.55524px, 326.462789px) scale(1.013146, 1.014977)
+            }
+        }
+
+        #eAWVISqL1Ph5 {
+            animation: eAWVISqL1Ph5_c_o 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph5_c_o {
+            0% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+
+            70% {
+                opacity: 1
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+
+        #eAWVISqL1Ph6_ts {
+            animation: eAWVISqL1Ph6_ts__ts 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph6_ts__ts {
+            0% {
+                transform: translate(1148.050203px, 813.961463px) scale(0.033241, 0.033303)
+            }
+
+            50% {
+                transform: translate(1148.050203px, 813.961463px) scale(1.013146, 1.014977)
+            }
+
+            100% {
+                transform: translate(1148.050203px, 813.961463px) scale(1.013146, 1.014977)
+            }
+        }
+
+        #eAWVISqL1Ph6 {
+            animation: eAWVISqL1Ph6_c_o 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph6_c_o {
+            0% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+
+            70% {
+                opacity: 1
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+
+        #eAWVISqL1Ph7_ts {
+            animation: eAWVISqL1Ph7_ts__ts 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph7_ts__ts {
+            0% {
+                transform: translate(287.983029px, 821.598019px) scale(0.033241, 0.033303)
+            }
+
+            20% {
+                transform: translate(287.983029px, 821.598019px) scale(1.013146, 1.014977)
+            }
+
+            100% {
+                transform: translate(287.983029px, 821.598019px) scale(1.013146, 1.014977)
+            }
+        }
+
+        #eAWVISqL1Ph7 {
+            animation: eAWVISqL1Ph7_c_o 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph7_c_o {
+            0% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+
+            70% {
+                opacity: 1
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+
+        #eAWVISqL1Ph8_ts {
+            animation: eAWVISqL1Ph8_ts__ts 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph8_ts__ts {
+            0% {
+                transform: translate(1488.831536px, 150.82199px) scale(0.033241, 0.033303)
+            }
+
+            40% {
+                transform: translate(1488.831536px, 150.82199px) scale(1.013146, 1.014977)
+            }
+
+            100% {
+                transform: translate(1488.831536px, 150.82199px) scale(1.013146, 1.014977)
+            }
+        }
+
+        #eAWVISqL1Ph8 {
+            animation: eAWVISqL1Ph8_c_o 1500ms linear infinite normal forwards
+        }
+
+        @keyframes eAWVISqL1Ph8_c_o {
+            0% {
+                opacity: 0
+            }
+
+            50% {
+                opacity: 1
+            }
+
+            70% {
+                opacity: 1
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+    </style>
+    <g id="eAWVISqL1Ph2_ts" transform="translate(441.817217,657.412055) scale(0.033241,0.033303)">
+        <path id="eAWVISqL1Ph2" d="M0,234.824112Q790.086618,1000.388899,883.634434,1080"
+            transform="translate(-441.817217,-657.412056)" opacity="0" fill="none" stroke="#b8b8b8" stroke-width="10"
+            stroke-linecap="round" />
+    </g>
+    <g id="eAWVISqL1Ph3_ts" transform="translate(427.350185,209.050733) scale(0.033602,0.035336)">
+        <path id="eAWVISqL1Ph3" d="M192.526073,408.555772L662.174296,9.545696"
+            transform="translate(-427.350184,-209.050734)" opacity="0" fill="none" stroke="#b8b8b8" stroke-width="10"
+            stroke-linecap="round" />
+    </g>
+    <g id="eAWVISqL1Ph4_ts" transform="translate(763.35867,387.555241) scale(0.033241,0.033303)">
+        <path id="eAWVISqL1Ph4" d="M960,0L566.71734,775.110483" transform="translate(-763.35867,-387.555241)"
+            opacity="0" fill="none" stroke="#b8b8b8" stroke-width="10" stroke-linecap="round" />
+    </g>
+    <g id="eAWVISqL1Ph5_ts" transform="translate(1347.55524,326.462789) scale(0.033241,0.033303)">
+        <path id="eAWVISqL1Ph5" d="M772.904365,397.100937l1149.30175-141.276295"
+            transform="translate(-1347.55524,-326.462789)" opacity="0" fill="none" stroke="#b8b8b8" stroke-width="10"
+            stroke-linecap="round" />
+    </g>
+    <g id="eAWVISqL1Ph6_ts" transform="translate(1148.050203,813.961463) scale(0.033241,0.033303)">
+        <path id="eAWVISqL1Ph6" d="M690.811383,547.922927L1605.289022,1080"
+            transform="translate(-1148.050202,-813.961463)" opacity="0" fill="none" stroke="#b8b8b8" stroke-width="10"
+            stroke-linecap="round" />
+    </g>
+    <g id="eAWVISqL1Ph7_ts" transform="translate(287.983029,821.598019) scale(0.033241,0.033303)">
+        <path id="eAWVISqL1Ph7" d="M337.620646,563.19604L238.345412,1080" transform="translate(-287.983029,-821.59802)"
+            opacity="0" fill="none" stroke="#b8b8b8" stroke-width="10" stroke-linecap="round" />
+    </g>
+    <g id="eAWVISqL1Ph8_ts" transform="translate(1488.831536,150.82199) scale(0.033241,0.033303)">
+        <path id="eAWVISqL1Ph8" d="M1532.741735,301.643981L1444.921336,0" transform="translate(-1488.831535,-150.82199)"
+            opacity="0" fill="none" stroke="#b8b8b8" stroke-width="10" stroke-linecap="round" />
+    </g>
+</svg>

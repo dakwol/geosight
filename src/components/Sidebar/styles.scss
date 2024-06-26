@@ -12,12 +12,12 @@
     position: fixed;
     display: flex;
     z-index: 100;
-    width: 252rem;
+    width: 296rem;
     height: 100%;
     background-color: $white;
     transition: 0.1s linear;
     user-select: none;
-    padding: 32rem 4rem;
+   
     img {
         display: flex;
         width: 24rem;
@@ -30,8 +30,10 @@
         justify-content: space-between;
         align-items: center;
         height: 100%;
+        width: 52rem;
         border-right:1rem solid $gray-100 ;
-        padding-right: 10rem;
+        padding-right: 5rem;
+        padding: 32rem 0rem;
     }
    
 
@@ -46,7 +48,7 @@
         .sidebar__nav{
             display: flex;
             flex-direction: column;
-            gap: 18rem;
+            gap: 16rem;
         }
     }
     .nanItem {
@@ -58,6 +60,11 @@
         position: relative;
         color: $black-btn;
         opacity: 0.8;
+        transition: .2s ease-in-out;
+
+        &:hover{
+            background-color: $gray-100;
+        }
 
         span{
             @include fnt(10, 22, $weight: 500, $color: $gray-500);
@@ -127,7 +134,7 @@
 }
 
 .sidebarRight{
-    padding: 0 4rem;
+    padding: 32rem 8rem;
     width: 100%;
 
     .titleSidebar{
@@ -136,10 +143,33 @@
 
     .buttonIco{
         cursor: pointer;
-        padding:4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 2rem solid $white;
+        transition: .2s ease-in-out;
+        width: 32rem;
+        height: 32rem;
+
+        
+        img{
+            width: 22rem;
+            height: 22rem;
+        }
+
         &.active{
-            border-bottom: 2rem;
-            border-bottom-color: $blue;
+            border-bottom: 2rem solid $blue-500;
+        }
+
+        &:hover{
+            background-color: $gray-100;
+        }
+
+        &:last-child{
+           img{
+                width: 16rem;
+                height: 16rem;
+           }
         }
     }
 

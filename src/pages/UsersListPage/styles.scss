@@ -6,8 +6,15 @@
     padding: 28rem 32rem;
 }
 
+.modalTable{
+    h1{
+        @include fnt(32, 54, $weight:600)
+    }
+}
+
 .gridModal{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12rem;
+    margin-top: 16rem;
 }

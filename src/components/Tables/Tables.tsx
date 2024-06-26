@@ -1,7 +1,13 @@
 import React from "react";
 import "./styles.scss"; // Подключите свои стили здесь
 import { IOptionInput } from "../../models/IOptionInput";
-import { fieldToArray } from "../UI/functions/functions";
+import {
+  fieldToArray,
+  formatDateIntlDate,
+  formatDateIntlTimeDate,
+} from "../UI/functions/functions";
+import Loader from "../Loader/Loader";
+import icons from "../../assets/icons/icons";
 
 interface Header {
   key: string;
@@ -20,42 +26,59 @@ interface Props {
 }
 
 const Tables: React.FC<Props> = ({ data, headers, totals, onItemClick }) => {
-  console.log("====================================");
-  console.log("headers", headers);
-  console.log("====================================");
   return (
-    <div className="block-table-container">
-      {headers && (
-        <div
-          className="block-table-header"
-          style={{ gridTemplateColumns: `repeat(${headers.length}, 1fr)` }}
-        >
-          {headers.map((header, index) => (
-            <div key={index} className="block-table-header-cell">
-              {header.value.label}
+    <>
+      {data.length === 0 ? (
+        <Loader />
+      ) : (
+        <div className="block-table-container">
+          {headers && (
+            <div
+              className="block-table-header"
+              style={{
+                gridTemplateColumns: `repeat(${headers.length}, 1fr) ${
+                  onItemClick ? "20rem" : "0rem"
+                }`,
+              }}
+            >
+              {headers?.map((header, index) => (
+                <div key={index} className="block-table-header-cell">
+                  {header.value.label}
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+          <div
+            className="block-table-body"
+            style={{
+              gridTemplateColumns: `repeat(${headers.length}, 1fr) ${
+                onItemClick ? "20rem" : "0rem"
+              }`,
+            }}
+          >
+            {data.map((item, rowIndex) => {
+              return (
+                <>
+                  {fieldToArray(item).map((dataItem) => (
+                    <div key={dataItem.key} className="block-table-row">
+                      {dataItem.key === "updated_at"
+                        ? formatDateIntlTimeDate(dataItem.value)
+                        : dataItem.value}
+                    </div>
+                  ))}
+                  <img
+                    className="redactButton"
+                    src={icons.Pencil}
+                    alt="Edit"
+                    onClick={() => onItemClick && onItemClick(item)}
+                  />
+                </>
+              );
+            })}
+          </div>
         </div>
       )}
-      <div
-        className="block-table-body"
-        style={{ gridTemplateColumns: `repeat(${headers.length}, 1fr)` }}
-      >
-        {data.map((item, rowIndex) => {
-          return fieldToArray(item).map((dataItem) => {
-            return (
-              <div
-                key={dataItem.key}
-                className="block-table-row"
-                // onClick={() => onItemClick(item)}
-              >
-                {dataItem.value}
-              </div>
-            );
-          });
-        })}
-      </div>
-    </div>
+    </>
   );
 };
 

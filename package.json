@@ -5,6 +5,7 @@
   "proxy": "http://localhost:8001",
   "dependencies": {
     "@emotion/styled": "^11.11.0",
+    "@mapcomponents/react-maplibre": "^1.0.5",
     "@pbe/react-yandex-maps": "^1.2.5",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -18,6 +19,7 @@
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
     "axios": "^1.5.1",
+    "axios-retry": "^4.4.1",
     "emoji-picker-react": "^4.5.3",
     "express": "^4.19.2",
     "jwt-decode": "^4.0.0",
