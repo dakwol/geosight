@@ -16,6 +16,9 @@ const MapPage: FC = () => {
 
   const [styleMap, setStyleMap] = useState<iStyleMap | null>(null);
   const [mapData, setMapData] = useState<any>({});
+
+  const [address, setAddress] = useState<string>("");
+
   const sidebarData = [
     {
       id: 1,
@@ -52,12 +55,7 @@ const MapPage: FC = () => {
           <FormInput
             style={"inputSearch"}
             value={undefined}
-            onChange={function (
-              value: string,
-              isChecked?: boolean | undefined
-            ): void {
-              throw new Error("Function not implemented.");
-            }}
+            onChange={(value) => setAddress(value)}
             subInput={undefined}
             required={false}
             error={""}
@@ -66,7 +64,7 @@ const MapPage: FC = () => {
             friedlyInput
           />
         </div>
-        <MapComponent styleMap={styleMap} mapData={mapData} />
+        <MapComponent styleMap={styleMap} mapData={mapData} address={address} />
       </div>
     </Fragment>
   );

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
 import "./styles.scss";
+import icons from "../../assets/icons/icons";
 
 interface FilePickerProps {
   onFilesSelected: (files: File[]) => void;
@@ -66,8 +67,9 @@ const FilePicker: React.FC<FilePickerProps> = ({
       className={`containerFilePicker col-3 ${isDragging && "active"}`}
       onClick={() => dropzoneRef.current?.click()}
     >
-      <p>{title}</p>
-      <p>{formatText}</p>
+      <img src={icons.addFile} className="addFileIco"></img>
+      <p className="titlePicker">{title}</p>
+      <p className="formatTextPicker">{formatText}</p>
       <input
         type="file"
         multiple

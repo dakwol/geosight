@@ -7,6 +7,7 @@ import MapsApiRequest from "../../../../api/Maps/Maps";
 import { IOptionInput } from "../../../../models/IOptionInput";
 import FormInput from "../../../FormInput/FormInput";
 import FilePicker from "../../../FilePicker/FilePicker";
+import "./styles.scss";
 
 interface IOptionLayerCreate {
   maps: IOptionInput;
@@ -61,7 +62,7 @@ const AddLayerComponent: FC<IAddLayerProps> = ({ mapDataId }) => {
       <Modal
         content={
           <div>
-            <h1>Новый слой</h1>
+            <h1 className="titleModal">Новый слой</h1>
             <div className="gridModal">
               {optionLayers &&
                 fieldToArray(optionLayers).map((item) => {
@@ -74,7 +75,7 @@ const AddLayerComponent: FC<IAddLayerProps> = ({ mapDataId }) => {
                       value={undefined}
                       onChange={(value) => handleInputChange(item.key, value)}
                       subInput={item.value.label}
-                      required={false}
+                      required={item.value.required}
                       error={""}
                       keyData={""}
                     ></FormInput>
@@ -85,7 +86,11 @@ const AddLayerComponent: FC<IAddLayerProps> = ({ mapDataId }) => {
                 title="Выберите или перетащите файлы в эту область"
                 formatText="Формат — csv, geojson Размер — не больше 15 МБ."
               />
-              <Buttons text={"Создать"} onClick={createLayer} />
+              <Buttons
+                text={"Создать"}
+                onClick={createLayer}
+                className="modalButtonCreateLayer col-3"
+              />
             </div>
           </div>
         }

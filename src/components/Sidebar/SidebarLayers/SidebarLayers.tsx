@@ -19,6 +19,7 @@ interface IMapDataLayers {
 
 const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers }) => {
   const [activeLayer, setActiveLayer] = useState<string | number>();
+  const [activeLayerRedact, setActiveLayerRedact] = useState<boolean>(false);
 
   const [visibleLayers, setVisibleLayers] = useState<Array<string | number>>(
     []
@@ -49,7 +50,9 @@ const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers }) => {
       id: 1,
       ico: icons.Pencil,
       classNames: ``,
-      onClick: () => {},
+      onClick: () => {
+        setActiveLayerRedact(true);
+      },
     },
     {
       id: 2,

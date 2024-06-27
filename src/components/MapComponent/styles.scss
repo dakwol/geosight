@@ -24,3 +24,69 @@
     object-fit: cover;
     transform: rotateZ(0deg );
   }
+
+  .toastContainer{
+    width: 500rem;
+  }
+
+  .mapControls{
+    position: fixed;
+    top: 50%;
+    right: 20rem;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12rem;
+
+    .mapCenter{
+      background-color: $white;
+      border: 0;
+      border-radius: 12rem;
+      padding: 7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
+
+      &:hover{
+        background-color: $gray-100;
+      }
+      
+    }
+
+    .mapZoomContainer{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: $white;
+      border-radius: 12rem;
+      overflow: hidden;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
+      height: 106rem;
+
+      .buttonZoom{
+        background-color: $white;
+        border: 0;
+        width: 100%;
+        height: 100%;
+        padding: 12rem 16rem;
+        cursor: pointer;
+
+        @include fnt(20,20, $color: $gray-600);
+
+        &:hover{
+          background-color: $gray-100;
+        }
+        
+      }
+
+      .line{
+        content: '';
+        width: 50%;
+        height: 2rem;
+        background-color: $gray-600;
+      }
+    }
+  }

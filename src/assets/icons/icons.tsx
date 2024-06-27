@@ -67,6 +67,8 @@ import visibility from "./visibility.svg";
 import expand_more from "./expand_more.svg";
 import mapLoading from "./mapLoading.svg";
 import dontvisibility from "./dontvisibility.svg";
+import addFile from "./addFile.svg";
+import my_location from "./my_location.svg";
 export default {
   geosIco,
   bikLogo,
@@ -137,4 +139,6 @@ export default {
   expand_more,
   mapLoading,
   dontvisibility,
+  addFile,
+  my_location,
 };

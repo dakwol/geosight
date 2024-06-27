@@ -10,4 +10,23 @@
     &.active{
         border: 2rem solid $blue;
     }
+
+    .addFileIco{
+        width: 44rem;
+        height: 44rem;
+        background-color: $tint;
+        border-radius: 8rem;
+        padding: 10rem;
+        margin: 0 auto 12rem;
+
+    }
+
+    .titlePicker{
+        @include fnt(12, 16, $weight:500, $color: $txt-color, $font: $fontUI);
+        
+    }
+    .formatTextPicker{
+        @include fnt(12, 16, $weight:400, $color: $gray-600, $font: $fontUI);
+        
+    }
 }

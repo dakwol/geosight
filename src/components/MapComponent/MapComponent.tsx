@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, FC } from "react";
+import React, { useRef, useEffect, useState, FC, Fragment } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.scss";
@@ -6,6 +6,7 @@ import MapsApiRequest from "../../api/Maps/Maps";
 import { iStyleMap } from "../../models/IMaps";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import icons from "../../assets/icons/icons";
+import { Toast } from "primereact/toast";
 
 interface ISource {
   [key: string]: { id: string | number; name: string; description: string };
@@ -14,9 +15,10 @@ interface ISource {
 interface IMapProps {
   styleMap: iStyleMap | null;
   mapData: any;
+  address: string;
 }
 
-const MapComponent: FC<IMapProps> = ({ styleMap, mapData }) => {
+const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const visibilityLayers = useLocalStorage("visibilityLayers");
@@ -24,6 +26,49 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData }) => {
 
   const [zoom] = useState(14);
   const API_KEY = "9qniwKQThKcoBngEU7mE";
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const toast = useRef<Toast | null>(null);
+
+  const handleAddressSearch = async () => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${address}`
+      );
+      const data = await response.json();
+      if (data.length > 0) {
+        const { lon, lat } = data[0];
+        map.current?.setCenter([parseFloat(lon), parseFloat(lat)]);
+        map.current?.setZoom(14);
+      } else {
+        toast.current?.show({
+          severity: "error",
+          summary: "Завершено",
+          detail: "Адрес не найден",
+          life: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching address coordinates:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (address !== "") {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      timerRef.current = setTimeout(() => {
+        handleAddressSearch();
+      }, 1000); // 1 second delay
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [address]);
 
   useEffect(() => {
     if (!styleMap || map.current) return;
@@ -37,11 +82,11 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData }) => {
         map.current = new maplibregl.Map({
           container: mapContainer.current ? mapContainer.current : "",
           style: styleMap.url,
-          center: sessionStorage.getItem("positionMap")
-            ? JSON.parse(sessionStorage.getItem("positionMap") || "")
+          center: sessionStorage?.getItem("positionMap")
+            ? JSON.parse(sessionStorage?.getItem("positionMap") || "{}")
             : [longitude, latitude],
-          zoom: sessionStorage.getItem("zoom")
-            ? JSON.parse(sessionStorage.getItem("zoom") || "")
+          zoom: sessionStorage?.getItem("zoom")
+            ? JSON.parse(sessionStorage?.getItem("zoom") || "{}")
             : zoom,
         });
 
@@ -168,14 +213,60 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData }) => {
     };
   }, [styleMap, zoom, API_KEY, mapData.layers, visibilityLayers]);
 
+  const zoomIn = () => {
+    if (map.current) {
+      map.current.zoomIn();
+    }
+  };
+
+  const zoomOut = () => {
+    if (map.current) {
+      map.current.zoomOut();
+    }
+  };
+
+  const centerMap = () => {
+    if (map.current) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { longitude, latitude } = position.coords;
+          map.current?.setCenter([longitude, latitude]);
+          map.current?.setZoom(14);
+        },
+        (error) => {
+          console.error("Error getting geolocation:", error);
+        }
+      );
+    }
+  };
+
   return (
-    <div className="map-wrap">
-      {mapData.layers ? (
-        <div ref={mapContainer} className="map" />
-      ) : (
-        <img src={icons.mapLoading} className="loadingMap"></img>
-      )}
-    </div>
+    <Fragment>
+      <Toast className="toastContainer" ref={toast}></Toast>
+      <div className="map-wrap">
+        {mapData.layers ? (
+          <Fragment>
+            <div ref={mapContainer} className="map" />
+            <div className="mapControls">
+              <button onClick={centerMap} className="mapCenter">
+                <img src={icons.my_location}></img>
+              </button>
+              <div className="mapZoomContainer">
+                <button className="buttonZoom" onClick={zoomIn}>
+                  +
+                </button>
+                <div className="line"></div>
+                <button className="buttonZoom" onClick={zoomOut}>
+                  -
+                </button>
+              </div>
+            </div>
+          </Fragment>
+        ) : (
+          <img src={icons.mapLoading} className="loadingMap"></img>
+        )}
+      </div>
+    </Fragment>
   );
 };
 
