@@ -47,7 +47,9 @@ const FormSelector: React.FC<FormSelectorProps> = ({
 
   const [activeOption, setActiveOption] = useState("");
 
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(
+    value === undefined ? [] : [value]
+  );
   const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
   const formSelectorRef = useRef<HTMLDivElement | null>(null);
 
@@ -135,10 +137,6 @@ const FormSelector: React.FC<FormSelectorProps> = ({
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-
-  console.log("====================================");
-  console.log("options", options);
-  console.log("====================================");
 
   useEffect(() => {
     const foundOption = options?.find((item) => item.value === selectedOption);

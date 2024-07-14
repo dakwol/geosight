@@ -7,6 +7,8 @@ import { iStyleMap } from "../../models/IMaps";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import icons from "../../assets/icons/icons";
 import { Toast } from "primereact/toast";
+import { useSelector } from "react-redux";
+import apiConfig from "../../api/apiConfig";
 
 interface ISource {
   [key: string]: { id: string | number; name: string; description: string };
@@ -102,17 +104,26 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
 
         map.current.on("load", () => {
           mapData.layers.forEach((layer: any) => {
+            console.log(
+              'localStorage.getItem("visibilityLayers")',
+              localStorage.getItem("visibilityLayers")
+            );
+
             if (
               layer.is_active &&
-              !localStorage.getItem("visibilityLayers")?.includes(layer.id)
+              JSON.parse(
+                localStorage.getItem("visibilityLayers") || ""
+              )?.includes(layer.id)
             ) {
+              console.log("activeLayer", layer);
+
               const sourceId = `layer-${layer.id}`;
 
               if (!map.current?.getSource(sourceId)) {
                 map.current?.addSource(sourceId, {
                   type: "vector",
                   tiles: [
-                    `http://5.35.92.166:8001/martin/get_features/{z}/{x}/{y}?map_layer=${layer.id}`,
+                    `${apiConfig.baseUrlMartin}martin/get_features/{z}/{x}/{y}?map_layer=${layer.id}`,
                   ],
                 });
               }
@@ -121,25 +132,73 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
 
               if (serialize_styles) {
                 if (serialize_styles.polygon) {
-                  const polygonLayerId = `polygon-${layer.id}`;
-                  const polygonPaint: any = {}; // новый объект paint для полигонов
+                  const polygonLayerId = `polygon-${layer.id}`; // используем шаблонные строки для id
 
-                  polygonPaint["fill-opacity"] =
-                    serialize_styles.polygon.polygon_opacity;
-                  polygonPaint["fill-color"] =
-                    serialize_styles.polygon.polygon_solid_color;
-                  polygonPaint["fill-outline-color"] =
-                    serialize_styles.polygon.polygon_border_color;
+                  let fillColor = serialize_styles.polygon.polygon_solid_color;
 
+                  if (serialize_styles.polygon.polygon_color_palette) {
+                    console.log(
+                      "aaaaaaaa",
+                      serialize_styles.polygon.polygon_color_palette
+                    );
+
+                    map.current?.addLayer({
+                      id: polygonLayerId,
+                      type: "fill",
+                      source: sourceId,
+                      filter: ["==", "$type", "Polygon"],
+                      "source-layer": "get_features",
+                      paint: {
+                        "fill-opacity":
+                          serialize_styles.polygon.polygon_opacity,
+                        "fill-color":
+                          serialize_styles.polygon.polygon_color_palette[2],
+                        "fill-outline-color":
+                          serialize_styles.polygon.polygon_border_color,
+                      },
+                    });
+                  } else {
+                    // добавляем слой для заливки полигона
+                    map.current?.addLayer({
+                      id: polygonLayerId,
+                      type: "fill",
+                      source: sourceId,
+                      filter: ["==", "$type", "Polygon"],
+                      "source-layer": "get_features",
+                      paint: {
+                        "fill-opacity":
+                          serialize_styles.polygon.polygon_opacity,
+                        "fill-color": fillColor,
+                        "fill-outline-color":
+                          serialize_styles.polygon.polygon_border_color,
+                      },
+                    });
+                  }
+
+                  const polygonBorderLayerId = `polygon-border-${layer.id}`; // используем шаблонные строки для id границы
+
+                  // добавляем слой для границы полигона
                   map.current?.addLayer({
-                    id: polygonLayerId,
-                    type: "fill",
+                    id: polygonBorderLayerId,
+                    type: "line",
                     source: sourceId,
                     filter: ["==", "$type", "Polygon"],
                     "source-layer": "get_features",
-                    paint: polygonPaint, // используем polygonPaint для полигонов
+                    paint: {
+                      "line-color":
+                        serialize_styles.polygon.polygon_border_color, // Цвет границы
+                      "line-width":
+                        serialize_styles.polygon.polygon_border_size || 1, // Ширина границы
+                      "line-opacity":
+                        serialize_styles.polygon.polygon_border_opacity || 1, // Прозрачность границы
+                      "line-dasharray":
+                        serialize_styles.polygon.polygon_border_style === "dash"
+                          ? [1, 2]
+                          : undefined, // Стиль границы, например пунктирная линия
+                    },
                   });
                 }
+
                 if (serialize_styles.line) {
                   const lineLayerId = `line-${layer.id}`;
                   const linePaint: any = {}; // новый объект paint для линий
@@ -163,6 +222,33 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
                     paint: linePaint, // используем linePaint для линий
                   });
                 }
+                if (serialize_styles.polygon.polygon_label) {
+                  map.current?.addLayer({
+                    id: `${1}-label`,
+                    type: "symbol",
+                    source: sourceId,
+                    filter: ["==", "$type", "Polygon"],
+                    "source-layer": "get_features",
+                    layout: {
+                      "text-field": serialize_styles.polygon.polygon_label,
+                      "text-font": [
+                        `${serialize_styles.polygon.polygon_label_font} ${serialize_styles.polygon.polygon_label_font_style}`,
+                      ] || ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                      "text-size":
+                        serialize_styles.polygon.polygon_label_font_size || 12,
+                      "text-anchor": "center",
+                    },
+                    paint: {
+                      "text-color":
+                        serialize_styles.polygon.polygon_label_font_color ||
+                        "#000000",
+                      "text-opacity":
+                        serialize_styles.polygon.polygon_label_font_opacity ||
+                        1,
+                    },
+                  });
+                }
+
                 if (serialize_styles.point) {
                   const pointLayerId = `circle-${layer.id}`;
                   const pointPaint: any = {}; // новый объект paint для точек

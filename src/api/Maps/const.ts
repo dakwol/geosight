@@ -7,6 +7,21 @@ export const API_MAPS_MODEL = {
         },
         layers:{
             url: 'layers/'
-        }
+        },
+        properties:{
+            url: 'properties/'
+        },
+        'property-values':{
+            url: 'property-values-'
+        },
+        polygon:{
+            url: 'polygon/'
+        },
+        line:{
+            url: 'line/'
+        },
+        point:{
+            url: 'point/'
+        },
     },
 }

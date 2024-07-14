@@ -7,6 +7,13 @@ interface IChoices{
     display_name: string;
 }
 
+export interface IOptionFormSelector {
+    id: string | number;
+    value: string;
+    display_name: string;
+};
+  
+
 export interface IOptionInput {
     label: string;
     max_length?: string;

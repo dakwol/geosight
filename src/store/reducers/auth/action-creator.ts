@@ -57,14 +57,17 @@ export const AuthActionCreators = {
                                     
                                         localStorage.setItem('account', JSON.stringify(user));
                                         dispatch(AuthActionCreators.setIsAuth(true));
+                                        dispatch(AuthActionCreators.setIsLoading(false));
                                     }
                                     
                                     
                                     //@ts-ignore
                                     dispatch(AuthActionCreators.setUser({id: resp.data.id, email: resp.data.email, password: mockUser.password, first_name: resp.data.first_name, last_name: resp.data.last_name, patronymic: resp.data.patronymic, phone_number: resp.data.phone_number}));
+                                    dispatch(AuthActionCreators.setIsLoading(false));
                                 
                                 } else {
                                     dispatch(AuthActionCreators.setErr('Ошибка получения пользователя'));
+                                    dispatch(AuthActionCreators.setIsLoading(false));
                                 }
                             })
                        }
@@ -74,13 +77,15 @@ export const AuthActionCreators = {
                     } else {
                         console.log(resp);
                         dispatch(AuthActionCreators.setErr('Произошла ошибка авторизации'));
+                        dispatch(AuthActionCreators.setIsLoading(false));
                     }
                 });
                
             } catch (e) {
                 dispatch(AuthActionCreators.setErr('Произошла ошибка при авторизации'));
+                dispatch(AuthActionCreators.setIsLoading(false));
             }
-            dispatch(AuthActionCreators.setIsLoading(false));
+        
    
       
     },

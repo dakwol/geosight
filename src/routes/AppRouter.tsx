@@ -17,15 +17,15 @@ const AppRouter = () => {
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const storedRoute = localStorage.getItem("currentRoute");
+  // useEffect(() => {
+  //   const storedRoute = localStorage.getItem("currentRoute");
 
-    if (storedRoute) {
-      setInitialRoute(storedRoute);
-    } else {
-      setInitialRoute(RouteNames.LOGIN);
-    }
-  }, [isAuthenticated]);
+  //   if (storedRoute) {
+  //     setInitialRoute(storedRoute);
+  //   } else {
+  //     navigate(RouteNames.LOGIN);
+  //   }
+  // }, [isAuthenticated]);
 
   useEffect(() => {
     const handleRouteChange = () => {

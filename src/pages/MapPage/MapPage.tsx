@@ -9,6 +9,7 @@ import { RouteNames } from "../../routes";
 import { useNavigate } from "react-router-dom";
 import MapsApiRequest from "../../api/Maps/Maps";
 import { iStyleMap } from "../../models/IMaps";
+import { useSelector } from "react-redux";
 
 const MapPage: FC = () => {
   const mapApi = new MapsApiRequest();
@@ -16,7 +17,7 @@ const MapPage: FC = () => {
 
   const [styleMap, setStyleMap] = useState<iStyleMap | null>(null);
   const [mapData, setMapData] = useState<any>({});
-
+  const isUpdate = useSelector((state: any) => state.dataPressReducer.isUpdate);
   const [address, setAddress] = useState<string>("");
 
   const sidebarData = [
@@ -45,7 +46,7 @@ const MapPage: FC = () => {
         setMapData(resp.data);
       }
     });
-  }, []);
+  }, [isUpdate]);
 
   return (
     <Fragment>
@@ -60,7 +61,7 @@ const MapPage: FC = () => {
             required={false}
             error={""}
             keyData={""}
-            placeholder="Поиск"
+            placeholder="Поиск адреса"
             friedlyInput
           />
         </div>

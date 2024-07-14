@@ -110,6 +110,12 @@
         height: 46rem;
         @include fnt(18, 32, $weight: 500, $color: $white, $font: $fontText);
         background-color: $black-btn;
+
+
+        &.disabled{
+            pointer-events: none;
+            background-color: rgba($black-btn, $alpha: .5);
+        }
     }
     .buttonLoginWhiteButton {
         padding: 12rem;

@@ -11,6 +11,8 @@ import UserApiRequest from "../../api/User/Users";
 import { fieldToArray } from "../UI/functions/functions";
 import { DataPressActionCreators } from "../../store/reducers/dataPressItem/action-creator";
 import apiConfig from "../../api/apiConfig";
+import { RouteNames } from "../../routes";
+import { useNavigate } from "react-router-dom";
 
 interface IUserDataProps {
   avatar: string;
@@ -30,6 +32,7 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
   const [optionUserUpdate, setOptionUserUpdate] = useState<IUserOption[]>();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userApi = new UserApiRequest();
 
@@ -65,6 +68,12 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
         )}
       </div>
     );
+  };
+
+  const logout = () => {
+    //@ts-ignore
+    dispatch(AuthActionCreators.logout());
+    navigate(RouteNames.LOGIN);
   };
 
   const renderUserForm = () => {
@@ -146,8 +155,7 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
             className="logoutButton"
             text={"Выйти"}
             onClick={() => {
-              //@ts-ignore
-              dispatch(AuthActionCreators.logout());
+              logout();
             }}
           />
           <Buttons

@@ -4,4 +4,5 @@ export interface IDataPress {
     fieldName?: string | undefined;
     fieldValue?: string | undefined;
     process_data?: [] | undefined;
+    isUpdate?: boolean;
 }

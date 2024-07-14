@@ -17,14 +17,16 @@ import { RouteNames } from "../../routes";
 const LoginForm: FC = () => {
   const dispatch = useDispatch();
 
-  const { error, isLoading } = useTypeSelector((state) => state.authReducer);
+  const { error, isLoading, isAuth } = useTypeSelector(
+    (state) => state.authReducer
+  );
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
-  const [isAuth, setIsAuth] = useState(true);
+  const [isAuthState, setIsAuth] = useState(true);
   const [isResetPassword, setIsResetPassword] = useState(false);
 
   const submit = () => {
@@ -42,23 +44,29 @@ const LoginForm: FC = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(AuthActionCreators.setErr(""));
-    dispatch(AuthActionCreators.setIsLoading(true)); // Установите isLoading в true
-    const timeout = setTimeout(() => {
-      dispatch(AuthActionCreators.setIsLoading(false)); // Установите isLoading в false через 2 секунды
-    }, 300);
+  // useEffect(() => {
+  //   dispatch(AuthActionCreators.setErr(""));
+  //   dispatch(AuthActionCreators.setIsLoading(true)); // Установите isLoading в true
+  //   const timeout = setTimeout(() => {
+  //     dispatch(AuthActionCreators.setIsLoading(false)); // Установите isLoading в false через 2 секунды
+  //   }, 300);
 
-    return () => {
-      clearTimeout(timeout); // Очистите таймаут при размонтировании
-    };
-  }, [isAuth, isResetPassword]);
+  //   return () => {
+  //     clearTimeout(timeout); // Очистите таймаут при размонтировании
+  //   };
+  // }, [isAuthState, isResetPassword]);
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate(RouteNames.MAP);
+    }
+  }, [isAuth]);
 
   return (
     <div className="loginForm">
       <div
         className={`loginFormContainer ${isLoading && "active"} ${
-          !isAuth && "miniContainer"
+          !isAuthState && "miniContainer"
         }`}
       >
         {error != "" && (
@@ -75,7 +83,7 @@ const LoginForm: FC = () => {
         )}
 
         <div className={`containerInput ${isLoading && "active"}`}>
-          {isAuth ? (
+          {isAuthState ? (
             !isResetPassword ? (
               <LoginFormAuth
                 onForgot={() => {
@@ -84,6 +92,7 @@ const LoginForm: FC = () => {
                 onResetPassword={() => {
                   setIsResetPassword(true);
                 }}
+                isLoading={isLoading}
               />
             ) : (
               <LoginFormResetPassword

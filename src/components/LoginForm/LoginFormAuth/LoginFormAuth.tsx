@@ -10,12 +10,17 @@ import { AuthActionCreators } from "../../../store/reducers/auth/action-creator"
 interface LoginFormProps {
   onForgot: () => void;
   onResetPassword: () => void;
+  isLoading: boolean;
 }
 
-const LoginFormAuth: FC<LoginFormProps> = ({ onForgot, onResetPassword }) => {
+const LoginFormAuth: FC<LoginFormProps> = ({
+  onForgot,
+  onResetPassword,
+  isLoading,
+}) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading } = useTypeSelector((state) => state.authReducer);
+  const { error } = useTypeSelector((state) => state.authReducer);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +29,8 @@ const LoginFormAuth: FC<LoginFormProps> = ({ onForgot, onResetPassword }) => {
     //@ts-ignore
     dispatch(AuthActionCreators.login(username, password));
   };
+
+  console.log("isLoading", isLoading);
 
   return (
     <>
@@ -58,12 +65,12 @@ const LoginFormAuth: FC<LoginFormProps> = ({ onForgot, onResetPassword }) => {
       />
 
       <Buttons
-        // ico={isLoading ? icons.lock : ""}
+        ico={isLoading ? icons.lock : ""}
         text={"Войти"}
         onClick={() => {
           !isLoading && submit();
         }}
-        className="buttonLogin"
+        className={`buttonLogin ${isLoading && "disabled"}`}
       />
       <div className="containerCheck">
         <p

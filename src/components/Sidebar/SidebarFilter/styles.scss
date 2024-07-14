@@ -1,0 +1,17 @@
+@use "../../../scss/" as *;
+
+.filterBlock{
+    padding: 12px;
+    border: 1rem solid $gray-300;
+    border-radius: 12rem;
+}
+
+.filterLayerContainer{
+    display: flex;
+    align-items: center;
+}
+
+.removeFilter{
+    pointer-events: all;
+    cursor: pointer;
+}

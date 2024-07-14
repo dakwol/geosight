@@ -175,6 +175,14 @@
 
     .containerSidebarRight{
         margin-top: 14rem;
+        overflow: auto;
+        height: 87vh;
+        scrollbar-width: none; /* для скрытия скроллбара в Firefox */
+
+        &::-webkit-scrollbar {
+            width: 0;  /* для скрытия скроллбара в Safari/Chrome */
+        }
+    
     }
 
     .titleSidebarMenu{

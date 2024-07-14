@@ -1,5 +1,5 @@
-import { DataPressActionEnum, SetDataPressAction, ClearDataPressAction } from "./types";
-import { IDataPress } from "../../../models/IDataPress";
+// actions.ts
+import { DataPressActionEnum, SetDataPressAction, ClearDataPressAction, SetUpdateAction } from "./types";
 
 export const DataPressActionCreators = {
   setDataPress: (fieldName: string, fieldValue: string | boolean): SetDataPressAction => ({
@@ -9,5 +9,9 @@ export const DataPressActionCreators = {
   }),
   clearDataPress: (): ClearDataPressAction => ({
     type: DataPressActionEnum.CLEAR_DATAPRESS,
+  }),
+  setUpdate: (payload: boolean): SetUpdateAction => ({
+    type: DataPressActionEnum.SET_UPDATE,
+    payload,
   }),
 };

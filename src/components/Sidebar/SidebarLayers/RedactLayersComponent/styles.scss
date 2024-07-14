@@ -1,0 +1,91 @@
+@use "../../../../scss/" as *;
+
+.backRedactButton{
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.colorPickerInputStyle{
+    width: 40rem;
+    border-radius: 6rem;
+    height: 30rem;
+}
+
+.colorPickerLayerStyle{
+    background-color: inherit;
+    border: none;
+    border-radius: 12rem;
+}
+
+.sliderStyle{
+    width: 90%;
+    margin: 0 auto;
+
+    .p-slider-range{
+        height: 5rem;
+    }
+    .p-slider-handle{
+        height: 10rem;
+        width: 10rem;
+    }
+}
+
+.colorPickerContainer{
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    padding: 15rem;
+    border: 1rem solid $gray-300;
+    border-radius: 12rem;
+    position: relative;
+
+    .colorPickerContainerRight{
+        display: flex;
+        gap: 6rem;
+        align-items: center;
+    }
+    
+    .colorPickerInputOpacity{
+        position: absolute;
+        right: 0;
+        width: 50px;
+        border: none;
+    }
+}
+
+.colorPickerInput{
+    border: 0;
+    @include fnt(12, 16, $color: $black, $font:$fontText)
+}
+
+.formInputRedactLayer{
+    input{
+        padding: 15rem !important;
+        height: auto !important;
+        border-radius: 12rem !important;
+        font-size: 12rem !important;
+
+        &:focus{
+            border: none;
+        }
+    }
+}
+
+.fillInputColor{
+    padding: 15rem;
+    border-radius: 12rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 40rem));
+    border: 1rem solid $gray-200;
+
+    .colorPickerInputFill{
+        height: 15rem;
+        width: 100%;
+        border-radius: 0;
+    
+    }
+    &:first-child{
+       border-radius: 4rem;     
+    }
+}

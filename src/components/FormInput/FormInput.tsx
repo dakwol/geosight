@@ -24,6 +24,7 @@ import {
 } from "../UI/functions/functions";
 import Buttons from "../Buttons/Buttons";
 import { Calendar } from "primereact/calendar";
+import { IOptionFormSelector } from "../../models/IOptionInput";
 
 type FormInputProps = {
   id?: string;
@@ -44,7 +45,7 @@ type FormInputProps = {
   disabled?: boolean;
   ico?: string | undefined;
   question?: boolean;
-  options?: string[] | undefined;
+  options?: string[] | IOptionFormSelector[] | undefined;
   mask?: string | undefined;
   keyData: string;
   rightIco?: string;

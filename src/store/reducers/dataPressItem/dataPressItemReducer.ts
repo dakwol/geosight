@@ -3,6 +3,7 @@ import { DataPressAction, DataPressActionEnum, DataPressState } from "./types";
 
 const initState: DataPressState = {
   dataPress: {},
+  isUpdate: false,
 };
 
 export default function dataPressReducer(
@@ -11,9 +12,23 @@ export default function dataPressReducer(
 ): DataPressState {
   switch (action.type) {
     case DataPressActionEnum.SET_DATAPRESS:
-      return { ...state, dataPress: { ...state.dataPress, [action.fieldName]: action.fieldValue } };
+      return { 
+        ...state, 
+        dataPress: { 
+          ...state.dataPress, 
+          [action.fieldName]: action.fieldValue 
+        } 
+      };
+    case DataPressActionEnum.SET_UPDATE:
+      return { 
+        ...state, 
+        isUpdate: action.payload 
+      };
     case DataPressActionEnum.CLEAR_DATAPRESS:
-      return { ...state, dataPress: {} }; // Clear the entire dataPress state
+      return { 
+        ...state, 
+        dataPress: {} 
+      };
     default:
       return state;
   }

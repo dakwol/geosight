@@ -1,6 +1,7 @@
 const apiConfig = {
-    baseUrl: 'http://5.35.92.166:8001/api/',
-    baseUrlMedia: 'http://5.35.92.166:8001/media/',
+    baseUrl: 'https://app.geosight.ru/api/',
+    baseUrlMartin: 'https://app.geosight.ru/',
+    baseUrlMedia: 'https://app.geosight.ru/media/',
     apiKey: ''
 }
 

@@ -48,7 +48,7 @@ const Sidebar = ({ sbData, pageType, mapData }: any) => {
     {
       id: 2,
       name: "",
-      component: <SidebarFilter />,
+      component: <SidebarFilter mapDataLayers={mapData.layers} />,
       active: false,
       ico: icons.filterAlt,
       activeIco: icons.filterAltActive,

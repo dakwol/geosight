@@ -1,13 +1,17 @@
 // types.ts
-import { IDataPress } from "../../../models/IDataPress";
+export interface IDataPress {
+  [key: string]: string | boolean;
+}
 
 export interface DataPressState {
-  dataPress: IDataPress | undefined;
+  dataPress: IDataPress;
+  isUpdate: boolean;
 }
 
 export enum DataPressActionEnum {
   SET_DATAPRESS = 'SET_DATAPRESS',
-  CLEAR_DATAPRESS = 'CLEAR_DATAPRESS', // New action type for clearing the dataPress
+  CLEAR_DATAPRESS = 'CLEAR_DATAPRESS',
+  SET_UPDATE = 'SET_UPDATE',
 }
 
 export interface SetDataPressAction {
@@ -20,4 +24,9 @@ export interface ClearDataPressAction {
   type: DataPressActionEnum.CLEAR_DATAPRESS;
 }
 
-export type DataPressAction = SetDataPressAction | ClearDataPressAction;
+export interface SetUpdateAction {
+  type: DataPressActionEnum.SET_UPDATE;
+  payload: boolean;
+}
+
+export type DataPressAction = SetDataPressAction | ClearDataPressAction | SetUpdateAction;

@@ -17,6 +17,15 @@ class MapsApiRequest extends BaseModelAPI {
     async createLayers<T>(body:FormData) {
         return this.makeRequest<T>(axiosClient.post, {urlParams: API_MAPS_MODEL.methods.layers.url, body:body});
     }
+    async updateLayers<T>(id:string, urlParams: string,body:FormData) {
+        return this.makeRequest<T>(axiosClient.put, { urlParams: API_MAPS_MODEL.methods.layers.url + `${id}/${urlParams}/`, body:body});
+    }
+    async layersPropertis<T>(id:string, urlParams?: string) {
+        return this.makeRequest<T>(axiosClient.get, { urlParams: API_MAPS_MODEL.methods.layers.url + `${id}/${API_MAPS_MODEL.methods.properties.url}${urlParams}`});
+    }
+    async layersPropertyValues<T>(id:string, type:string, urlParams?: string) {
+        return this.makeRequest<T>(axiosClient.get, { urlParams: API_MAPS_MODEL.methods.layers.url + `${id}/${`${API_MAPS_MODEL.methods["property-values"].url}${type}`}${urlParams}`});
+    }
 }
 
 export default MapsApiRequest;
