@@ -61,8 +61,8 @@ const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers }) => {
       id: 2,
       ico: (layerId: string | number) =>
         visibleLayers.includes(layerId)
-          ? icons.visibility
-          : icons.dontvisibility,
+          ? icons.dontvisibility
+          : icons.visibility,
       classNames: ``,
       onClick: (layerId: string | number) => {
         toggleLayerVisibility(layerId);

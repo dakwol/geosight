@@ -26,6 +26,9 @@ class MapsApiRequest extends BaseModelAPI {
     async layersPropertyValues<T>(id:string, type:string, urlParams?: string) {
         return this.makeRequest<T>(axiosClient.get, { urlParams: API_MAPS_MODEL.methods.layers.url + `${id}/${`${API_MAPS_MODEL.methods["property-values"].url}${type}`}${urlParams}`});
     }
+    async mapsAllowed<T>() {
+        return this.makeRequest<T>(axiosClient.get, { urlParams: API_MAPS_MODEL.methods.allowed.url});
+    }
 }
 
 export default MapsApiRequest;

@@ -10,6 +10,7 @@ import SidebarLayers from "./SidebarLayers/SidebarLayers";
 import SidebarFilter from "./SidebarFilter/SidebarFilter";
 import SidebarMap from "./SidebarMap/SidebarMap";
 import apiConfig from "../../api/apiConfig";
+import MapModal from "../MapModal/MapModal";
 
 const Sidebar = ({ sbData, pageType, mapData }: any) => {
   const [isActive, setIsActive] = useState(() => {
@@ -68,10 +69,20 @@ const Sidebar = ({ sbData, pageType, mapData }: any) => {
     setActiveTab(index); // Устанавливаем активный элемент при клике
   };
 
+  const handleSidebarClick = (item: any) => {
+    if (item.id === 1) {
+      item.navigate();
+    } else {
+      setIsOpenModal(item.name);
+    }
+  };
+
   return (
     <Fragment>
       <Modal
         content={(() => {
+          console.log("isOpenModal", isOpenModal);
+
           switch (isOpenModal) {
             case "profile":
               return (
@@ -82,6 +93,10 @@ const Sidebar = ({ sbData, pageType, mapData }: any) => {
                   }}
                 />
               );
+            case "Карта":
+              return <MapModal />;
+            case "Шеринг":
+              return <MapModal />;
             default:
               return null;
           }
@@ -107,13 +122,7 @@ const Sidebar = ({ sbData, pageType, mapData }: any) => {
               <nav className="sidebar__nav">
                 {sbData.map((e: any, i: React.Key | null | undefined) => (
                   <div
-                    onClick={
-                      e.id === 1
-                        ? e.navigate
-                        : (value) => {
-                            setIsOpenModal(`${value}`);
-                          }
-                    }
+                    onClick={() => handleSidebarClick(e)}
                     key={i}
                     className={`nanItem ${i === active ? "active" : ""} `}
                   >

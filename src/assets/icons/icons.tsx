@@ -70,6 +70,7 @@ import dontvisibility from "./dontvisibility.svg";
 import addFile from "./addFile.svg";
 import my_location from "./my_location.svg";
 import undo from "./undo.svg";
+import previ from "./previ.svg";
 export default {
   geosIco,
   bikLogo,
@@ -143,4 +144,5 @@ export default {
   addFile,
   my_location,
   undo,
+  previ,
 };

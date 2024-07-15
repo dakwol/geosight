@@ -1,0 +1,50 @@
+@use "../../scss/" as *;
+
+.containerMapModal{
+    width: 558rem;
+    max-height: 338px;
+
+    .containerMapsModal{
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12rem;
+        margin-top: 21px;
+
+        .containerItemMapsModal{
+            width: 100%;
+            background-color: $white;
+            border-radius: 6px;
+            border: 1rem dashed $gray-300;
+            cursor: pointer;
+            transition: .2s ease-in-out;
+
+            &:hover{
+                background-color: $gray-20;
+            }
+
+            .mapsPrevi{
+                width: 100%;
+                height: calc(220 / 3);
+                object-fit: cover;
+            }
+
+            .mapsItemFooterContainer{
+                padding: 22px 11px;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+
+                .mapsItemTitle{
+                    @include fnt(16, 18, $weight:600, $color: $txt-color, $font:$fontText);
+                }
+                .mapsItemDate{
+                    @include fnt(16, 18, $weight:600, $color: $txt-color, $font:$fontText);
+                }
+                .mapsItemDescription{
+                    @include fnt(16, 18, $weight:400, $color: $text-gray, $font:$fontText);
+                }
+            }
+        }
+    }
+}

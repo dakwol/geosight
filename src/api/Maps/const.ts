@@ -23,5 +23,8 @@ export const API_MAPS_MODEL = {
         point:{
             url: 'point/'
         },
+        allowed:{
+            url: 'allowed/'
+        },
     },
 }

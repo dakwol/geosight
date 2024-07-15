@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import MapsApiRequest from "../../api/Maps/Maps";
 import { iStyleMap } from "../../models/IMaps";
 import { useSelector } from "react-redux";
+import MapModal from "../../components/MapModal/MapModal";
 
 const MapPage: FC = () => {
   const mapApi = new MapsApiRequest();
@@ -29,7 +30,13 @@ const MapPage: FC = () => {
       ico: icons.adminPanelSettings,
       name: "Админ",
     },
-    { id: 2, exact: false, element: <></>, ico: icons.map2, name: "Карта" },
+    {
+      id: 2,
+      exact: false,
+      element: <></>,
+      ico: icons.map2,
+      name: "Карта",
+    },
     {
       id: 3,
       exact: false,
@@ -40,13 +47,15 @@ const MapPage: FC = () => {
   ];
 
   useEffect(() => {
-    mapApi.getShow("1/").then((resp) => {
-      if (resp.success && resp.data) {
-        setStyleMap(resp.data.style);
-        setMapData(resp.data);
-      }
-    });
-  }, [isUpdate]);
+    mapApi
+      .getShow(`${localStorage.getItem("activeMap")}/` || "1/")
+      .then((resp) => {
+        if (resp.success && resp.data) {
+          setStyleMap(resp.data.style);
+          setMapData(resp.data);
+        }
+      });
+  }, [isUpdate, localStorage.getItem("activeMap")]);
 
   return (
     <Fragment>
