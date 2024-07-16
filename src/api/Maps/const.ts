@@ -26,5 +26,8 @@ export const API_MAPS_MODEL = {
         allowed:{
             url: 'allowed/'
         },
+        mapstyle:{
+            url: 'map_style/'
+        },
     },
 }

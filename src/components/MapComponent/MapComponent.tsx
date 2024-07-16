@@ -9,6 +9,7 @@ import icons from "../../assets/icons/icons";
 import { Toast } from "primereact/toast";
 import { useSelector } from "react-redux";
 import apiConfig from "../../api/apiConfig";
+import { fieldToArray } from "../UI/functions/functions";
 
 interface ISource {
   [key: string]: { id: string | number; name: string; description: string };
@@ -196,6 +197,61 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
                           ? [1, 2]
                           : undefined, // Стиль границы, например пунктирная линия
                     },
+                  });
+
+                  //@ts-ignore
+                  map.current.on("click", polygonLayerId, (e) => {
+                    console.log("polygon", e);
+
+                    //@ts-ignore
+                    const coordinates =
+                      //@ts-ignore
+                      e.features[0].geometry.coordinates.slice();
+
+                    console.log("eeeeeeee", e.features);
+
+                    //@ts-ignore
+                    const title =
+                      //@ts-ignore
+                      e.features[0].properties.title || "Заголовок";
+                    const description =
+                      //@ts-ignore
+                      JSON.parse(e.features[0].properties.info || "{}") ||
+                      "Ничего не найдено";
+
+                    // Ensure the description is displayed at the correct coordinates
+                    while (
+                      Math.abs(e.lngLat.lng - coordinates[0][0][0]) > 180
+                    ) {
+                      coordinates[0][0][0] +=
+                        e.lngLat.lng > coordinates[0][0][0] ? 360 : -360;
+                    }
+
+                    new maplibregl.Popup()
+                      .setLngLat(e.lngLat)
+                      .setHTML(
+                        `<h3>${title}</h3>${fieldToArray(description)
+                          .map(
+                            (item: any) => `<p>${item.key}: ${item.value}</p>`
+                          )
+                          .join("")}`
+                      )
+                      //@ts-ignore
+                      .addTo(map.current);
+                  });
+
+                  // Change the cursor to a pointer when the mouse is over the polygon layer.
+                  //@ts-ignore
+                  map.current.on("mouseenter", polygonLayerId, () => {
+                    //@ts-ignore
+                    map.current.getCanvas().style.cursor = "pointer";
+                  });
+
+                  // Change the cursor back to default when it leaves the polygon layer.
+                  //@ts-ignore
+                  map.current.on("mouseleave", polygonLayerId, () => {
+                    //@ts-ignore
+                    map.current.getCanvas().style.cursor = "";
                   });
                 }
 

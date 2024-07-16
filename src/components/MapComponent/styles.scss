@@ -90,3 +90,24 @@
       }
     }
   }
+
+  .maplibregl-popup-content{
+    background-color: $white;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 10rem;
+    padding: 20rem 14rem;
+    min-width: 166rem;
+
+    .maplibregl-popup-close-button{
+      right: 15rem;
+      top: 15rem;
+      font-size: 28rem;
+      padding: 0 8rem;
+      border-radius: 4rem;
+    }
+
+    h3{
+      @include fnt(15, 20, $weight:600, $font:$fontText);
+    }
+  }
+  

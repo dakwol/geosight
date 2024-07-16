@@ -57,7 +57,9 @@ const Sidebar = ({ sbData, pageType, mapData }: any) => {
     {
       id: 3,
       name: "",
-      component: <SidebarMap />,
+      component: (
+        <SidebarMap mapDataId={mapData.id} mapDataStyle={mapData.style} />
+      ),
       active: false,
       ico: icons.map,
       activeIco: icons.mapActive,

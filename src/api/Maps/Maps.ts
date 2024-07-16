@@ -29,6 +29,12 @@ class MapsApiRequest extends BaseModelAPI {
     async mapsAllowed<T>() {
         return this.makeRequest<T>(axiosClient.get, { urlParams: API_MAPS_MODEL.methods.allowed.url});
     }
+    async mapStyleOptions<T>(id:string,) {
+        return this.makeRequest<T>(axiosClient.options, {id:id, urlParams: API_MAPS_MODEL.methods.mapstyle.url});
+    }
+    async mapStyle<T>(id:string,body:any) {
+        return this.makeRequest<T>(axiosClient.put, {id:id, urlParams: API_MAPS_MODEL.methods.mapstyle.url, body:body});
+    }
 }
 
 export default MapsApiRequest;
