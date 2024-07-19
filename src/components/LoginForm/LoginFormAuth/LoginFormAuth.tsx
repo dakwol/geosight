@@ -80,7 +80,7 @@ const LoginFormAuth: FC<LoginFormProps> = ({
         >
           Забыли пароль?
         </p>
-        <p>
+        {/* <p>
           Нет аккаунта?
           <a
           // onClick={() => {
@@ -89,7 +89,7 @@ const LoginFormAuth: FC<LoginFormProps> = ({
           >
             Подать заявку
           </a>
-        </p>
+        </p> */}
       </div>
     </>
   );

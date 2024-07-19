@@ -17,6 +17,15 @@ class UserApiRequest extends BaseModelAPI {
     async optionsUsersCompanies<T>() {
         return this.makeRequest<T>(axiosClient.options, {method: API_USER_MODEL.methods.getUsersCompanies.url});
     }
+    async sendCode<T>(body:any) {
+        return this.makeRequest<T>(axiosClient.post, {method: API_USER_MODEL.methods.sendCode.url, body:body});
+    }
+    async checkActivationCode<T>(body:any) {
+        return this.makeRequest<T>(axiosClient.post, {method: API_USER_MODEL.methods.checkActivationCode.url, body:body});
+    }
+    async resetPassword<T>(body:any) {
+        return this.makeRequest<T>(axiosClient.post, {method: API_USER_MODEL.methods.resetPassword.url, body:body});
+    }
 }
 
 export default UserApiRequest;

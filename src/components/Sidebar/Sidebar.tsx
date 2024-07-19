@@ -148,9 +148,10 @@ const Sidebar = ({ sbData, pageType, mapData }: any) => {
               >
                 {storedUser.avatar ? (
                   <img
-                    src={`${apiConfig.baseUrlMedia}${storedUser.avatar.slice(
-                      23
-                    )}`}
+                    src={`${apiConfig.baseUrlMedia.slice(
+                      0,
+                      -6
+                    )}${storedUser.avatar.slice(23)}`}
                   ></img>
                 ) : (
                   <Skeleton

@@ -151,8 +151,6 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers }) => {
     setLayersArray(newLayers);
   }, [mapDataLayers]);
 
-  console.log(mapDataLayers);
-
   return (
     <div className="containerSidebarRight">
       <div className="containerAddLayer">
@@ -221,7 +219,10 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers }) => {
                     <>
                       <p>{filter.range}</p>
                       <Slider
-                        value={Number(filter.range)}
+                        value={[
+                          Number(filter.range[0]),
+                          Number(filter.range[1]),
+                        ]}
                         onChange={(e) =>
                           updateFilter(filter.id, "range", `${e.value}`)
                         }

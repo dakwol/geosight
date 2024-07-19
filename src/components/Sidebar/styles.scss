@@ -190,3 +190,14 @@
         margin-bottom: 12rem;
     }
 }
+
+.p-slider{
+    height: 5rem;
+    display: flex;
+    align-items: center;
+
+    .p-slider-handle{
+        width: 20rem;
+        height: 20rem;
+    }
+}

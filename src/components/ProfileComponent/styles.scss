@@ -1,5 +1,9 @@
 @use "../../scss/" as *;
 
+.lkModal{
+    width: 378rem;
+}
+
 .titleModal{
     @include fnt(32, 54, $color: $black, $weight: 700)
 }

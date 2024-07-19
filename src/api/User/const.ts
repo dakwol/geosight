@@ -19,7 +19,16 @@ export const API_USER_MODEL = {
         },
         getCompanyUsers:{
             url: 'company_users/'
-        }
+        },
+        sendCode:{
+            url: 'send-activation-code/'
+        },
+        checkActivationCode:{
+            url: 'check-activation-code/'
+        },
+        resetPassword:{
+            url: 'reset-password/'
+        },
     },
 }
 export const API_PASSWORD_MODEL = {
