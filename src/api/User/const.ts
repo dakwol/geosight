@@ -16,6 +16,9 @@ export const API_USER_MODEL = {
         },
         getUsersCompanies:{
             url: 'companies/'
+        },
+        getCompanyUsers:{
+            url: 'company_users/'
         }
     },
 }

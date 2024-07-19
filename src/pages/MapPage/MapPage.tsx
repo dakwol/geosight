@@ -48,7 +48,7 @@ const MapPage: FC = () => {
 
   useEffect(() => {
     mapApi
-      .getShow(`${localStorage.getItem("activeMap")}/` || "1/")
+      .getShow(`${localStorage.getItem("activeMap") || 1}/` || "1/")
       .then((resp) => {
         if (resp.success && resp.data) {
           setStyleMap(resp.data.style);

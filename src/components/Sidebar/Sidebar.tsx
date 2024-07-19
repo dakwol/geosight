@@ -11,6 +11,7 @@ import SidebarFilter from "./SidebarFilter/SidebarFilter";
 import SidebarMap from "./SidebarMap/SidebarMap";
 import apiConfig from "../../api/apiConfig";
 import MapModal from "../MapModal/MapModal";
+import SheringModal from "../SheringModal/SheringModal";
 
 const Sidebar = ({ sbData, pageType, mapData }: any) => {
   const [isActive, setIsActive] = useState(() => {
@@ -98,7 +99,7 @@ const Sidebar = ({ sbData, pageType, mapData }: any) => {
             case "Карта":
               return <MapModal />;
             case "Шеринг":
-              return <MapModal />;
+              return <SheringModal />;
             default:
               return null;
           }

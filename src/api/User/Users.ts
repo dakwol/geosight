@@ -11,6 +11,9 @@ class UserApiRequest extends BaseModelAPI {
     async getUsersCompanies<T>() {
         return this.makeRequest<T>(axiosClient.get, {method: API_USER_MODEL.methods.getUsersCompanies.url});
     }
+    async getCompanyUsers<T>() {
+        return this.makeRequest<T>(axiosClient.get, {method: API_USER_MODEL.methods.getCompanyUsers.url});
+    }
     async optionsUsersCompanies<T>() {
         return this.makeRequest<T>(axiosClient.options, {method: API_USER_MODEL.methods.getUsersCompanies.url});
     }
