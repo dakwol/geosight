@@ -13,10 +13,11 @@ export interface IRoute {
     id?: string;
     ico?: string;
     name?: string;
+    params?: { [key: string]: string | number };
 }
 
 export enum RouteNames {
-    MAP = '/',
+    MAP = '/map',
     LOGIN = '/login',
     MAPLIST = '/map-list',
     USERSLIST = '/users-list',
@@ -59,13 +60,15 @@ export const publicRoutes: IRoute[] = [
 
 export const privateRoutes: IRoute[] = [
     {path: RouteNames.MAPLIST, exact: false, element: MapListPage, ico: icons.adminPanelSettings, name: 'Админка'},
-    {path: RouteNames.MAP, exact: false, element: MapPage, ico: icons.map, name: 'Карта'},
+    
+    {path:`${RouteNames.MAP}/:id`, exact: true, element: MapPage, params: { params: ':id' }},
 
 ]
 export const adminRoutes: IRoute[] = [
     {path: RouteNames.MAPLIST, exact: false, element: MapListPage, ico: icons.adminPanelSettings, name: 'Админка'},
     {path: RouteNames.USERSLIST, exact: false, element: UsersListPage, ico: icons.adminPanelSettings, name: 'Пользователи'},
     {path: RouteNames.COMPANYLIST, exact: false, element: CompanyListPage, ico: icons.adminPanelSettings, name: 'Компании'},
-    {path: RouteNames.MAP, exact: false, element: MapPage, ico: icons.map, name: 'Карта'},
+    
+    {path:`${RouteNames.MAP}/:id`, exact: true, element: MapPage, params: { params: ':id' }},
 
 ]

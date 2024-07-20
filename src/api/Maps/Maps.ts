@@ -35,6 +35,15 @@ class MapsApiRequest extends BaseModelAPI {
     async mapStyle<T>(id:string,body:any) {
         return this.makeRequest<T>(axiosClient.put, {id:id, urlParams: API_MAPS_MODEL.methods.mapstyle.url, body:body});
     }
+    async signAllowedUser<T>(id:string, urlParams:string) {
+        return this.makeRequest<T>(axiosClient.post, {id:id,urlParams: `${API_MAPS_MODEL.methods.signAllowedUser.url}${urlParams}`});
+    }
+    async getAllowedUser<T>(id:string) {
+        return this.makeRequest<T>(axiosClient.get, {id:id,urlParams: `${API_MAPS_MODEL.methods.getAllowedUser.url}`});
+    }
+    async removeAllowedUser<T>(id:string, urlParams:string) {
+        return this.makeRequest<T>(axiosClient.post, {id:id,urlParams: `${API_MAPS_MODEL.methods.removeAllowedUser.url}?user=${urlParams}`});
+    }
 }
 
 export default MapsApiRequest;

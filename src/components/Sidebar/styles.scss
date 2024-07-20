@@ -30,7 +30,7 @@
         justify-content: space-between;
         align-items: center;
         height: 100%;
-        width: 52rem;
+        width: 51px;
         border-right:1rem solid $gray-100 ;
         padding-right: 5rem;
         padding: 32rem 0rem;
@@ -95,11 +95,13 @@
             border-radius: 50%;
             object-fit: cover;
             cursor: pointer;
+            pointer-events: all;
             border: 2rem solid inherit;
             transition: .1s ease-in-out;
+            border: 2rem solid $white;
 
             &:hover{
-                border: 2rem solid $bluelog
+                border: 2rem solid $bluelog;
             }
         }
     }

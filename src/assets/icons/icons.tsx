@@ -53,6 +53,7 @@ import thumbsUpGray from "./thumbs-up-gray.svg";
 import minus from "./minus.svg";
 import plus from "./plus.svg";
 import LogoGeo from "./LogoGeo.svg";
+import LogoSidebar from "./LogoSidebar.svg";
 import adminPanelSettings from "./admin_panel_settings.svg";
 import iosShare from "./ios_share.svg";
 import layers from "./layers.svg";
@@ -101,6 +102,7 @@ export default {
   refreshRotate,
   xClosed,
   Logo,
+  LogoSidebar,
   Mark,
   logOut,
   plusCircle,

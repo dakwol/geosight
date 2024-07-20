@@ -43,7 +43,7 @@ export const AuthActionCreators = {
                                     localStorage.setItem('email', mockUser.email);
                             
                                     if (resp.data) {
-                                        const data: { id?: string, email?: string, first_name?: string, last_name?: string, patronymic?: string, phone_number?:string, avatar?:string } = resp.data;
+                                        const data: { id?: string, email?: string, first_name?: string, last_name?: string, patronymic?: string, phone_number?:string, avatar?:string,role?:string } = resp.data;
                                     
                                         const user = {
                                         id: data.id,
@@ -52,7 +52,8 @@ export const AuthActionCreators = {
                                         first_name: data.first_name,
                                         last_name: data.last_name,
                                         patronymic: data.patronymic,
-                                        avatar: data.avatar
+                                        avatar: data.avatar,
+                                        role: data.role
                                         };
                                     
                                         localStorage.setItem('account', JSON.stringify(user));
@@ -62,7 +63,7 @@ export const AuthActionCreators = {
                                     
                                     
                                     //@ts-ignore
-                                    dispatch(AuthActionCreators.setUser({id: resp.data.id, email: resp.data.email, password: mockUser.password, first_name: resp.data.first_name, last_name: resp.data.last_name, patronymic: resp.data.patronymic, phone_number: resp.data.phone_number}));
+                                    dispatch(AuthActionCreators.setUser({id: resp.data.id, email: resp.data.email, password: mockUser.password, first_name: resp.data.first_name, last_name: resp.data.last_name, patronymic: resp.data.patronymic, phone_number: resp.data.phone_number, role:resp.data.role}));
                                     dispatch(AuthActionCreators.setIsLoading(false));
                                 
                                 } else {

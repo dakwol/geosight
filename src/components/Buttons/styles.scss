@@ -20,6 +20,12 @@
     position: relative;
     @include fnt(14,22, $color: $white);
     transition: .1s linear;
+
+    &.disabled{
+        background-color: $gray-300;
+        pointer-events: none;
+        cursor: inherit;
+    }
     &.iconContainer {
         padding: 8rem 24rem 8rem 12rem;
     }

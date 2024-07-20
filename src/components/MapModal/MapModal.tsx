@@ -10,6 +10,8 @@ import icons from "../../assets/icons/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { DataPressActionCreators } from "../../store/reducers/dataPressItem/action-creator";
 import Skeleton from "react-loading-skeleton";
+import { useNavigate } from "react-router-dom";
+import { RouteNames } from "../../routes";
 
 interface MapItem {
   description: string;
@@ -24,6 +26,7 @@ const MapModal: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const isUpdate = useSelector((state: any) => state.dataPressReducer.isUpdate);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
@@ -37,6 +40,7 @@ const MapModal: FC = () => {
 
   const handleActiveMap = (id: number) => {
     localStorage.setItem("activeMap", `${id}`);
+    navigate(`${RouteNames.MAP}/${id}`);
     dispatch(DataPressActionCreators.setUpdate(!isUpdate));
   };
 

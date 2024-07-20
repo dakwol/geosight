@@ -23,19 +23,24 @@ const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers }) => {
   const [activeLayerRedact, setActiveLayerRedact] = useState<string | number>(
     ""
   );
-
   const [visibleLayers, setVisibleLayers] = useState<Array<string | number>>(
     []
   );
   const [visibleLayerActive, setVisibleLayerActive] = useState<string | number>(
     ""
   );
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedLayers = localStorage.getItem("visibilityLayers");
     if (storedLayers) {
       setVisibleLayers(JSON.parse(storedLayers));
     }
+
+    // Simulating data loading
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // Adjust the timeout duration as needed
   }, []);
 
   const toggleLayerVisibility = (layerId: string | number) => {
@@ -94,7 +99,9 @@ const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers }) => {
             <AddLayerComponent mapDataId={mapDataId} />
           </div>
           <div className="containerLayers">
-            {mapDataLayers && mapDataLayers.length !== 0 ? (
+            {isLoading ? (
+              <Skeleton count={6} height={40} borderRadius={12} />
+            ) : mapDataLayers && mapDataLayers.length !== 0 ? (
               mapDataLayers.map((item) => {
                 const isActive = item.id === activeLayer;
                 const isVisible = visibleLayers?.includes(item.id);
@@ -142,7 +149,7 @@ const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers }) => {
                 );
               })
             ) : (
-              <Skeleton count={6} height={40} borderRadius={12} />
+              <div className="noDataMessage">Нет данных</div>
             )}
           </div>
         </div>

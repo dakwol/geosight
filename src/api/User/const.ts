@@ -29,6 +29,9 @@ export const API_USER_MODEL = {
         resetPassword:{
             url: 'reset-password/'
         },
+        cards:{
+            url: 'cards/'
+        },
     },
 }
 export const API_PASSWORD_MODEL = {

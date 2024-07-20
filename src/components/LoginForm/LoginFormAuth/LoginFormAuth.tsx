@@ -80,16 +80,12 @@ const LoginFormAuth: FC<LoginFormProps> = ({
         >
           Забыли пароль?
         </p>
-        {/* <p>
+        <p>
           Нет аккаунта?
-          <a
-          // onClick={() => {
-          //   onResetPassword();
-          // }}
-          >
+          <a href="https://geosight.ru/#form" target="_blank">
             Подать заявку
           </a>
-        </p> */}
+        </p>
       </div>
     </>
   );

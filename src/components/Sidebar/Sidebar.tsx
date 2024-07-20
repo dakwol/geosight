@@ -119,26 +119,37 @@ const Sidebar = ({ sbData, pageType, mapData }: any) => {
       >
         <div ref={sidebarRef} className={`sidebar ${isActive ? "active" : ""}`}>
           <div className="sidebarContainer">
-            <img src={icons.Logo} alt="Logo"></img>
+            <img src={icons.LogoSidebar} alt="Logo"></img>
 
             <div className="sidebar__container">
               <nav className="sidebar__nav">
-                {sbData.map((e: any, i: React.Key | null | undefined) => (
-                  <div
-                    onClick={() => handleSidebarClick(e)}
-                    key={i}
-                    className={`nanItem ${i === active ? "active" : ""} `}
-                  >
-                    <img
-                      src={e.ico}
-                      alt="Icon"
-                      style={isActive ? { marginRight: 0 } : {}}
-                    ></img>
-                    <span className={`display ${isActive ? "hidden" : ""}`}>
-                      {e.name}
-                    </span>
-                  </div>
-                ))}
+                {sbData.map((e: any, i: React.Key | null | undefined) => {
+                  const account = JSON.parse(
+                    localStorage.getItem("account") || "{}"
+                  );
+                  const isAdmin = account.role === "admin";
+
+                  if (i === 0 && !isAdmin) {
+                    return null;
+                  }
+
+                  return (
+                    <div
+                      onClick={() => handleSidebarClick(e)}
+                      key={i}
+                      className={`nanItem ${i === active ? "active" : ""} `}
+                    >
+                      <img
+                        src={e.ico}
+                        alt="Icon"
+                        style={isActive ? { marginRight: 0 } : {}}
+                      ></img>
+                      <span className={`display ${isActive ? "hidden" : ""}`}>
+                        {e.name}
+                      </span>
+                    </div>
+                  );
+                })}
               </nav>
               <div
                 onClick={() => {

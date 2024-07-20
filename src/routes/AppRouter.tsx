@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { RouteNames, adminRoutes, privateRoutes, publicRoutes } from "./index";
 import { useTypeSelector } from "../hooks/useTypedSelector";
 import { useDispatch } from "react-redux";
@@ -16,6 +22,7 @@ const AppRouter = () => {
   const navigate = useNavigate();
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
   const dispatch = useDispatch();
+  const location = useLocation();
 
   // useEffect(() => {
   //   const storedRoute = localStorage.getItem("currentRoute");
@@ -75,6 +82,24 @@ const AppRouter = () => {
       path: "/map",
     },
   ];
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const match = location.pathname.match(/^\/map\/(\d+)$/);
+      if (match) {
+        const mapId = match[1];
+        localStorage.setItem("activeMap", mapId);
+        navigate(`${RouteNames.MAP}/${mapId}`);
+      }
+    } else {
+      const match = location.pathname.match(/^\/map\/(\d+)$/);
+      if (match) {
+        const mapId = match[1];
+        localStorage.setItem("activeMap", mapId);
+        navigate(RouteNames.LOGIN);
+      }
+    }
+  }, [isAuthenticated]);
 
   return (
     <>

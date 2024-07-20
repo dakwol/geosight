@@ -1,1 +1,146 @@
 @use "../../scss/" as *;
+
+.sheringModal{
+    width: 444rem;
+}
+
+.sharingSearchContainer{
+    display: grid;
+    grid-template-columns: 1fr 136rem;
+    align-items: flex-end;
+    gap: 12rem;
+}
+
+.searhUserContainer{
+    position: absolute;
+    background-color: $white;
+    border-radius: 12rem;
+    border: 1rem solid $gray-200;
+    padding: 14rem;
+    z-index: 2;
+    margin-top: 8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12rem;
+
+    .searchUserItem{
+        display: flex;
+        gap: 6rem;
+        align-items: center;
+        cursor: pointer;
+
+        img{
+            border-radius: 100%;
+            width: 36rem;
+            height: 36rem;
+            object-fit: cover;
+        }
+
+        h3{
+            @include fnt(14, 16, $weight:500, $color:$black, $font: $fontText);
+        }
+        p{
+            @include fnt(14, 16, $weight:500, $color:$gray-400, $font: $fontText);
+        }
+
+        &:hover{
+            h3,p{
+                color: $blue-700;
+            }
+        }
+
+        &.active{
+            h3,p{
+                color: $blue;
+            }
+        }
+    }
+}
+
+.usersSharedContainer{
+    padding: 20rem 16rem;
+    margin: 20rem 0;
+    border-top: 2rem solid $gray-200;
+    border-bottom: 2rem solid $gray-200;
+    display: flex;
+    flex-direction: column;
+    gap: 12rem;
+
+    .searchUserItemArray{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .deleteUser{
+            position: relative;
+            width: 20rem;
+            height: 20rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            &::after{
+                content: '';
+                position: absolute;
+                width: 20rem;
+                height: 2rem;
+                background-color: $gray-600;
+
+                &:hover{
+                    background-color: $blue;
+                }
+            }
+        }
+    }
+    .searchUserItem{
+        display: flex;
+        gap: 6rem;
+        align-items: center;
+        cursor: pointer;
+
+        img{
+            border-radius: 100%;
+            width: 36rem;
+            height: 36rem;
+            object-fit: cover;
+        }
+
+        h3{
+            @include fnt(14, 16, $weight:500, $color:$black, $font: $fontText);
+        }
+        p{
+            @include fnt(14, 16, $weight:500, $color:$gray-400, $font: $fontText);
+        }
+
+        &:hover{
+            h3,p{
+                color: $blue-700;
+            }
+        }
+
+        &.active{
+            h3,p{
+                color: $blue;
+            }
+        }
+    }   
+}
+
+.containerShering{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.copyLinkButton{
+    display: flex;
+    align-items: center;
+    gap: 6rem;
+    cursor: pointer;
+    @include fnt(16, 20, $color: $text-gray, $font: $fontText);
+
+    &:hover{
+        color: $blue;
+    }
+}

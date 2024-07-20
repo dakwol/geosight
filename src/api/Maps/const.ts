@@ -29,5 +29,14 @@ export const API_MAPS_MODEL = {
         mapstyle:{
             url: 'map_style/'
         },
+        signAllowedUser:{
+            url: 'sign-allowed-users/'
+        },
+        getAllowedUser:{
+            url: 'get-allowed-users/'
+        },
+        removeAllowedUser:{
+            url: 'remove-allowed-users/'
+        },
     },
 }

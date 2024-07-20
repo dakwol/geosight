@@ -172,7 +172,7 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
             }
 
             if (item.key.endsWith("palette")) {
-              const paletteEntries = Object.entries(dataPress[item.key]);
+              const paletteEntries = Object.entries(dataPress[item.key] || "");
 
               // Заполним массив до 5 элементов пустыми значениями, если текущих меньше 5
               while (paletteEntries.length < 5) {

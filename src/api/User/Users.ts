@@ -26,6 +26,9 @@ class UserApiRequest extends BaseModelAPI {
     async resetPassword<T>(body:any) {
         return this.makeRequest<T>(axiosClient.post, {method: API_USER_MODEL.methods.resetPassword.url, body:body});
     }
+    async getUsersCards<T>(urlParametr:string) {
+        return this.makeRequest<T>(axiosClient.get, {urlParams:`?search=${urlParametr}`,method: API_USER_MODEL.methods.cards.url});
+    }
 }
 
 export default UserApiRequest;

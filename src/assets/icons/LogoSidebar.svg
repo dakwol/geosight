@@ -1,0 +1,32 @@
+<svg width="779" height="630" viewBox="0 0 779 630" fill="none" xmlns="http://www.w3.org/2000/svg"
+    class="svg-container">
+    <path
+        d="M361 617.501C315.8 631.901 283.833 602.501 273.5 586.001L243 542L211.5 495.001L285.5 445.001L343.5 528.501L420.5 500.001L452 583.001C436 589.167 395.4 604.701 361 617.501Z"
+        fill="rgb(2, 111, 235)" class="svg-elem-1">
+        <animate attributeName="fill" values="rgb(173, 216, 255);rgb(2, 111, 235)" dur="1.5s" keyTimes="0;1" begin="0s"
+            repeatCount="1" />
+    </path>
+    <path
+        d="M600.5 432.001L632.5 516.001C649.667 509.501 692.3 493.301 725.5 480.501C764.3 461.701 768.5 423.501 768.5 406.001C768.501 388.501 769 330.501 769 330.501H679L678.5 403.001L600.5 432.001Z"
+        fill="rgb(2, 111, 235)" class="svg-elem-2">
+        <animate attributeName="fill" values="rgb(173, 216, 255);rgb(2, 111, 235)" dur="1.5s" keyTimes="0;1"
+            begin="0.2s" repeatCount="1" />
+    </path>
+    <path
+        d="M678.5 98.5006L679.5 163.001H768.5C768.5 149.834 771 100 768.5 72.0006C763.635 17.505 713.5 4.50051 691.5 6.00062C669.5 7.50074 607.5 18.0006 607.5 18.0006L620.5 106.501L678.5 98.5006Z"
+        fill="rgb(2, 111, 235)" class="svg-elem-3">
+        <animate attributeName="fill" values="rgb(173, 216, 255);rgb(2, 111, 235)" dur="1.5s" keyTimes="0;1"
+            begin="0.4s" repeatCount="1" />
+    </path>
+    <path d="M465 128.501L314 151.001L301 62.5006L451.5 41.0006L465 128.501Z" fill="rgb(2, 111, 235)"
+        class="svg-elem-4">
+        <animate attributeName="fill" values="rgb(173, 216, 255);rgb(2, 111, 235)" dur="1.5s" keyTimes="0;1"
+            begin="0.6s" repeatCount="1" />
+    </path>
+    <path
+        d="M146 85.0005L158.5 173.001L106 182.001L156.5 256.001L82.5 305.501L16.5 208.001C-16 146.501 37.5 102.001 63.5 97.5005C89.5 93.0005 146 85.0005 146 85.0005Z"
+        fill="rgb(2, 111, 235)" class="svg-elem-5">
+        <animate attributeName="fill" values="rgb(173, 216, 255);rgb(2, 111, 235)" dur="1.5s" keyTimes="0;1"
+            begin="0.8s" repeatCount="1" />
+    </path>
+</svg>

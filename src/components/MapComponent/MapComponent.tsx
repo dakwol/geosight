@@ -100,7 +100,10 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
             "positionMap",
             JSON.stringify([center?.lng, center?.lat])
           );
-          sessionStorage.setItem("zoom", JSON.stringify(zoomSession));
+          sessionStorage.setItem(
+            "zoom",
+            zoomSession ? JSON.stringify(zoomSession) : ""
+          );
         });
 
         map.current.on("load", () => {
@@ -328,10 +331,20 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
               }
             }
           });
+          toast.current?.show({
+            severity: "success",
+            summary: "Данные успешно получены",
+            detail: "",
+          });
         });
       },
       (error) => {
         console.error("Error getting geolocation:", error);
+        toast.current?.show({
+          severity: "error",
+          summary: "Ошибка",
+          detail: `${error}`,
+        });
 
         // Fallback coordinates if geolocation fails
         const defaultLng = 37.6176;
@@ -384,7 +397,6 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
 
   return (
     <Fragment>
-      <Toast className="toastContainer" ref={toast}></Toast>
       <div className="map-wrap">
         {mapData.layers ? (
           <Fragment>

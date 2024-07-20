@@ -58,7 +58,9 @@ const LoginForm: FC = () => {
 
   useEffect(() => {
     if (isAuth) {
-      navigate(RouteNames.MAP);
+      navigate(
+        `${RouteNames.MAP}${`/${localStorage.getItem("activeMap")}` || "/0"}`
+      );
     }
   }, [isAuth]);
 
