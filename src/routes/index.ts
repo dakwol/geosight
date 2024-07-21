@@ -6,6 +6,7 @@ import MapListPage from "../pages/MapListPage/MapListPage";
 import UsersListPage from "../pages/UsersListPage/UsersListPage";
 import CompanyListPage from "../pages/CompanyListPage/CompanyListPage";
 import LayersListPage from "../pages/LayersListPage/LayersListPage";
+import { isAdmin } from "../utils";
 
 export interface IRoute {
     path: string;
@@ -28,32 +29,28 @@ export enum RouteNames {
 }
 
 export const navDate = [
-    {
+  {
       id: 1,
       name: "Карты",
       link: RouteNames.MAPLIST,
-    },
-    {
+  },
+  {
       id: 2,
       name: "Слои",
       link: RouteNames.LAYERSLIST,
-    },
-    // {
-    //   id: 3,
-    //   name: "Скоринг",
-    // //   link: RouteNames.VACANCY,
-    // },
-    {
+  },
+  {
       id: 4,
       name: "Компании",
       link: RouteNames.COMPANYLIST,
-    },
-    {
+      isVisible: isAdmin,
+  },
+  {
       id: 5,
       name: "Пользователи",
       link: RouteNames.USERSLIST,
-    },
-  ];
+  },
+].filter(item => item.isVisible !== false);
 
 export const publicRoutes: IRoute[] = [
     {path: RouteNames.LOGIN, exact: false, element: Login, ico: icons.map, name: 'Аккаунт'}

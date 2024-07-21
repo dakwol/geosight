@@ -32,6 +32,9 @@ class UserApiRequest extends BaseModelAPI {
     async getUsersCards<T>(urlParametr:string) {
         return this.makeRequest<T>(axiosClient.get, {urlParams:`?search=${urlParametr}`,method: API_USER_MODEL.methods.cards.url});
     }
+    async editUser<T>(id:string, body:any) {
+        return this.makeRequest<T>(axiosClient.put, {id:id, method: API_USER_MODEL.methods.editUser.url, body:body});
+    }
 }
 
 export default UserApiRequest;

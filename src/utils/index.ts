@@ -1,4 +1,4 @@
-export const isAdmin =
-JSON.parse(localStorage.getItem("account") || "").role === "admin";
-export const isManager =
-JSON.parse(localStorage.getItem("account") || "").role === "manager";
+const userData = JSON.parse(localStorage.getItem("account") || '{}')
+
+export const isAdmin = userData.role === "admin";
+export const isManager = userData.role === "manager";

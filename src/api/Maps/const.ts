@@ -38,5 +38,8 @@ export const API_MAPS_MODEL = {
         removeAllowedUser:{
             url: 'remove-allowed-users/'
         },
+        mapsFromCreate:{
+            url: 'maps_from_create/'
+        },
     },
 }

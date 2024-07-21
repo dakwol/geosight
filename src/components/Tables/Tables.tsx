@@ -23,9 +23,16 @@ interface Props {
   headers: Header[];
   totals: (string | number)[];
   onItemClick?: (item: Item) => void;
+  onItemDelete?: (item: Item) => void;
 }
 
-const Tables: React.FC<Props> = ({ data, headers, totals, onItemClick }) => {
+const Tables: React.FC<Props> = ({
+  data,
+  headers,
+  totals,
+  onItemClick,
+  onItemDelete,
+}) => {
   return (
     <>
       {data.length === 0 ? (
@@ -66,12 +73,20 @@ const Tables: React.FC<Props> = ({ data, headers, totals, onItemClick }) => {
                         : dataItem.value}
                     </div>
                   ))}
-                  <img
-                    className="redactButton"
-                    src={icons.Pencil}
-                    alt="Edit"
-                    onClick={() => onItemClick && onItemClick(item)}
-                  />
+                  <div className="containerRowButtons">
+                    <img
+                      className="redactButton"
+                      src={icons.Pencil}
+                      alt="Edit"
+                      onClick={() => onItemClick && onItemClick(item)}
+                    />
+                    <img
+                      className="deleteButton"
+                      src={icons.TrashOne}
+                      alt="delete"
+                      onClick={() => onItemDelete && onItemDelete(item)}
+                    />
+                  </div>
                 </>
               );
             })}

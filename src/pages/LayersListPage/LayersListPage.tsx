@@ -19,6 +19,7 @@ import { TableActionCreators } from "../../store/reducers/tableCreateReducer/act
 import ErrorMessage from "../../components/UI/ErrorMassage/ErrorMassage";
 import { isAdmin } from "../../utils";
 import { ILayersCreateOptions } from "../../models/ILayersData";
+import FilePicker from "../../components/FilePicker/FilePicker";
 
 const LayersListPage: FC = () => {
   const mapsApi = new MapsApiRequest();
@@ -26,7 +27,9 @@ const LayersListPage: FC = () => {
   const [isBodyTable, setBodyTable] = useState<any>([]);
   const [optionCreate, setOptionCreate] = useState<ILayersCreateOptions>();
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isRedact, setIsRedact] = useState(false);
   const [newLayer, setNewLayer] = useState<ILayersCreateOptions>();
+  const [mapsOptionArray, setMapsOptionArray] = useState<any>([]);
   const dispatch = useDispatch();
 
   const { Table, isUpdate, error } = useTypeSelector(
@@ -42,13 +45,22 @@ const LayersListPage: FC = () => {
         mapsApi.getLayers().then((resp) => {
           if (resp.success) {
             setBodyTable(resp.data && resp.data.results);
+
+            mapsApi.mapsFromCreate().then((resp) => {
+              if (resp.success && resp.data) {
+                setMapsOptionArray(resp.data);
+              }
+            });
           }
         });
       }
     });
   }, [isUpdate]);
 
-  const handleNewLayer = (key: string, value: string | boolean) => {
+  const handleNewLayer = (
+    key: string,
+    value: string | string[] | boolean | File[]
+  ) => {
     const updatedLayer = {
       ...newLayer,
       [key]: value,
@@ -70,12 +82,61 @@ const LayersListPage: FC = () => {
   const newLayerCreate = () => {
     mapsApi.createLayers(Table).then((resp) => {
       if (resp.success && resp.data) {
+        dispatch(TableActionCreators.setTable(undefined));
         dispatch(TableActionCreators.setUpdate(!isUpdate));
         setIsOpenModal(false);
       } else {
         dispatch(
           TableActionCreators.setErr({ message: resp.message, type: "error" })
         );
+      }
+    });
+  };
+
+  const layerUpdate = () => {
+    mapsApi.updateByIdLayer(`${Table.id}/`, Table).then((resp) => {
+      if (resp.success && resp.data) {
+        dispatch(TableActionCreators.setUpdate(!isUpdate));
+        setIsOpenModal(false);
+      } else {
+        dispatch(
+          TableActionCreators.setErr({ message: resp.message, type: "error" })
+        );
+      }
+    });
+  };
+  const layerDelete = (id: string | number) => {
+    mapsApi.deleteByIdLayer(`${id}/`).then((resp) => {
+      if (resp.success && resp.data) {
+        dispatch(TableActionCreators.setUpdate(!isUpdate));
+        setIsOpenModal(false);
+      } else {
+        dispatch(
+          TableActionCreators.setErr({ message: resp.message, type: "error" })
+        );
+      }
+    });
+  };
+
+  const handleRedactLayer = (item: any) => {
+    console.log("dddddd", item);
+
+    mapsApi.getByIdLayer(item.id).then((resp) => {
+      if (resp.success && resp.data) {
+        const updatedLayer = fieldToArray(resp.data).reduce(
+          (acc, data) => {
+            //@ts-ignore
+            acc[data.key] = data.value;
+            return acc;
+          },
+          { ...newLayer }
+        );
+        setIsRedact(true);
+        setNewLayer(updatedLayer as ILayersCreateOptions);
+        dispatch(
+          TableActionCreators.setTable(updatedLayer as IMapsCreateOptions)
+        );
+        setIsOpenModal(true);
       }
     });
   };
@@ -95,7 +156,7 @@ const LayersListPage: FC = () => {
       <Modal
         content={
           <div className="modalTable">
-            <h1>Новый слой</h1>
+            <h1>{isRedact ? "Редактировать слой" : "Новый слой"}</h1>
             <div className="gridModal">
               {optionCreate &&
                 fieldToArray(optionCreate).map((item) => {
@@ -103,9 +164,12 @@ const LayersListPage: FC = () => {
                     return (
                       <FormInput
                         style={"col-3"}
-                        value={undefined}
+                        value={Table ? Table[item.key] : undefined}
                         onChange={(e) => {
-                          handleNewLayer(item.key, e);
+                          handleNewLayer(
+                            item.key,
+                            item.key === "maps" ? [e] : e
+                          );
                         }}
                         subInput={item.value.label}
                         required={item.value.required}
@@ -114,18 +178,33 @@ const LayersListPage: FC = () => {
                         keyData={""}
                         type={item.value.type}
                         //@ts-ignore
-                        options={item.value.choices}
+                        options={
+                          item.key === "maps"
+                            ? mapsOptionArray
+                            : item.value.choices
+                        }
                       />
                     );
                   }
                 })}
+              {!isRedact && (
+                <FilePicker
+                  onFilesSelected={(e) => handleNewLayer("file", e)}
+                  title={
+                    Table?.file
+                      ? "Файл выбран"
+                      : "Выберите или перетащите файлы в эту область"
+                  }
+                  formatText="Формат — csv, geojson Размер — не больше 15 МБ."
+                />
+              )}
             </div>
             <div className="gridModal">
               <Buttons text={"Отмена"} onClick={() => setIsOpenModal(false)} />
               <Buttons
-                text={"Создать слой"}
+                text={isRedact ? "Редактировать" : "Создать слой"}
                 onClick={() => {
-                  newLayerCreate();
+                  isRedact ? layerUpdate() : newLayerCreate();
                 }}
               />
             </div>
@@ -146,7 +225,12 @@ const LayersListPage: FC = () => {
           data={isBodyTable}
           headers={isHeaderTable ? fieldToArray(isHeaderTable) : []}
           totals={[]}
-          onItemClick={() => {}}
+          onItemClick={(item) => {
+            handleRedactLayer(item);
+          }}
+          onItemDelete={(item) => {
+            layerDelete(item.id);
+          }}
         />
       </div>
     </Fragment>

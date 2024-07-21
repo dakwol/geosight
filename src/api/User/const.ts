@@ -14,6 +14,9 @@ export const API_USER_MODEL = {
         login:{
             url: 'login/'
         },
+        editUser:{
+            url: 'edit/'
+        },
         getUsersCompanies:{
             url: 'companies/'
         },

@@ -47,6 +47,18 @@ class MapsApiRequest extends BaseModelAPI {
     async removeAllowedUser<T>(id:string, urlParams:string) {
         return this.makeRequest<T>(axiosClient.post, {id:id,urlParams: `${API_MAPS_MODEL.methods.removeAllowedUser.url}?user=${urlParams}`});
     }
+    async mapsFromCreate<T>() {
+        return this.makeRequest<T>(axiosClient.get, {urlParams: `${API_MAPS_MODEL.methods.layers.url}${API_MAPS_MODEL.methods.mapsFromCreate.url}`});
+    }
+    async getByIdLayer<T>(id:string) {
+        return this.makeRequest<T>(axiosClient.get, {urlParams: `${API_MAPS_MODEL.methods.layers.url}${id}/data/`});
+    }
+    async updateByIdLayer<T>(id:string, body:any) {
+        return this.makeRequest<T>(axiosClient.put, {urlParams: `${API_MAPS_MODEL.methods.layers.url}${id}`, body:body});
+    }
+    async deleteByIdLayer<T>(id:string) {
+        return this.makeRequest<T>(axiosClient.delete, {urlParams: `${API_MAPS_MODEL.methods.layers.url}${id}`});
+    }
 }
 
 export default MapsApiRequest;

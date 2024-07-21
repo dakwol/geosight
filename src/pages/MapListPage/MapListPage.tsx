@@ -26,6 +26,7 @@ const MapListPage: FC = () => {
   const [optionCreate, setOptionCreate] = useState<IMapsCreateOptions>();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [newMap, setNewMap] = useState<IMapsCreateOptions>();
+  const [isRedact, setIsRedact] = useState(false);
   const dispatch = useDispatch();
 
   const { Table, isUpdate, error } = useTypeSelector(
@@ -68,6 +69,30 @@ const MapListPage: FC = () => {
       }
     });
   };
+  const mapUpdate = () => {
+    mapsApi.update({ id: `${Table.id}/`, body: Table }).then((resp) => {
+      if (resp.success && resp.data) {
+        dispatch(TableActionCreators.setUpdate(!isUpdate));
+        setIsOpenModal(false);
+      } else {
+        dispatch(
+          TableActionCreators.setErr({ message: resp.message, type: "error" })
+        );
+      }
+    });
+  };
+  const mapDelete = (id: string | number) => {
+    mapsApi.delete({ id: `${id}/` }).then((resp) => {
+      if (resp.success && resp.data) {
+        dispatch(TableActionCreators.setUpdate(!isUpdate));
+        setIsOpenModal(false);
+      } else {
+        dispatch(
+          TableActionCreators.setErr({ message: resp.message, type: "error" })
+        );
+      }
+    });
+  };
 
   const handleSearch = (value: string) => {
     mapsApi.list({ urlParams: `?search=${value}` }).then((resp) => {
@@ -90,7 +115,7 @@ const MapListPage: FC = () => {
           },
           { ...newMap }
         );
-
+        setIsRedact(true);
         setNewMap(updatedMap as IMapsCreateOptions);
         dispatch(
           TableActionCreators.setTable(updatedMap as IMapsCreateOptions)
@@ -117,11 +142,13 @@ const MapListPage: FC = () => {
       <Modal
         content={
           <div className="modalTable">
-            <h1>Новая карта</h1>
+            <h1>{isRedact ? "Редактирование карты" : "Новая карта"}</h1>
             <div className="gridModal">
               {optionCreate &&
                 fieldToArray(optionCreate).map((item) => {
                   if (isAdmin || item.key !== "company") {
+                    console.log("ssss", isAdmin);
+
                     return (
                       <FormInput
                         style={"col-3"}
@@ -145,9 +172,9 @@ const MapListPage: FC = () => {
             <div className="gridModal">
               <Buttons text={"Отмена"} onClick={() => setIsOpenModal(false)} />
               <Buttons
-                text={"Создать карту"}
+                text={isRedact ? "Редактировать" : "Создать карту"}
                 onClick={() => {
-                  newMapCreate();
+                  isRedact ? mapUpdate() : newMapCreate();
                 }}
               />
             </div>
@@ -172,6 +199,9 @@ const MapListPage: FC = () => {
           totals={[]}
           onItemClick={(item) => {
             handleRedactMap(item);
+          }}
+          onItemDelete={(item) => {
+            mapDelete(item.id);
           }}
         />
       </div>

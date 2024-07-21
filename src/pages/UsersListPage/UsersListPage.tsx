@@ -12,6 +12,7 @@ import { useTypeSelector } from "../../hooks/useTypedSelector";
 import { useDispatch } from "react-redux";
 import { UserActionCreators } from "../../store/reducers/userCreateReducer/action-creatorUser";
 import ErrorMessage from "../../components/UI/ErrorMassage/ErrorMassage";
+import { isAdmin } from "../../utils";
 interface ClassContain {
   company: string;
   email: string;
@@ -30,6 +31,7 @@ const UsersListPage: FC = () => {
   const [isBodyTable, setBodyTable] = useState<any>([]);
   const [newUser, setNewUser] = useState<IUser>();
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isRedact, setIsRedact] = useState(false);
   const dispatch = useDispatch();
 
   const { User, isUpdate, error } = useTypeSelector(
@@ -99,9 +101,53 @@ const UsersListPage: FC = () => {
   const handleRedactUser = (userItem: IUser) => {
     setIsOpenModal(true);
     dispatch(UserActionCreators.setUser(undefined));
-    fieldToArray(userItem).forEach((item) =>
-      handleNewUser(item.key, item.value)
-    );
+
+    userApi.options().then((resp) => {
+      if (resp.success) {
+        setOptionCreate(resp.data.actions.update as IUserCreateOption);
+        userApi.getById({ id: userItem.id }).then((resp) => {
+          if (resp.success && resp.data) {
+            const updatedUser = fieldToArray(resp.data).reduce(
+              (acc, data) => {
+                //@ts-ignore
+                acc[data.key] = data.value;
+                return acc;
+              },
+              { ...newUser }
+            );
+            setIsRedact(true);
+            setNewUser(updatedUser as IUser);
+            dispatch(UserActionCreators.setUser(updatedUser as IUser));
+            setIsOpenModal(true);
+          }
+        });
+      }
+    });
+  };
+
+  const userUpdate = () => {
+    userApi.editUser(`${User?.id}/`, User).then((resp) => {
+      if (resp.success && resp.data) {
+        dispatch(UserActionCreators.setUpdate(!isUpdate));
+        setIsOpenModal(false);
+      } else {
+        dispatch(
+          UserActionCreators.setErr({ message: resp.message, type: "error" })
+        );
+      }
+    });
+  };
+  const userDelete = (id: string | number) => {
+    userApi.delete({ id: `${id}/` }).then((resp) => {
+      if (resp.success && resp.data) {
+        dispatch(UserActionCreators.setUpdate(!isUpdate));
+        setIsOpenModal(false);
+      } else {
+        dispatch(
+          UserActionCreators.setErr({ message: resp.message, type: "error" })
+        );
+      }
+    });
   };
 
   return (
@@ -119,50 +165,52 @@ const UsersListPage: FC = () => {
       <Modal
         content={
           <div className="modalTable">
-            <h1>Создать профиль</h1>
+            <h1>{isRedact ? "Редактировать профиль" : "Создать профиль"}</h1>
             <div className="gridModal">
               {optiomCreate &&
                 fieldToArray(optiomCreate).map((item) => {
-                  return (
-                    <FormInput
-                      style={
-                        //@ts-ignore
-                        classContain[item.key]
-                      }
-                      value={
-                        User
-                          ? //@ts-ignore
-                            User[item.key]
-                          : undefined
-                      }
-                      checked={
-                        User
-                          ? //@ts-ignore
-                            User[item.key]
-                          : false
-                      }
-                      onChange={(e) => {
-                        handleNewUser(item.key, e);
-                      }}
-                      onCheck={(e) => {
-                        handleNewUser(item.key, e);
-                      }}
-                      subInput={item.value.label}
-                      required={item.value.required}
-                      error={""}
-                      type={item.value.type}
-                      keyData={""}
-                      options={item.value.choices}
-                    />
-                  );
+                  if (isAdmin || item.key !== "company") {
+                    return (
+                      <FormInput
+                        style={
+                          //@ts-ignore
+                          classContain[item.key]
+                        }
+                        value={
+                          User
+                            ? //@ts-ignore
+                              User[item.key]
+                            : undefined
+                        }
+                        checked={
+                          User
+                            ? //@ts-ignore
+                              User[item.key]
+                            : false
+                        }
+                        onChange={(e) => {
+                          handleNewUser(item.key, e);
+                        }}
+                        onCheck={(e) => {
+                          handleNewUser(item.key, e);
+                        }}
+                        subInput={item.value.label}
+                        required={item.value.required}
+                        error={""}
+                        type={item.value.type}
+                        keyData={""}
+                        options={item.value.choices}
+                      />
+                    );
+                  }
                 })}
             </div>
             <div className="gridModal">
               <Buttons text={"Отмена"} onClick={() => setIsOpenModal(false)} />
               <Buttons
-                text={"Создать пользователя"}
+                text={isRedact ? "Редактировать" : "Создать пользователя"}
                 onClick={() => {
-                  newUserCreate();
+                  isRedact ? userUpdate() : newUserCreate();
                 }}
               />
             </div>
@@ -184,6 +232,9 @@ const UsersListPage: FC = () => {
           headers={isHeaderTable ? fieldToArray(isHeaderTable) : []}
           totals={[]}
           onItemClick={(e) => handleRedactUser(e as any)}
+          onItemDelete={(item) => {
+            userDelete(item.id);
+          }}
         />
       </div>
     </>

@@ -25,11 +25,24 @@
             border-bottom: 1rem solid $gray-50;
             margin-bottom: 18rem;
         }
-        .redactButton{
-            width: 18rem;
-            pointer-events: all;
-            cursor: pointer;
-        }
+      
     }
  
+}
+
+.containerRowButtons{
+    display: flex;
+    align-items: center;
+    gap:2rem;
+
+    .redactButton{
+        width: 18rem;
+        pointer-events: all;
+        cursor: pointer;
+    }
+
+    .deleteButton{
+        pointer-events: all;
+        cursor: pointer;
+    }
 }
