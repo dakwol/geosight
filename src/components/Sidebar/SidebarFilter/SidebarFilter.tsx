@@ -70,28 +70,30 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers }) => {
     });
 
     if (key === "layer") {
-      mapLayerApi.layersPropertis(value, "").then((resp) => {
-        if (resp.success && resp.data) {
-          const newProperties = resp.data.map((item: any) => ({
-            id: item.name,
-            value: item.name,
-            display_name: item.name,
-            type: item.type,
-          }));
+      mapLayerApi
+        .layersPropertis(value, "?types=integer&types=float&types=string")
+        .then((resp) => {
+          if (resp.success && resp.data) {
+            const newProperties = resp.data.map((item: any) => ({
+              id: item.name,
+              value: item.name,
+              display_name: item.name,
+              type: item.type,
+            }));
 
-          setFilters((prevFilters) =>
-            prevFilters.map((filter) =>
-              filter.id === id
-                ? {
-                    ...filter,
-                    propertiesType: newProperties,
-                    propertiesArray: newProperties,
-                  }
-                : filter
-            )
-          );
-        }
-      });
+            setFilters((prevFilters) =>
+              prevFilters.map((filter) =>
+                filter.id === id
+                  ? {
+                      ...filter,
+                      propertiesType: newProperties,
+                      propertiesArray: newProperties,
+                    }
+                  : filter
+              )
+            );
+          }
+        });
     }
 
     if (key === "property_name") {

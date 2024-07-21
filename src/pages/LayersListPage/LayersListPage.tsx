@@ -18,14 +18,15 @@ import { useTypeSelector } from "../../hooks/useTypedSelector";
 import { TableActionCreators } from "../../store/reducers/tableCreateReducer/action-creatorTable";
 import ErrorMessage from "../../components/UI/ErrorMassage/ErrorMassage";
 import { isAdmin } from "../../utils";
+import { ILayersCreateOptions } from "../../models/ILayersData";
 
-const MapListPage: FC = () => {
+const LayersListPage: FC = () => {
   const mapsApi = new MapsApiRequest();
   const [isHeaderTable, setHeaderTable] = useState<IUserOption>();
   const [isBodyTable, setBodyTable] = useState<any>([]);
-  const [optionCreate, setOptionCreate] = useState<IMapsCreateOptions>();
+  const [optionCreate, setOptionCreate] = useState<ILayersCreateOptions>();
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [newMap, setNewMap] = useState<IMapsCreateOptions>();
+  const [newLayer, setNewLayer] = useState<ILayersCreateOptions>();
   const dispatch = useDispatch();
 
   const { Table, isUpdate, error } = useTypeSelector(
@@ -33,12 +34,12 @@ const MapListPage: FC = () => {
   );
 
   useEffect(() => {
-    mapsApi.options().then((resp) => {
+    mapsApi.optionLayers().then((resp) => {
       if (resp.success) {
         setHeaderTable(resp.data && resp.data.actions.list);
         setOptionCreate(resp.data && resp.data.actions.create);
 
-        mapsApi.list().then((resp) => {
+        mapsApi.getLayers().then((resp) => {
           if (resp.success) {
             setBodyTable(resp.data && resp.data.results);
           }
@@ -47,17 +48,27 @@ const MapListPage: FC = () => {
     });
   }, [isUpdate]);
 
-  const handleNewMaps = (key: string, value: string | boolean) => {
-    const updatedMap = {
-      ...newMap,
+  const handleNewLayer = (key: string, value: string | boolean) => {
+    const updatedLayer = {
+      ...newLayer,
       [key]: value,
     };
-    setNewMap(updatedMap as IMapsCreateOptions);
-    dispatch(TableActionCreators.setTable(updatedMap as IMapsCreateOptions));
+    setNewLayer(updatedLayer as ILayersCreateOptions);
+    dispatch(
+      TableActionCreators.setTable(updatedLayer as ILayersCreateOptions)
+    );
   };
 
-  const newMapCreate = () => {
-    mapsApi.create({ body: Table }).then((resp) => {
+  const handleSearch = (value: string) => {
+    mapsApi.getLayers(`?search=${value}`).then((resp) => {
+      if (resp.success) {
+        setBodyTable(resp.data && resp.data.results);
+      }
+    });
+  };
+
+  const newLayerCreate = () => {
+    mapsApi.createLayers(Table).then((resp) => {
       if (resp.success && resp.data) {
         dispatch(TableActionCreators.setUpdate(!isUpdate));
         setIsOpenModal(false);
@@ -68,39 +79,6 @@ const MapListPage: FC = () => {
       }
     });
   };
-
-  const handleSearch = (value: string) => {
-    mapsApi.list({ urlParams: `?search=${value}` }).then((resp) => {
-      if (resp.success) {
-        setBodyTable(resp.data && resp.data.results);
-      }
-    });
-  };
-
-  const handleRedactMap = (item: any) => {
-    console.log("dddddd", item);
-
-    mapsApi.getById({ id: item.id, urlParams: `/data` }).then((resp) => {
-      if (resp.success && resp.data) {
-        const updatedMap = fieldToArray(resp.data).reduce(
-          (acc, data) => {
-            //@ts-ignore
-            acc[data.key] = data.value;
-            return acc;
-          },
-          { ...newMap }
-        );
-
-        setNewMap(updatedMap as IMapsCreateOptions);
-        dispatch(
-          TableActionCreators.setTable(updatedMap as IMapsCreateOptions)
-        );
-        setIsOpenModal(true);
-      }
-    });
-  };
-
-  console.log("Table", Table);
 
   return (
     <Fragment>
@@ -117,7 +95,7 @@ const MapListPage: FC = () => {
       <Modal
         content={
           <div className="modalTable">
-            <h1>Новая карта</h1>
+            <h1>Новый слой</h1>
             <div className="gridModal">
               {optionCreate &&
                 fieldToArray(optionCreate).map((item) => {
@@ -125,9 +103,9 @@ const MapListPage: FC = () => {
                     return (
                       <FormInput
                         style={"col-3"}
-                        value={Table ? Table[item.key] : undefined}
+                        value={undefined}
                         onChange={(e) => {
-                          handleNewMaps(item.key, e);
+                          handleNewLayer(item.key, e);
                         }}
                         subInput={item.value.label}
                         required={item.value.required}
@@ -145,9 +123,9 @@ const MapListPage: FC = () => {
             <div className="gridModal">
               <Buttons text={"Отмена"} onClick={() => setIsOpenModal(false)} />
               <Buttons
-                text={"Создать карту"}
+                text={"Создать слой"}
                 onClick={() => {
-                  newMapCreate();
+                  newLayerCreate();
                 }}
               />
             </div>
@@ -158,25 +136,21 @@ const MapListPage: FC = () => {
       />
       <div className="grayPageContainer">
         <HeaderAdmin
-          title={"Создать карту"}
+          title={"Создать слой"}
           onClick={() => {
             setIsOpenModal(true);
           }}
-          onSearch={(value) => {
-            handleSearch(value);
-          }}
+          onSearch={(value) => handleSearch(value)}
         />
         <Tables
           data={isBodyTable}
           headers={isHeaderTable ? fieldToArray(isHeaderTable) : []}
           totals={[]}
-          onItemClick={(item) => {
-            handleRedactMap(item);
-          }}
+          onItemClick={() => {}}
         />
       </div>
     </Fragment>
   );
 };
 
-export default MapListPage;
+export default LayersListPage;

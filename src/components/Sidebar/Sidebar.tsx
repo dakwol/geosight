@@ -12,6 +12,7 @@ import SidebarMap from "./SidebarMap/SidebarMap";
 import apiConfig from "../../api/apiConfig";
 import MapModal from "../MapModal/MapModal";
 import SheringModal from "../SheringModal/SheringModal";
+import { isAdmin, isManager } from "../../utils";
 
 const Sidebar = ({ sbData, pageType, mapData }: any) => {
   const [isActive, setIsActive] = useState(() => {
@@ -124,12 +125,7 @@ const Sidebar = ({ sbData, pageType, mapData }: any) => {
             <div className="sidebar__container">
               <nav className="sidebar__nav">
                 {sbData.map((e: any, i: React.Key | null | undefined) => {
-                  const account = JSON.parse(
-                    localStorage.getItem("account") || "{}"
-                  );
-                  const isAdmin = account.role === "admin";
-
-                  if (i === 0 && !isAdmin) {
+                  if (i === 0 && !isAdmin && !isManager) {
                     return null;
                   }
 

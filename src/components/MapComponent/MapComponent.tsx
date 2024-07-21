@@ -73,6 +73,24 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
     };
   }, [address]);
 
+  function divideIntervals(
+    min_val: number,
+    max_val: number,
+    n: number
+  ): [number, number][] {
+    const step = (max_val - min_val) / n;
+    const intervals: [number, number][] = [];
+
+    for (let i = 0; i < n; i++) {
+      const start = min_val + i * step;
+      const end = min_val + (i + 1) * step;
+      intervals.push([start, end]);
+    }
+    console.log("intervals", intervals);
+
+    return intervals;
+  }
+
   useEffect(() => {
     if (!styleMap || map.current) return;
 
@@ -136,15 +154,58 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
 
               if (serialize_styles) {
                 if (serialize_styles.polygon) {
-                  const polygonLayerId = `polygon-${layer.id}`; // используем шаблонные строки для id
+                  const polygonLayerId = `polygon-${layer.id}`; // use template strings for id
 
                   let fillColor = serialize_styles.polygon.polygon_solid_color;
 
                   if (serialize_styles.polygon.polygon_color_palette) {
-                    console.log(
-                      "aaaaaaaa",
-                      serialize_styles.polygon.polygon_color_palette
-                    );
+                    if (serialize_styles.polygon.polygon_value_field_name) {
+                      mapApi
+                        .layersPropertis(layer.id, "?types=integer&types=float")
+                        .then((resp) => {
+                          if (resp.success && resp.data) {
+                            const newLayers = resp.data.map((item: any) => ({
+                              id: item.name,
+                              value: item.name,
+                              display_name: item.name,
+                              type: item.type,
+                            }));
+                            newLayers.map((item: any) => {
+                              if (
+                                item.name ===
+                                serialize_styles.polygon_value_field_name
+                              ) {
+                                mapApi
+                                  .layersPropertyValues(
+                                    layer.id,
+                                    `${item.type}/`,
+                                    `?property_name=${serialize_styles.polygon.polygon_value_field_name}`
+                                  )
+                                  .then((resp) => {
+                                    console.log("aaaaaaaaaaaasss", resp.data);
+                                    divideIntervals(
+                                      resp.data.min_value,
+                                      resp.data.max_value,
+                                      5
+                                    );
+                                  });
+                              }
+                            });
+                          }
+                        });
+                    }
+                    // Ensure the third color in the palette is defined, otherwise fallback to a default color
+                    fillColor =
+                      serialize_styles.polygon.polygon_color_palette[2] ||
+                      fillColor;
+
+                    console.log("Selected fill color from palette:", fillColor);
+
+                    console.log("serialize_styles", serialize_styles);
+                    //@ts-ignore
+                    const features = map.current?.getSource(sourceId);
+
+                    console.log("features", features);
 
                     map.current?.addLayer({
                       id: polygonLayerId,
@@ -155,14 +216,18 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
                       paint: {
                         "fill-opacity":
                           serialize_styles.polygon.polygon_opacity,
-                        "fill-color":
-                          serialize_styles.polygon.polygon_color_palette[2],
+                        "fill-color": fillColor,
                         "fill-outline-color":
                           serialize_styles.polygon.polygon_border_color,
                       },
                     });
                   } else {
-                    // добавляем слой для заливки полигона
+                    console.log(
+                      "No color palette found, using solid color:",
+                      fillColor
+                    );
+
+                    // Add layer with solid color
                     map.current?.addLayer({
                       id: polygonLayerId,
                       type: "fill",
@@ -179,27 +244,32 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
                     });
                   }
 
-                  const polygonBorderLayerId = `polygon-border-${layer.id}`; // используем шаблонные строки для id границы
+                  // Adding a layer for the polygon border
+                  const polygonBorderLayerId = `polygon-border-${layer.id}`;
 
-                  // добавляем слой для границы полигона
+                  const borderPaint = {
+                    "line-color": serialize_styles.polygon.polygon_border_color, // Border color
+                    "line-width":
+                      serialize_styles.polygon.polygon_border_size || 1, // Border width
+                    "line-opacity":
+                      serialize_styles.polygon.polygon_border_opacity || 1, // Border opacity
+                  };
+
+                  // Conditionally add the line-dasharray property
+                  if (
+                    serialize_styles.polygon.polygon_border_style === "dash"
+                  ) {
+                    //@ts-ignore
+                    borderPaint["line-dasharray"] = [1, 2]; // Dash style for the border
+                  }
+
                   map.current?.addLayer({
                     id: polygonBorderLayerId,
                     type: "line",
                     source: sourceId,
                     filter: ["==", "$type", "Polygon"],
                     "source-layer": "get_features",
-                    paint: {
-                      "line-color":
-                        serialize_styles.polygon.polygon_border_color, // Цвет границы
-                      "line-width":
-                        serialize_styles.polygon.polygon_border_size || 1, // Ширина границы
-                      "line-opacity":
-                        serialize_styles.polygon.polygon_border_opacity || 1, // Прозрачность границы
-                      "line-dasharray":
-                        serialize_styles.polygon.polygon_border_style === "dash"
-                          ? [1, 2]
-                          : undefined, // Стиль границы, например пунктирная линия
-                    },
+                    paint: borderPaint,
                   });
 
                   //@ts-ignore

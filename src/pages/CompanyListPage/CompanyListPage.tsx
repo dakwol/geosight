@@ -9,14 +9,24 @@ import FormInput from "../../components/FormInput/FormInput";
 import Modal from "../../components/Modal/Modal";
 import { ICompanies } from "../../models/ICompanies";
 import Buttons from "../../components/Buttons/Buttons";
+import { useTypeSelector } from "../../hooks/useTypedSelector";
+import { TableActionCreators } from "../../store/reducers/tableCreateReducer/action-creatorTable";
+import { useDispatch } from "react-redux";
+import ErrorMessage from "../../components/UI/ErrorMassage/ErrorMassage";
 
 const CompanyListPage: FC = () => {
   const companyApi = new UserApiRequest();
   const [isHeaderTable, setHeaderTable] = useState<IUserOption>();
   const [isBodyTable, setBodyTable] = useState<any>([]);
-  const [usersArray, setUsersArray] = useState<IUser[]>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [optionCreate, setOptionCreate] = useState<ICompanies>();
+  const [newCompany, setNewCompany] = useState<ICompanies>();
+
+  const dispatch = useDispatch();
+
+  const { Table, isUpdate, error } = useTypeSelector(
+    (state) => state.TableReducer
+  );
 
   useEffect(() => {
     companyApi.optionsUsersCompanies().then((resp) => {
@@ -29,18 +39,9 @@ const CompanyListPage: FC = () => {
             setBodyTable(resp.data && (resp.data.results as IUser[]));
           }
         });
-        companyApi.list().then((resp) => {
-          if (resp.success) {
-            let data = fieldToArray(resp.data.results).map((item) => {
-              return { value: item.key, display_name: item.value.email };
-            });
-            //@ts-ignore
-            setUsersArray(data);
-          }
-        });
       }
     });
-  }, []);
+  }, [isUpdate]);
 
   const companyCreate = () => {
     companyApi.optionsUsersCompanies().then((resp) => {
@@ -52,12 +53,43 @@ const CompanyListPage: FC = () => {
     });
   };
 
-  console.log("====================================");
-  console.log("isBodyTable", usersArray);
-  console.log("====================================");
+  const handleNewCompany = (key: string, value: string | boolean) => {
+    const updatedLayer = {
+      ...newCompany,
+      [key]: value,
+    };
+    setNewCompany(updatedLayer as ICompanies);
+    dispatch(TableActionCreators.setTable(updatedLayer as ICompanies));
+  };
+
+  const newCompanyCreate = () => {
+    companyApi.createCompanies(Table).then((resp) => {
+      if (resp.success && resp.data) {
+        dispatch(TableActionCreators.setUpdate(!isUpdate));
+        setIsOpenModal(false);
+      } else {
+        dispatch(
+          TableActionCreators.setErr({
+            message: "Ошибка создания компании",
+            type: "error",
+          })
+        );
+      }
+    });
+  };
 
   return (
     <Fragment>
+      {error.message && error.message !== "" && (
+        <ErrorMessage
+          type={error.type}
+          message={error.message}
+          onClick={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          onClose={() => dispatch(TableActionCreators.setErr({ message: "" }))}
+        ></ErrorMessage>
+      )}
       <Modal
         content={
           <div className="modalTable">
@@ -69,7 +101,9 @@ const CompanyListPage: FC = () => {
                     <FormInput
                       style={"col-3"}
                       value={undefined}
-                      onChange={() => {}}
+                      onChange={(value) => {
+                        handleNewCompany(item.key, value);
+                      }}
                       subInput={item.value.label}
                       required={item.value.required}
                       error={""}
@@ -80,6 +114,15 @@ const CompanyListPage: FC = () => {
                     />
                   );
                 })}
+            </div>
+            <div className="gridModal">
+              <Buttons text={"Отмена"} onClick={() => setIsOpenModal(false)} />
+              <Buttons
+                text={"Создать компанию"}
+                onClick={() => {
+                  newCompanyCreate();
+                }}
+              />
             </div>
           </div>
         }

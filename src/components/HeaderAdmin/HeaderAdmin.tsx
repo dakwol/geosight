@@ -9,32 +9,37 @@ import Buttons from "../Buttons/Buttons";
 interface IProps {
   title: string;
   onClick: () => void;
+  onSearch?: (e: string) => void;
 }
 
-const HeaderAdmin: FC<IProps> = ({ title, onClick }) => {
+const HeaderAdmin: FC<IProps> = ({ title, onClick, onSearch }) => {
   const navigation = useNavigate();
   return (
     <div className="headerAdmin__container">
       <div className="searchLogoContainer">
-        <div className="logoAdmin" onClick={() => navigation(RouteNames.MAP)}>
+        <div
+          className="logoAdmin"
+          onClick={() =>
+            navigation(
+              `${RouteNames.MAP}/${localStorage.getItem("activeMap") || "1/"}`
+            )
+          }
+        >
           <img src={icons.logoAdmin}></img>
         </div>
-        <FormInput
-          style={"inputSearch"}
-          value={undefined}
-          onChange={function (
-            value: string | string[],
-            isChecked?: boolean | undefined
-          ): void {
-            throw new Error("Function not implemented.");
-          }}
-          subInput={undefined}
-          required={false}
-          error={""}
-          keyData={""}
-          placeholder="Поиск"
-          friedlyInput
-        />
+        {onSearch && (
+          <FormInput
+            style={"inputSearch"}
+            value={undefined}
+            onChange={(value) => onSearch(value)}
+            subInput={undefined}
+            required={false}
+            error={""}
+            keyData={""}
+            placeholder="Поиск"
+            friedlyInput
+          />
+        )}
       </div>
       <div className="nav">
         {navDate.map((item) => (

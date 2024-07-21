@@ -1,3 +1,5 @@
+import { IOptionInput } from "./IOptionInput";
+
 export interface ILayersData{
     created_at: string;
     creator: number | null;
@@ -32,4 +34,10 @@ export interface ILayersData{
     polygon_solid_color: string;
     polygon_value_field_name:number | null;
     updated_at:string;
+}
+
+export interface ILayersCreateOptions{
+    maps: IOptionInput;
+    description: IOptionInput;
+    name: IOptionInput;
 }

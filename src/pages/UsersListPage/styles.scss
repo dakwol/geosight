@@ -7,6 +7,7 @@
 }
 
 .modalTable{
+    min-width: 540rem;
     h1{
         @include fnt(32, 54, $weight:600)
     }

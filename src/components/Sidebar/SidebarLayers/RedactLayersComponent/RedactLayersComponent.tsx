@@ -61,6 +61,7 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
 
   const [layersOption, setLayersOption] = useState<ILayersStylesOption>();
   const [isUpdateMap, setIsUpdateMap] = useState(false);
+  const [layersFieldName, setLayersFieldName] = useState([]);
   const [activeTypeLayer, setActiveTypeLayer] = useState("polygon");
 
   useEffect(() => {
@@ -73,7 +74,23 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
         });
       }
     });
+    mapLayerApi
+      .layersPropertis(layerData.id, "?types=integer&types=float")
+      .then((resp) => {
+        if (resp.success && resp.data) {
+          const newProperties = resp.data.map((item: any) => ({
+            id: item.name,
+            value: item.name,
+            display_name: item.name,
+            type: item.type,
+          }));
+
+          setLayersFieldName(newProperties);
+        }
+      });
   }, []);
+
+  console.log("ddddddddw", layersFieldName);
 
   useEffect(() => {
     dispatch(DataPressActionCreators.clearDataPress());
@@ -87,7 +104,8 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
     fieldValue: string | boolean,
     updateMap: boolean = false
   ) => {
-    console.log("fieldName", fieldValue);
+    console.log("fieldName", fieldName);
+    console.log("fieldValue", fieldValue);
 
     if (fieldName.endsWith("opacity")) {
       dispatch(
@@ -217,7 +235,13 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
                   required={false}
                   placeholder={item.value.placeholder}
                   error={""}
-                  options={item.value.choices}
+                  options={
+                    item.key.endsWith("value_field_name")
+                      ? layersFieldName.length !== 0
+                        ? layersFieldName
+                        : []
+                      : item.value.choices
+                  }
                   keyData={""}
                 ></FormInput>
               </div>

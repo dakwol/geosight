@@ -14,6 +14,9 @@ class MapsApiRequest extends BaseModelAPI {
     async optionLayers<T>() {
         return this.makeRequest<T>(axiosClient.options, {urlParams: API_MAPS_MODEL.methods.layers.url});
     }
+    async getLayers<T>(urlParams?: string) {
+        return this.makeRequest<T>(axiosClient.get, {urlParams: `${API_MAPS_MODEL.methods.layers.url}${urlParams? urlParams : ''}`});
+    }
     async createLayers<T>(body:FormData) {
         return this.makeRequest<T>(axiosClient.post, {urlParams: API_MAPS_MODEL.methods.layers.url, body:body});
     }
@@ -24,7 +27,7 @@ class MapsApiRequest extends BaseModelAPI {
         return this.makeRequest<T>(axiosClient.get, { urlParams: API_MAPS_MODEL.methods.layers.url + `${id}/${API_MAPS_MODEL.methods.properties.url}${urlParams}`});
     }
     async layersPropertyValues<T>(id:string, type:string, urlParams?: string) {
-        return this.makeRequest<T>(axiosClient.get, { urlParams: API_MAPS_MODEL.methods.layers.url + `${id}/${`${API_MAPS_MODEL.methods["property-values"].url}${type}`}${urlParams}`});
+        return this.makeRequest<T>(axiosClient.get, { urlParams: API_MAPS_MODEL.methods.layers.url + `${id}/${`${API_MAPS_MODEL.methods["property-values"].url}${type}`}${urlParams ? urlParams : ''}`});
     }
     async mapsAllowed<T>() {
         return this.makeRequest<T>(axiosClient.get, { urlParams: API_MAPS_MODEL.methods.allowed.url});

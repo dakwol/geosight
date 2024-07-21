@@ -5,6 +5,7 @@ import icons from "../assets/icons/icons";
 import MapListPage from "../pages/MapListPage/MapListPage";
 import UsersListPage from "../pages/UsersListPage/UsersListPage";
 import CompanyListPage from "../pages/CompanyListPage/CompanyListPage";
+import LayersListPage from "../pages/LayersListPage/LayersListPage";
 
 export interface IRoute {
     path: string;
@@ -22,6 +23,7 @@ export enum RouteNames {
     MAPLIST = '/map-list',
     USERSLIST = '/users-list',
     COMPANYLIST = '/company-list',
+    LAYERSLIST = '/layers-list',
 
 }
 
@@ -34,13 +36,13 @@ export const navDate = [
     {
       id: 2,
       name: "Слои",
-    //   link: RouteNames.VACANCY,
+      link: RouteNames.LAYERSLIST,
     },
-    {
-      id: 3,
-      name: "Скоринг",
-    //   link: RouteNames.VACANCY,
-    },
+    // {
+    //   id: 3,
+    //   name: "Скоринг",
+    // //   link: RouteNames.VACANCY,
+    // },
     {
       id: 4,
       name: "Компании",
@@ -68,6 +70,7 @@ export const adminRoutes: IRoute[] = [
     {path: RouteNames.MAPLIST, exact: false, element: MapListPage, ico: icons.adminPanelSettings, name: 'Админка'},
     {path: RouteNames.USERSLIST, exact: false, element: UsersListPage, ico: icons.adminPanelSettings, name: 'Пользователи'},
     {path: RouteNames.COMPANYLIST, exact: false, element: CompanyListPage, ico: icons.adminPanelSettings, name: 'Компании'},
+    {path: RouteNames.LAYERSLIST, exact: false, element: LayersListPage, ico: icons.adminPanelSettings, name: 'Слои'},
     
     {path:`${RouteNames.MAP}/:id`, exact: true, element: MapPage, params: { params: ':id' }},
 
