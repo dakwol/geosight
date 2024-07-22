@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles.scss"; // Подключите свои стили здесь
 import { IOptionInput } from "../../models/IOptionInput";
 import {
@@ -8,6 +8,7 @@ import {
 } from "../UI/functions/functions";
 import Loader from "../Loader/Loader";
 import icons from "../../assets/icons/icons";
+import FormInput from "../FormInput/FormInput";
 
 interface Header {
   key: string;
@@ -22,17 +23,37 @@ interface Props {
   data: Item[];
   headers: Header[];
   totals: (string | number)[];
+  type?: string;
   onItemClick?: (item: Item) => void;
   onItemDelete?: (item: Item) => void;
+  onDataChange?: (data: Item[]) => void;
 }
 
 const Tables: React.FC<Props> = ({
   data,
   headers,
   totals,
+  type,
   onItemClick,
   onItemDelete,
+  onDataChange,
 }) => {
+  const [tableData, setTableData] = useState(data);
+
+  const handleInputChange = (
+    rowIndex: number,
+    key: string,
+    value: string | number | boolean
+  ) => {
+    const newData = [...tableData];
+    //@ts-ignore
+    newData[rowIndex] = {
+      ...newData[rowIndex],
+      [key]: value,
+    };
+    setTableData(newData);
+    onDataChange && onDataChange(newData);
+  };
   return (
     <>
       {data.length === 0 ? (
@@ -44,7 +65,7 @@ const Tables: React.FC<Props> = ({
               className="block-table-header"
               style={{
                 gridTemplateColumns: `repeat(${headers.length}, 1fr) ${
-                  onItemClick ? "20rem" : "0rem"
+                  onItemClick || onItemDelete ? "20rem" : "0rem"
                 }`,
               }}
             >
@@ -59,7 +80,7 @@ const Tables: React.FC<Props> = ({
             className="block-table-body"
             style={{
               gridTemplateColumns: `repeat(${headers.length}, 1fr) ${
-                onItemClick ? "20rem" : "0rem"
+                onItemClick || onItemDelete ? "20rem" : "0rem"
               }`,
             }}
           >
@@ -68,24 +89,70 @@ const Tables: React.FC<Props> = ({
                 <>
                   {fieldToArray(item).map((dataItem) => (
                     <div key={dataItem.key} className="block-table-row">
-                      {dataItem.key === "updated_at"
-                        ? formatDateIntlTimeDate(dataItem.value)
-                        : dataItem.value}
+                      {type === "poi" ? (
+                        dataItem.key === "name" ? (
+                          dataItem.value
+                        ) : (
+                          <FormInput
+                            style={""}
+                            value={dataItem.value}
+                            onChange={(value) =>
+                              handleInputChange(rowIndex, dataItem.key, value)
+                            }
+                            subInput={undefined}
+                            required={false}
+                            type={
+                              dataItem.key === "is_active"
+                                ? "boolean"
+                                : undefined
+                            }
+                            onCheck={(value) =>
+                              handleInputChange(rowIndex, dataItem.key, value)
+                            }
+                            error={""}
+                            keyData={""}
+                          />
+                        )
+                      ) : dataItem.key === "updated_at" ||
+                        dataItem.key === "created_at" ||
+                        dataItem.key === "end_time" ? (
+                        (dataItem.value !== null || dataItem.value) &&
+                        formatDateIntlTimeDate(dataItem.value)
+                      ) : dataItem.key === "maps" ? (
+                        dataItem.value !== null &&
+                        dataItem.value.length !== 0 &&
+                        dataItem.value[0]
+                      ) : (
+                        dataItem.value
+                      )}
                     </div>
                   ))}
                   <div className="containerRowButtons">
-                    <img
-                      className="redactButton"
-                      src={icons.Pencil}
-                      alt="Edit"
-                      onClick={() => onItemClick && onItemClick(item)}
-                    />
-                    <img
-                      className="deleteButton"
-                      src={icons.TrashOne}
-                      alt="delete"
-                      onClick={() => onItemDelete && onItemDelete(item)}
-                    />
+                    {onItemClick && (
+                      <img
+                        className="redactButton"
+                        src={icons.Pencil}
+                        alt="Edit"
+                        onClick={() => onItemClick && onItemClick(item)}
+                      />
+                    )}
+                    {type === "scoring" ? (
+                      item.status === "in_progress" && (
+                        <img
+                          className="deleteButton"
+                          src={icons.TrashOne}
+                          alt="delete"
+                          onClick={() => onItemDelete && onItemDelete(item)}
+                        />
+                      )
+                    ) : (
+                      <img
+                        className="deleteButton"
+                        src={icons.TrashOne}
+                        alt="delete"
+                        onClick={() => onItemDelete && onItemDelete(item)}
+                      />
+                    )}
                   </div>
                 </>
               );

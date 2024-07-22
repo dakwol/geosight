@@ -11,8 +11,26 @@ class MapsApiRequest extends BaseModelAPI {
     async getShow<T>(id:string) {
         return this.makeRequest<T>(axiosClient.get, {id:id, method: API_MAPS_MODEL.methods.show.url});
     }
+    async layersPoi<T>() {
+        return this.makeRequest<T>(axiosClient.get, {method: API_MAPS_MODEL.methods.layersPoi.url});
+    }
     async optionLayers<T>() {
         return this.makeRequest<T>(axiosClient.options, {urlParams: API_MAPS_MODEL.methods.layers.url});
+    }
+    async layersScoringOption<T>() {
+        return this.makeRequest<T>(axiosClient.options, {urlParams: API_MAPS_MODEL.methods.layersScoring.url});
+    }
+    async getLayersScoring<T>() {
+        return this.makeRequest<T>(axiosClient.get, {urlParams: API_MAPS_MODEL.methods.layersScoring.url});
+    }
+    async createScoring<T>(body:any) {
+        return this.makeRequest<T>(axiosClient.post, {urlParams: API_MAPS_MODEL.methods.createScoring.url, body:body});
+    }
+    async updateLayersScoring<T>(id:string,body:any) {
+        return this.makeRequest<T>(axiosClient.put, {urlParams: `${API_MAPS_MODEL.methods.layersScoring.url}${id}/`, body:body});
+    }
+    async killLayersScoring<T>(id:string) {
+        return this.makeRequest<T>(axiosClient.post, {urlParams: `${API_MAPS_MODEL.methods.layersScoringStop.url}?id=${id}`});
     }
     async getLayers<T>(urlParams?: string) {
         return this.makeRequest<T>(axiosClient.get, {urlParams: `${API_MAPS_MODEL.methods.layers.url}${urlParams? urlParams : ''}`});

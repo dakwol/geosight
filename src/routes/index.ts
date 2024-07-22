@@ -7,6 +7,7 @@ import UsersListPage from "../pages/UsersListPage/UsersListPage";
 import CompanyListPage from "../pages/CompanyListPage/CompanyListPage";
 import LayersListPage from "../pages/LayersListPage/LayersListPage";
 import { isAdmin } from "../utils";
+import ScoringListPage from "../pages/ScoringListPage/ScoringListPage";
 
 export interface IRoute {
     path: string;
@@ -25,6 +26,7 @@ export enum RouteNames {
     USERSLIST = '/users-list',
     COMPANYLIST = '/company-list',
     LAYERSLIST = '/layers-list',
+    SCORINGLAYER = '/scoring-list',
 
 }
 
@@ -38,6 +40,11 @@ export const navDate = [
       id: 2,
       name: "Слои",
       link: RouteNames.LAYERSLIST,
+  },
+  {
+      id: 3,
+      name: "Скоринг",
+      link: RouteNames.SCORINGLAYER,
   },
   {
       id: 4,
@@ -68,6 +75,7 @@ export const adminRoutes: IRoute[] = [
     {path: RouteNames.USERSLIST, exact: false, element: UsersListPage, ico: icons.adminPanelSettings, name: 'Пользователи'},
     {path: RouteNames.COMPANYLIST, exact: false, element: CompanyListPage, ico: icons.adminPanelSettings, name: 'Компании'},
     {path: RouteNames.LAYERSLIST, exact: false, element: LayersListPage, ico: icons.adminPanelSettings, name: 'Слои'},
+    {path: RouteNames.SCORINGLAYER, exact: false, element: ScoringListPage, ico: icons.adminPanelSettings, name: 'Скоринг'},
     
     {path:`${RouteNames.MAP}/:id`, exact: true, element: MapPage, params: { params: ':id' }},
 

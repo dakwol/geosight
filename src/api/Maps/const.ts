@@ -8,6 +8,18 @@ export const API_MAPS_MODEL = {
         layers:{
             url: 'layers/'
         },
+        layersPoi:{
+            url: 'layers/poi/'
+        },
+        createScoring:{
+            url: 'layers/scoring/'
+        },
+        layersScoring:{
+            url: 'layers/scoring_list/'
+        },
+        layersScoringStop:{
+            url: 'layers/scoring_stop/'
+        },
         properties:{
             url: 'properties/'
         },

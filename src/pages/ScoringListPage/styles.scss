@@ -1,0 +1,11 @@
+@use "../../scss/" as *;
+
+.grayPageContainer{
+    background-color: $gray-100;
+    height: 100vh;
+    padding: 28rem 32rem;
+}
+
+.p-datatable-wrapper{
+    width: 100%;
+}
