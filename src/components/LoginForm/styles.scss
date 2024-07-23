@@ -130,6 +130,7 @@
         cursor: pointer;
         text-align: center;
         width: 100%;
+        max-width: 100%;
         @include fnt(16, 20, $weight: 400, $font: $fontText, $color: $gray-400);
     }
 }

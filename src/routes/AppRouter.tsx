@@ -14,6 +14,7 @@ import { IUser } from "../models/IUser";
 import Sidebar from "../components/Sidebar/Sidebar";
 import icons from "../assets/icons/icons";
 import HeaderAdmin from "../components/HeaderAdmin/HeaderAdmin";
+import Login from "../pages/Login/Login";
 
 const AppRouter = () => {
   const { isAuth } = useTypeSelector((state) => state.authReducer);
@@ -107,7 +108,7 @@ const AppRouter = () => {
         <Sidebar sbData={sidebarData} pageType={undefined} />
       )} */}
       <Routes>
-        <Route path="*" element={""} />
+        <Route path="*" element={<Login />} />
         {publicRoutes.map((route) => (
           <Route
             path={route.path}

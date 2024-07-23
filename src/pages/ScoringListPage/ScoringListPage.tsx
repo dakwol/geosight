@@ -115,7 +115,7 @@ const ScoringListPage: FC = () => {
   };
 
   const handleSearch = (value: string) => {
-    ScoringApi.list({ urlParams: `?search=${value}` }).then((resp) => {
+    ScoringApi.getLayersScoring(`?search=${value}`).then((resp) => {
       if (resp.success) {
         setBodyTable(resp.data && resp.data.results);
       }

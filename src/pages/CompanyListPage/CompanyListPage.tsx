@@ -78,6 +78,14 @@ const CompanyListPage: FC = () => {
     });
   };
 
+  const handleSearch = (value: string) => {
+    companyApi.getUsersCompanies(`?search=${value}`).then((resp) => {
+      if (resp.success) {
+        setBodyTable(resp.data && resp.data.results);
+      }
+    });
+  };
+
   return (
     <Fragment>
       {error.message && error.message !== "" && (
@@ -130,7 +138,13 @@ const CompanyListPage: FC = () => {
         isOpen={isOpenModal}
       />
       <div className="grayPageContainer">
-        <HeaderAdmin title={"Создать компанию"} onClick={companyCreate} />
+        <HeaderAdmin
+          title={"Создать компанию"}
+          onClick={companyCreate}
+          onSearch={(value) => {
+            handleSearch(value);
+          }}
+        />
         <Tables
           data={isBodyTable ? isBodyTable : []}
           //@ts-ignore

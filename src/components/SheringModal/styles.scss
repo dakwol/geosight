@@ -2,13 +2,21 @@
 
 .sheringModal{
     width: 444rem;
+    min-height: 200rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .sharingSearchContainer{
-    display: grid;
-    grid-template-columns: 1fr 136rem;
-    align-items: flex-end;
-    gap: 12rem;
+ 
+    .searchInputContainer{
+        display: grid;
+        grid-template-columns: 1fr 136rem;
+        align-items: flex-end;
+        gap: 12rem;
+        position: relative;
+    }
 }
 
 .searhUserContainer{
@@ -22,6 +30,7 @@
     display: flex;
     flex-direction: column;
     gap: 12rem;
+    bottom: -70rem;
 
     .searchUserItem{
         display: flex;
@@ -55,6 +64,10 @@
             }
         }
     }
+}
+
+.loaderContainerModal{
+    margin: 14rem 0;
 }
 
 .usersSharedContainer{

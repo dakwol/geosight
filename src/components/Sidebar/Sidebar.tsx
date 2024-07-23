@@ -125,21 +125,21 @@ const Sidebar = ({ sbData, pageType, mapData }: any) => {
             <div className="sidebar__container">
               <nav className="sidebar__nav">
                 {sbData.map((e: any, i: React.Key | null | undefined) => {
-                  if (i === 0 && !isAdmin && !isManager) {
+                  const isActive = i === active; // Ensure isActive is defined
+                  if (i === 0 && !(isAdmin || isManager)) {
                     return null;
                   }
-
                   return (
                     <div
                       onClick={() => handleSidebarClick(e)}
                       key={i}
-                      className={`nanItem ${i === active ? "active" : ""} `}
+                      className={`nanItem ${isActive ? "active" : ""}`}
                     >
                       <img
                         src={e.ico}
                         alt="Icon"
                         style={isActive ? { marginRight: 0 } : {}}
-                      ></img>
+                      />
                       <span className={`display ${isActive ? "hidden" : ""}`}>
                         {e.name}
                       </span>

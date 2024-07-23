@@ -7,6 +7,7 @@ import "./styles.scss";
 import MapsApiRequest from "../../api/Maps/Maps";
 import { useLocation } from "react-router-dom";
 import icons from "../../assets/icons/icons";
+import Loader from "../Loader/Loader";
 
 interface IUserActive {
   id: number | string;
@@ -21,6 +22,7 @@ const SheringModal: FC = () => {
   const mapsApi = new MapsApiRequest();
   const [isUpdate, setIsUpdate] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [usersSearchArray, setUsersSearchArray] = useState<IUserActive[]>([]);
   const [usersArray, setUsersArray] = useState<IUserActive[]>([]);
   const [userActive, setUserActive] = useState<IUserActive>({
@@ -32,11 +34,13 @@ const SheringModal: FC = () => {
   });
 
   useEffect(() => {
+    setIsLoading(true);
     mapsApi
       .getAllowedUser(`${localStorage.getItem("activeMap") || ""}/`)
       .then((resp) => {
         if (resp.success && resp.data) {
           setUsersArray(resp.data.results);
+          setIsLoading(false);
         }
       });
   }, [isUpdate]);
@@ -99,7 +103,7 @@ const SheringModal: FC = () => {
   return (
     <div className="sheringModal">
       <div className="sharingSearchContainer">
-        <div>
+        <div className="searchInputContainer">
           <FormInput
             style={""}
             value={userActive.email}
@@ -143,15 +147,15 @@ const SheringModal: FC = () => {
                 }
               </div>
             )}
+          <Buttons
+            text={"Пригласить"}
+            disabled={userActive.id === ""}
+            onClick={() => handleInviteUser()}
+          />
         </div>
-        <Buttons
-          text={"Пригласить"}
-          disabled={userActive.id === ""}
-          onClick={() => handleInviteUser()}
-        />
       </div>
       <div className="containerShering">
-        {usersArray &&
+        {usersArray || isLoading ? (
           //@ts-ignore
           usersArray.length !== 0 && (
             <div className="usersSharedContainer">
@@ -178,7 +182,12 @@ const SheringModal: FC = () => {
                 })
               }
             </div>
-          )}
+          )
+        ) : (
+          <div className="loaderContainerModal">
+            <Loader />
+          </div>
+        )}
         <p className="copyLinkButton" onClick={handleCopyLink}>
           <img src={icons.fileCopy}></img>{" "}
           {`${isCopy ? "Ссылка скопирована" : "Скопировать ссылку"}`}

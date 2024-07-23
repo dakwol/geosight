@@ -12,7 +12,7 @@ import { useTypeSelector } from "../../hooks/useTypedSelector";
 import { useDispatch } from "react-redux";
 import { UserActionCreators } from "../../store/reducers/userCreateReducer/action-creatorUser";
 import ErrorMessage from "../../components/UI/ErrorMassage/ErrorMassage";
-import { isAdmin } from "../../utils";
+import { isAdmin, isManager } from "../../utils";
 interface ClassContain {
   company: string;
   email: string;
@@ -66,7 +66,7 @@ const UsersListPage: FC = () => {
 
   const userCreateModal = () => {
     dispatch(UserActionCreators.setUser(undefined));
-
+    setIsRedact(false);
     setIsOpenModal(true);
   };
 
@@ -75,9 +75,6 @@ const UsersListPage: FC = () => {
       ...newUser,
       [key]: value,
     };
-    console.log("====================================");
-    console.log("updatedUser", updatedUser);
-    console.log("====================================");
     setNewUser(updatedUser as IUser);
     dispatch(UserActionCreators.setUser(updatedUser as IUser));
   };
@@ -99,12 +96,11 @@ const UsersListPage: FC = () => {
   };
 
   const handleRedactUser = (userItem: IUser) => {
-    setIsOpenModal(true);
     dispatch(UserActionCreators.setUser(undefined));
 
     userApi.options().then((resp) => {
       if (resp.success) {
-        setOptionCreate(resp.data.actions.update as IUserCreateOption);
+        setOptionCreate(resp.data.actions.edit as IUserCreateOption);
         userApi.getById({ id: userItem.id }).then((resp) => {
           if (resp.success && resp.data) {
             const updatedUser = fieldToArray(resp.data).reduce(
@@ -146,6 +142,14 @@ const UsersListPage: FC = () => {
         dispatch(
           UserActionCreators.setErr({ message: resp.message, type: "error" })
         );
+      }
+    });
+  };
+
+  const handleSearch = (value: string) => {
+    userApi.list({ urlParams: `?search=${value}` }).then((resp) => {
+      if (resp.success) {
+        setBodyTable(resp.data && resp.data.results);
       }
     });
   };
@@ -199,7 +203,11 @@ const UsersListPage: FC = () => {
                         error={""}
                         type={item.value.type}
                         keyData={""}
-                        options={item.value.choices}
+                        options={
+                          isManager
+                            ? item.value.choices?.slice(0, -1)
+                            : item.value.choices
+                        }
                       />
                     );
                   }
@@ -224,6 +232,9 @@ const UsersListPage: FC = () => {
           title={"Создать пользователя"}
           onClick={() => {
             userCreateModal();
+          }}
+          onSearch={(value) => {
+            handleSearch(value);
           }}
         />
         <Tables

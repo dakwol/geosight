@@ -8,8 +8,8 @@ class UserApiRequest extends BaseModelAPI {
         super(API_USER_MODEL.url);
     }
 
-    async getUsersCompanies<T>() {
-        return this.makeRequest<T>(axiosClient.get, {method: API_USER_MODEL.methods.getUsersCompanies.url});
+    async getUsersCompanies<T>(urlParams?:string) {
+        return this.makeRequest<T>(axiosClient.get, {method: `${API_USER_MODEL.methods.getUsersCompanies.url}${urlParams ? urlParams : ''}`});
     }
     async createCompanies<T>(body:any) {
         return this.makeRequest<T>(axiosClient.post, {method: API_USER_MODEL.methods.getUsersCompanies.url, body:body});

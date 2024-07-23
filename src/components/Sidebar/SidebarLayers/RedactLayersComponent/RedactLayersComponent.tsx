@@ -64,6 +64,23 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
   const [layersFieldName, setLayersFieldName] = useState([]);
   const [activeTypeLayer, setActiveTypeLayer] = useState("polygon");
 
+  const [dataFonts, setDataFonts] = useState([
+    {
+      value: "Open Sans",
+      display_name: "Open Sans",
+    },
+  ]);
+  const [dataFontsStyle, setDataFontsStyle] = useState([
+    {
+      value: "Semibold",
+      display_name: "Semibold",
+    },
+    {
+      value: "Bold",
+      display_name: "Bold",
+    },
+  ]);
+
   useEffect(() => {
     mapLayerApi.optionLayers().then((resp) => {
       if (resp.success && resp.data) {
@@ -240,6 +257,10 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
                       ? layersFieldName.length !== 0
                         ? layersFieldName
                         : []
+                      : item.key.endsWith("label_font")
+                      ? dataFonts
+                      : item.key.endsWith("label_font_style")
+                      ? dataFontsStyle
                       : item.value.choices
                   }
                   keyData={""}

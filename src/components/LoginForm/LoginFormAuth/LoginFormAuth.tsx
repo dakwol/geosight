@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import FormInput from "../../FormInput/FormInput";
 import { useDispatch } from "react-redux";
 import { useTypeSelector } from "../../../hooks/useTypedSelector";
@@ -29,6 +29,21 @@ const LoginFormAuth: FC<LoginFormProps> = ({
     //@ts-ignore
     dispatch(AuthActionCreators.login(username, password));
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        event.preventDefault(); // Prevent the default form submission
+        submit();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [username, password, isLoading]);
 
   console.log("isLoading", isLoading);
 

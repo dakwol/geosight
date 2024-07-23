@@ -20,8 +20,8 @@ class MapsApiRequest extends BaseModelAPI {
     async layersScoringOption<T>() {
         return this.makeRequest<T>(axiosClient.options, {urlParams: API_MAPS_MODEL.methods.layersScoring.url});
     }
-    async getLayersScoring<T>() {
-        return this.makeRequest<T>(axiosClient.get, {urlParams: API_MAPS_MODEL.methods.layersScoring.url});
+    async getLayersScoring<T>(urlParams?:string) {
+        return this.makeRequest<T>(axiosClient.get, {urlParams: `${API_MAPS_MODEL.methods.layersScoring.url}${urlParams ? urlParams : ''}`});
     }
     async createScoring<T>(body:any) {
         return this.makeRequest<T>(axiosClient.post, {urlParams: API_MAPS_MODEL.methods.createScoring.url, body:body});

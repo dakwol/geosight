@@ -221,10 +221,9 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers }) => {
                     <>
                       <p>{filter.range}</p>
                       <Slider
-                        value={[
-                          Number(filter.range[0]),
-                          Number(filter.range[1]),
-                        ]}
+                        //@ts-ignore
+                        value={filter.range.split(",").map(Number)}
+                        step={1}
                         onChange={(e) =>
                           updateFilter(filter.id, "range", `${e.value}`)
                         }

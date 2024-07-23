@@ -61,14 +61,26 @@ const LayersListPage: FC = () => {
     key: string,
     value: string | string[] | boolean | File[]
   ) => {
-    const updatedLayer = {
-      ...newLayer,
-      [key]: value,
-    };
-    setNewLayer(updatedLayer as ILayersCreateOptions);
-    dispatch(
-      TableActionCreators.setTable(updatedLayer as ILayersCreateOptions)
+    const formData = new FormData();
+    formData.append(
+      key,
+      Array.isArray(value) ? JSON.stringify(value) : String(value)
     );
+
+    for (const existingKey in newLayer) {
+      if (newLayer.hasOwnProperty(existingKey) && existingKey !== key) {
+        //@ts-ignore
+        formData.append(existingKey, newLayer[existingKey]);
+      }
+    }
+    //@ts-ignore
+    const updatedLayer: ILayersCreateOptions = Object.fromEntries(
+      formData.entries()
+    ) as ILayersCreateOptions;
+    setNewLayer(updatedLayer);
+    console.log("2222222222", formData);
+
+    dispatch(TableActionCreators.setTable(updatedLayer));
   };
 
   const handleSearch = (value: string) => {
@@ -80,17 +92,20 @@ const LayersListPage: FC = () => {
   };
 
   const newLayerCreate = () => {
-    mapsApi.createLayers(Table).then((resp) => {
-      if (resp.success && resp.data) {
-        dispatch(TableActionCreators.setTable(undefined));
-        dispatch(TableActionCreators.setUpdate(!isUpdate));
-        setIsOpenModal(false);
-      } else {
-        dispatch(
-          TableActionCreators.setErr({ message: resp.message, type: "error" })
-        );
-      }
-    });
+    if (newLayer) {
+      //@ts-ignore
+      mapsApi.createLayers(newLayer).then((resp) => {
+        if (resp.success && resp.data) {
+          dispatch(TableActionCreators.setTable(undefined));
+          dispatch(TableActionCreators.setUpdate(!isUpdate));
+          setIsOpenModal(false);
+        } else {
+          dispatch(
+            TableActionCreators.setErr({ message: resp.message, type: "error" })
+          );
+        }
+      });
+    }
   };
 
   const layerUpdate = () => {
@@ -139,6 +154,12 @@ const LayersListPage: FC = () => {
         setIsOpenModal(true);
       }
     });
+  };
+
+  const handleOpenModal = () => {
+    setIsOpenModal(true);
+    setIsRedact(false);
+    dispatch(TableActionCreators.setTable(undefined));
   };
 
   return (
@@ -217,7 +238,7 @@ const LayersListPage: FC = () => {
         <HeaderAdmin
           title={"Создать слой"}
           onClick={() => {
-            setIsOpenModal(true);
+            handleOpenModal();
           }}
           onSearch={(value) => handleSearch(value)}
         />

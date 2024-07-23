@@ -9,9 +9,11 @@
 .filterLayerContainer{
     display: flex;
     align-items: center;
+    gap: 12rem;
 }
 
 .removeFilter{
     pointer-events: all;
     cursor: pointer;
+    margin-top: 20rem;
 }

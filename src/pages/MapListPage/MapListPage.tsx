@@ -48,6 +48,12 @@ const MapListPage: FC = () => {
     });
   }, [isUpdate]);
 
+  const handleOpenModal = () => {
+    setIsOpenModal(true);
+    setIsRedact(false);
+    dispatch(TableActionCreators.setTable(undefined));
+  };
+
   const handleNewMaps = (key: string, value: string | boolean) => {
     const updatedMap = {
       ...newMap,
@@ -187,7 +193,7 @@ const MapListPage: FC = () => {
         <HeaderAdmin
           title={"Создать карту"}
           onClick={() => {
-            setIsOpenModal(true);
+            handleOpenModal();
           }}
           onSearch={(value) => {
             handleSearch(value);
