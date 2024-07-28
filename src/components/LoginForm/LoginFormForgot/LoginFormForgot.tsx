@@ -92,6 +92,7 @@ const LoginFormForgot: FC<LoginForgotProps> = ({ onAuth }) => {
         );
       })}
 
+    <div className="containerFooterLogin">
       <Buttons
         // ico={isLoading ? icons.lock : ""}
         text={"Зарегистрироваться"}
@@ -108,6 +109,7 @@ const LoginFormForgot: FC<LoginForgotProps> = ({ onAuth }) => {
       >
         Вернуться назад
       </p>
+      </div>
     </>
   );
 };

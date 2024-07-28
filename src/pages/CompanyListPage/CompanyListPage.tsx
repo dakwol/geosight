@@ -19,6 +19,7 @@ const CompanyListPage: FC = () => {
   const [isHeaderTable, setHeaderTable] = useState<IUserOption>();
   const [isBodyTable, setBodyTable] = useState<any>([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isRedact, setIsRedact] = useState(false);
   const [optionCreate, setOptionCreate] = useState<ICompanies>();
   const [newCompany, setNewCompany] = useState<ICompanies>();
 
@@ -44,6 +45,7 @@ const CompanyListPage: FC = () => {
   }, [isUpdate]);
 
   const companyCreate = () => {
+    dispatch(TableActionCreators.setTable(undefined));
     companyApi.optionsUsersCompanies().then((resp) => {
       if (resp.success && resp.data && resp.data) {
         //@ts-ignore
@@ -86,6 +88,55 @@ const CompanyListPage: FC = () => {
     });
   };
 
+  const handleRedactCompany = (item: any) => {
+    console.log("dddddd", item);
+
+    companyApi.getByIdCompany(item.id ).then((resp) => {
+      if (resp.success && resp.data) {
+        const updatedCompany = fieldToArray(resp.data).reduce(
+          (acc, data) => {
+            //@ts-ignore
+            acc[data.key] = data.value;
+            return acc;
+          },
+          { ...newCompany }
+        );
+        setIsRedact(true);
+        setNewCompany(updatedCompany as ICompanies);
+        dispatch(
+          TableActionCreators.setTable(updatedCompany as any)
+        );
+        setIsOpenModal(true);
+      }
+    });
+  };
+
+  const companyUpdate = () => {
+    companyApi.updateCompany(`${Table.id}/`, Table).then((resp) => {
+      if (resp.success && resp.data) {
+        dispatch(TableActionCreators.setUpdate(!isUpdate));
+        setIsOpenModal(false);
+      } else {
+        dispatch(
+          TableActionCreators.setErr({ message: resp.message, type: "error" })
+        );
+      }
+    });
+  };
+
+  const companyDelete = (id: string | number) => {
+    companyApi.deleteUsersCompany(`${id}/`).then((resp) => {
+      if (resp.success && resp.data) {
+        dispatch(TableActionCreators.setUpdate(!isUpdate));
+        setIsOpenModal(false);
+      } else {
+        dispatch(
+          TableActionCreators.setErr({ message: resp.message, type: "error" })
+        );
+      }
+    });
+  };
+
   return (
     <Fragment>
       {error.message && error.message !== "" && (
@@ -101,14 +152,14 @@ const CompanyListPage: FC = () => {
       <Modal
         content={
           <div className="modalTable">
-            <h1>Новая компания</h1>
+            <h1>{isRedact ? 'Редактировать компанию' : 'Новая компания'}</h1>
             <div className="gridModal">
               {optionCreate &&
                 fieldToArray(optionCreate).map((item) => {
                   return (
                     <FormInput
                       style={"col-3"}
-                      value={undefined}
+                      value={Table ? Table[item.key] : undefined}
                       onChange={(value) => {
                         handleNewCompany(item.key, value);
                       }}
@@ -126,9 +177,9 @@ const CompanyListPage: FC = () => {
             <div className="gridModal">
               <Buttons text={"Отмена"} onClick={() => setIsOpenModal(false)} />
               <Buttons
-                text={"Создать компанию"}
+                text={isRedact ? 'Редактировать' : "Создать компанию"}
                 onClick={() => {
-                  newCompanyCreate();
+                  isRedact? companyUpdate() : newCompanyCreate();
                 }}
               />
             </div>
@@ -150,6 +201,12 @@ const CompanyListPage: FC = () => {
           //@ts-ignore
           headers={isHeaderTable ? fieldToArray(isHeaderTable) : []}
           totals={[]}
+          onItemClick={(item) => {
+            handleRedactCompany(item);
+          }}
+          onItemDelete={(item) => {
+            companyDelete(item.id);
+          }}
         />
       </div>
     </Fragment>

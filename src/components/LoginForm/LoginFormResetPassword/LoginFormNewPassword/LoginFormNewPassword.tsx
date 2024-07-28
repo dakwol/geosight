@@ -91,6 +91,7 @@ const LoginFormNewPassword: FC<LoginFormCode> = ({ goBack, onSubmit }) => {
         type="password"
         friedlyInput={true}
       />
+      <div className="containerFooterLogin">
       <Buttons
         // ico={isLoading ? icons.lock : ""}
         text={"Готово"}
@@ -107,6 +108,7 @@ const LoginFormNewPassword: FC<LoginFormCode> = ({ goBack, onSubmit }) => {
       >
         Вернуться назад
       </p>
+      </div>
     </div>
   );
 };

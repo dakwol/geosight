@@ -4,6 +4,9 @@ import icons from "../../../assets/icons/icons";
 import "./styles.scss";
 import AddLayerComponent from "./AddLayerComponent/AddLayerComponent";
 import RedactLayersComponent from "./RedactLayersComponent/RedactLayersComponent";
+import { useDispatch } from "react-redux";
+import { DataPressActionCreators } from "../../../store/reducers/dataPressItem/action-creator";
+import { toggleLayerVisibility } from "../../../store/reducers/layerVisible/actions";
 
 interface IMapDataLayer {
   description: string;
@@ -16,9 +19,10 @@ interface IMapDataLayer {
 interface IMapDataLayers {
   mapDataLayers: IMapDataLayer[];
   mapDataId: string;
+  toggleLayerVisibility:any;
 }
 
-const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers }) => {
+const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers, toggleLayerVisibility }) => {
   const [activeLayer, setActiveLayer] = useState<string | number>();
   const [activeLayerRedact, setActiveLayerRedact] = useState<string | number>(
     ""
@@ -26,9 +30,9 @@ const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers }) => {
   const [visibleLayers, setVisibleLayers] = useState<Array<string | number>>(
     []
   );
-  const [visibleLayerActive, setVisibleLayerActive] = useState<string | number>(
-    ""
-  );
+
+  const dispatch = useDispatch();
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -43,13 +47,13 @@ const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers }) => {
     }, 2000); // Adjust the timeout duration as needed
   }, []);
 
-  const toggleLayerVisibility = (layerId: string | number) => {
+  const toggleLayerVisible = (layerId: string | number) => {
     const updatedLayers = visibleLayers.includes(layerId)
       ? visibleLayers.filter((id) => id !== layerId)
       : [...visibleLayers, layerId];
 
     setVisibleLayers(updatedLayers);
-    setVisibleLayerActive(layerId);
+    toggleLayerVisibility(`polygon-${layerId}`);
     localStorage.setItem("visibilityLayers", JSON.stringify(updatedLayers));
   };
 
@@ -66,11 +70,11 @@ const SidebarLayers: FC<IMapDataLayers> = ({ mapDataId, mapDataLayers }) => {
       id: 2,
       ico: (layerId: string | number) =>
         visibleLayers.includes(layerId)
-          ? icons.dontvisibility
-          : icons.visibility,
+          ? icons.visibility
+          : icons.dontvisibility,
       classNames: ``,
       onClick: (layerId: string | number) => {
-        toggleLayerVisibility(layerId);
+        toggleLayerVisible(layerId);
       },
     },
     {

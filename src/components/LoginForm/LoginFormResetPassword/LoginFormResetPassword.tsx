@@ -67,6 +67,7 @@ const LoginFormResetPassword: FC<LoginFormResetPasswordProps> = ({
             type="email"
             friedlyInput={true}
           />
+      <div className="containerFooterLogin">
           <Buttons
             // ico={isLoading ? icons.lock : ""}
             text={"Отправить"}
@@ -83,6 +84,7 @@ const LoginFormResetPassword: FC<LoginFormResetPasswordProps> = ({
           >
             Вернуться назад
           </p>
+          </div>
         </div>
       )}
 

@@ -185,7 +185,7 @@ const LayersListPage: FC = () => {
                     return (
                       <FormInput
                         style={"col-3"}
-                        value={Table ? Table[item.key] : undefined}
+                        value={Table ? item.key === 'maps'? JSON.parse(Table['maps'])[0] : Table[item.key] : undefined}
                         onChange={(e) => {
                           handleNewLayer(
                             item.key,

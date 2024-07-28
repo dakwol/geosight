@@ -20,3 +20,35 @@
         width: 188rem;
     }
 }
+
+.sydgestAddress{
+    display: flex;
+    flex-direction: column;
+    background-color: $white;
+    border-radius: 8rem;
+    overflow-y: scroll;
+    gap: 8rem;
+    padding: 12rem 0;
+    position: absolute;
+    top: 50rem;
+    max-height: 400rem;
+  
+    /* Hide scrollbar for WebKit browsers */
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+  
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+
+    .sidgestItem{
+        cursor: pointer;
+        padding: 0 12rem;
+        @include fnt(14, 20, $color: $txt-color, $font: $fontUI);
+        &:hover{
+            background-color: $gray-100;
+        }
+    }
+}

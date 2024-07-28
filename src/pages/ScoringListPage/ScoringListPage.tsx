@@ -69,6 +69,7 @@ const ScoringListPage: FC = () => {
   };
 
   const newScoringCreate = () => {
+    dispatch(TableActionCreators.setTable(undefined));
     ScoringApi.createScoring(Table).then((resp) => {
       if (resp.success && resp.data) {
         dispatch(TableActionCreators.setUpdate(!isUpdate));
@@ -106,6 +107,7 @@ const ScoringListPage: FC = () => {
   };
 
   const handleOpenScoringModal = () => {
+    dispatch(TableActionCreators.setTable(undefined));
     ScoringApi.layersPoi().then((resp) => {
       if (resp.success && resp.data) {
         setPoi(resp.data);

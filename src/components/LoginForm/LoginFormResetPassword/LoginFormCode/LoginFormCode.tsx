@@ -59,6 +59,7 @@ const LoginFormCode: FC<LoginFormCode> = ({ goBack, onCodeSubmit }) => {
         value={code}
         onChange={(e) => sessionStorage.setItem("code", `${e.value}`)}
       />
+        <div className="containerFooterLogin">
       <Buttons
         // ico={isLoading ? icons.lock : ""}
         text={"Отправить"}
@@ -75,6 +76,7 @@ const LoginFormCode: FC<LoginFormCode> = ({ goBack, onCodeSubmit }) => {
       >
         Вернуться назад
       </p>
+      </div>
     </div>
   );
 };

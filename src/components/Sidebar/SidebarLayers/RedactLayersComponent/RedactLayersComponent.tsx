@@ -107,7 +107,6 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
       });
   }, []);
 
-  console.log("ddddddddw", layersFieldName);
 
   useEffect(() => {
     dispatch(DataPressActionCreators.clearDataPress());
@@ -121,8 +120,6 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
     fieldValue: string | boolean,
     updateMap: boolean = false
   ) => {
-    console.log("fieldName", fieldName);
-    console.log("fieldValue", fieldValue);
 
     if (fieldName.endsWith("opacity")) {
       dispatch(
@@ -202,6 +199,19 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
                       handleChange(item.key, e.target.value, true)
                     }
                   />
+                </div>
+              );
+            }
+            if (item.key.endsWith("opacity")) {
+              return (
+                <div>
+                   <input
+                    value={dataPress[item.key]}
+                    onChange={(e) =>
+                      handleChange(item.key, e.target.value, true)
+                    }
+                  />
+                  <Slider value={Number(dataPress[item.key])} onChange={(e) => handleChange(item.key, `${e.value}`, true)} />
                 </div>
               );
             }

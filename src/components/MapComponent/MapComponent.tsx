@@ -10,6 +10,8 @@ import { Toast } from "primereact/toast";
 import { useSelector } from "react-redux";
 import apiConfig from "../../api/apiConfig";
 import { fieldToArray } from "../UI/functions/functions";
+import { RootState } from "../../store";
+import Sidebar from "../Sidebar/Sidebar";
 
 interface ISource {
   [key: string]: { id: string | number; name: string; description: string };
@@ -19,12 +21,15 @@ interface IMapProps {
   styleMap: iStyleMap | null;
   mapData: any;
   address: string;
+  sidebarData: any;
+  setFoundAddresses:(data:[])=> void;
 }
 
-const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
+const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, setFoundAddresses }) => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const visibilityLayers = useLocalStorage("visibilityLayers");
+  const visibleLayers = useSelector((state: RootState) => state.visibilityReducer.visibleLayers);
   const mapApi = new MapsApiRequest();
 
   const [zoom] = useState(14);
@@ -32,7 +37,6 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const toast = useRef<Toast | null>(null);
-
   const handleAddressSearch = async () => {
     try {
       const response = await fetch(
@@ -40,6 +44,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
       );
       const data = await response.json();
       if (data.length > 0) {
+        setFoundAddresses(data); // Store the found addresses
         const { lon, lat } = data[0];
         map.current?.setCenter([parseFloat(lon), parseFloat(lat)]);
         map.current?.setZoom(14);
@@ -280,7 +285,6 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
                     const coordinates =
                       //@ts-ignore
                       e.features[0].geometry.coordinates.slice();
-
                     console.log("eeeeeeee", e.features);
 
                     //@ts-ignore
@@ -436,7 +440,30 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
         map.current = null;
       }
     };
-  }, [styleMap, zoom, API_KEY, mapData.layers, visibilityLayers]);
+  }, [styleMap, zoom, API_KEY, mapData.layers]);
+
+  const toggleLayerVisibility = (layerId: string) => {
+    console.log('layerId',layerId);
+    
+    const visibility = map.current?.getLayoutProperty(`${layerId}`, "visibility");
+    if (visibility === "visible") {
+      map.current?.setLayoutProperty(layerId, "visibility", "none");
+
+      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
+      map.current?.setLayoutProperty(borderLayerId, "visibility", "none");
+
+      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
+      map.current?.setLayoutProperty(labelLayerId, "visibility", "none");
+    } else {
+      map.current?.setLayoutProperty(layerId, "visibility", "visible");
+
+      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
+      map.current?.setLayoutProperty(borderLayerId, "visibility", "visible");
+
+      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
+      map.current?.setLayoutProperty(labelLayerId, "visibility", "visible");
+    }
+  };
 
   const zoomIn = () => {
     if (map.current) {
@@ -467,6 +494,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address }) => {
 
   return (
     <Fragment>
+      <Sidebar sbData={sidebarData} pageType={undefined} mapData={mapData} toggleLayerVisibility={(data:any)=>toggleLayerVisibility(data)}/>
       <div className="map-wrap">
         {mapData.layers ? (
           <Fragment>

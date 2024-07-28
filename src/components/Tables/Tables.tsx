@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.scss"; // Подключите свои стили здесь
 import { IOptionInput } from "../../models/IOptionInput";
 import {
@@ -40,6 +40,10 @@ const Tables: React.FC<Props> = ({
 }) => {
   const [tableData, setTableData] = useState(data);
 
+  useEffect(() => {
+    setTableData(data);
+  }, [data]);
+
   const handleInputChange = (
     rowIndex: number,
     key: string,
@@ -54,6 +58,22 @@ const Tables: React.FC<Props> = ({
     setTableData(newData);
     onDataChange && onDataChange(newData);
   };
+
+  const handleSelectAll = (value: boolean) => {
+    const newData = tableData.map((item) => {
+      const newItem = { ...item };
+      for (let key in newItem) {
+        if (typeof newItem[key] === "boolean") {
+          //@ts-ignore
+          newItem[key] = value;
+        }
+      }
+      return newItem;
+    });
+    setTableData(newData);
+    onDataChange && onDataChange(newData);
+  };
+
   return (
     <>
       {data.length === 0 ? (
@@ -74,8 +94,26 @@ const Tables: React.FC<Props> = ({
                   {header.value.label}
                 </div>
               ))}
+            
             </div>
+              
           )}
+          {type === "poi" && (
+                <div className="block-table-header-cell">
+                  <FormInput
+                    style={""}
+                    value={undefined}
+                    onChange={(value: string, isChecked?: boolean) =>
+                      handleSelectAll(isChecked || false)
+                    }
+                    subInput={"Выбрать все"}
+                    required={false}
+                    error={""}
+                    type="boolean"
+                    keyData={""}
+                  />
+                </div>
+              )}
           <div
             className="block-table-body"
             style={{
@@ -84,79 +122,78 @@ const Tables: React.FC<Props> = ({
               }`,
             }}
           >
-            {data.map((item, rowIndex) => {
-              return (
-                <>
-                  {fieldToArray(item).map((dataItem) => (
-                    <div key={dataItem.key} className="block-table-row">
-                      {type === "poi" ? (
-                        dataItem.key === "name" ? (
-                          dataItem.value
-                        ) : (
-                          <FormInput
-                            style={""}
-                            value={dataItem.value}
-                            onChange={(value) =>
-                              handleInputChange(rowIndex, dataItem.key, value)
-                            }
-                            subInput={undefined}
-                            required={false}
-                            type={
-                              dataItem.key === "is_active"
-                                ? "boolean"
-                                : undefined
-                            }
-                            onCheck={(value) =>
-                              handleInputChange(rowIndex, dataItem.key, value)
-                            }
-                            error={""}
-                            keyData={""}
-                          />
-                        )
-                      ) : dataItem.key === "updated_at" ||
-                        dataItem.key === "created_at" ||
-                        dataItem.key === "end_time" ? (
-                        (dataItem.value !== null || dataItem.value) &&
-                        formatDateIntlTimeDate(dataItem.value)
-                      ) : dataItem.key === "maps" ? (
-                        dataItem.value !== null &&
-                        dataItem.value.length !== 0 &&
-                        dataItem.value[0]
-                      ) : (
+            {tableData.map((item, rowIndex) => (
+              <React.Fragment key={rowIndex}>
+                {fieldToArray(item).map((dataItem) => (
+                  <div key={dataItem.key} className="block-table-row">
+                    {type === "poi" ? (
+                      dataItem.key === "name" ? (
                         dataItem.value
-                      )}
-                    </div>
-                  ))}
-                  <div className="containerRowButtons">
-                    {onItemClick && (
-                      <img
-                        className="redactButton"
-                        src={icons.Pencil}
-                        alt="Edit"
-                        onClick={() => onItemClick && onItemClick(item)}
-                      />
-                    )}
-                    {type === "scoring" ? (
-                      item.status === "in_progress" && (
-                        <img
-                          className="deleteButton"
-                          src={icons.TrashOne}
-                          alt="delete"
-                          onClick={() => onItemDelete && onItemDelete(item)}
+                      ) : (
+                        <FormInput
+                          style={""}
+                          value={dataItem.value}
+                          onChange={(value) =>
+                            handleInputChange(rowIndex, dataItem.key, value)
+                          }
+                          subInput={undefined}
+                          required={false}
+                          type={
+                            dataItem.key === "is_active"
+                              ? "boolean"
+                              : undefined
+                          }
+                          checked={dataItem.value}
+                          onCheck={(value) =>
+                            handleInputChange(rowIndex, dataItem.key, value)
+                          }
+                          error={""}
+                          keyData={""}
                         />
                       )
+                    ) : dataItem.key === "updated_at" ||
+                      dataItem.key === "created_at" ||
+                      dataItem.key === "end_time" ? (
+                      (dataItem.value !== null || dataItem.value) &&
+                      formatDateIntlTimeDate(dataItem.value)
+                    ) : dataItem.key === "maps" ? (
+                      dataItem.value !== null &&
+                      dataItem.value.length !== 0 &&
+                      dataItem.value[0]
                     ) : (
+                      dataItem.value
+                    )}
+                  </div>
+                ))}
+                <div className="containerRowButtons">
+                  {onItemClick && (
+                    <img
+                      className="redactButton"
+                      src={icons.Pencil}
+                      alt="Edit"
+                      onClick={() => onItemClick && onItemClick(item)}
+                    />
+                  )}
+                  {type === "scoring" ? (
+                    item.status === "in_progress" && (
                       <img
                         className="deleteButton"
                         src={icons.TrashOne}
                         alt="delete"
                         onClick={() => onItemDelete && onItemDelete(item)}
                       />
-                    )}
-                  </div>
-                </>
-              );
-            })}
+                    )
+                  ) : (
+                    <img
+                      className="deleteButton"
+                      src={icons.TrashOne}
+                      alt="delete"
+                      onClick={() => onItemDelete && onItemDelete(item)}
+                    />
+                  )}
+                </div>
+              </React.Fragment>
+            ))}
           </div>
         </div>
       )}

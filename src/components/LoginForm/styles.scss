@@ -89,7 +89,11 @@
 
                 a{
                     margin-left: 4rem;
-                    @include fnt(14, 20, $weight: 500, $font: $fontText, $color: $bluelog);
+                    @include fnt(14, 20, $weight: 500, $font: $fontText, $color: $black);
+
+                    &:hover{
+                        color: $bluelog;
+                    }
                 }
             }
         }
@@ -107,6 +111,7 @@
     .buttonLogin {
         padding: 12rem;
         border-radius: 8rem;
+        width: 100%;
         height: 46rem;
         @include fnt(18, 32, $weight: 500, $color: $white, $font: $fontText);
         background-color: $black-btn;
@@ -126,12 +131,21 @@
         @include fnt(18, 32, $weight: 500, $color: $blue-500, $font: $fontText)
     }
 
+    .containerFooterLogin{
+        display: flex;
+        flex-direction: column;
+        gap: 8rem;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
     .backButton{
         cursor: pointer;
-        text-align: center;
+        text-align: right;
         width: 100%;
         max-width: 100%;
-        @include fnt(16, 20, $weight: 400, $font: $fontText, $color: $gray-400);
+        @include fnt(14, 20, $weight: 500, $font: $fontText, $color: $black);
     }
 }
 

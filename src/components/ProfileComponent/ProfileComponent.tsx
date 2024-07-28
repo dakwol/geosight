@@ -204,7 +204,36 @@ const ProfileComponent: FC<IUserData> = ({ userData, onType }) => {
             <img src={icons.photo_camera}></img>
           </div>
         </div>
-        <div className="containerUserInfo">{renderUserForm()}</div>
+        <div className="containerUserInfo">
+        <div className="formUser">
+        {optionUserUpdate &&
+          fieldToArray(optionUserUpdate)?.map((item, index) => {
+            if (item.key === "id" || item.key === "avatar") {
+              return;
+            }
+            return (
+              <Fragment>
+                <FormInput
+                  style={""}
+                  value={
+                    //@ts-ignore
+                    dataPress[item.key] || userData[item.key]
+                  }
+                  onChange={(e) => {
+                    handleChange(item.key, e);
+                  }}
+                  subInput={item.value.label}
+                  required={item.value.required}
+                  error={""}
+                  type={item.value.type}
+                  friedlyInput
+                  keyData={item.key}
+                />
+              </Fragment>
+            );
+          })}
+      </div>
+        </div>
 
         <div className="footerModal">
           <Buttons
