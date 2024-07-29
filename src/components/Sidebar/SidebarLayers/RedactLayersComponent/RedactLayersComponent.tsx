@@ -205,13 +205,16 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
             if (item.key.endsWith("opacity")) {
               return (
                 <div>
-                   <input
-                    value={dataPress[item.key]}
-                    onChange={(e) =>
-                      handleChange(item.key, e.target.value, true)
-                    }
+                  <FormInput 
+                    style={"miniFormOpacity"} 
+                    value={dataPress[item.key]} 
+                    onChange={(value)=>handleChange(item.key, `${Number(value) / 10}`, true)} 
+                    subInput={item.value.label} 
+                    required={false} 
+                    error={""} 
+                    keyData={""}
                   />
-                  <Slider value={Number(dataPress[item.key])} onChange={(e) => handleChange(item.key, `${e.value}`, true)} />
+                  <Slider value={Number(dataPress[item.key])} onChange={(e) => handleChange(item.key, `${Number(e.value)}`, true)} max={1} step={0.1}/>
                 </div>
               );
             }

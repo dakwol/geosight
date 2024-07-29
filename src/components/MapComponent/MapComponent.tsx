@@ -219,13 +219,22 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
                       filter: ["==", "$type", "Polygon"],
                       "source-layer": "get_features",
                       paint: {
-                        "fill-opacity":
-                          serialize_styles.polygon.polygon_opacity,
-                        "fill-color": fillColor,
-                        "fill-outline-color":
-                          serialize_styles.polygon.polygon_border_color,
+                        "fill-opacity": serialize_styles.polygon.polygon_opacity,
+                        "fill-color": [
+                          "interpolate",
+                          ["linear"],
+                          ["to-number", ["get", "score"]],
+                          0, serialize_styles.polygon.polygon_color_palette["empty-0"] || serialize_styles.polygon.polygon_solid_color, // color for score 0-20
+                          20, serialize_styles.polygon.polygon_color_palette["empty-1"] || serialize_styles.polygon.polygon_solid_color, // color for score 20-40
+                          40, serialize_styles.polygon.polygon_color_palette["empty-2"] || serialize_styles.polygon.polygon_solid_color, // color for score 40-60
+                          60, serialize_styles.polygon.polygon_color_palette["empty-3"] || serialize_styles.polygon.polygon_solid_color, // color for score 60-80
+                          80, serialize_styles.polygon.polygon_color_palette["empty-4"] || serialize_styles.polygon.polygon_solid_color, // color for score 80-100
+                        ],
+                        "fill-outline-color": serialize_styles.polygon.polygon_border_color,
                       },
                     });
+                    
+                    
                   } else {
                     console.log(
                       "No color palette found, using solid color:",
@@ -285,15 +294,15 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
                     const coordinates =
                       //@ts-ignore
                       e.features[0].geometry.coordinates.slice();
-                    console.log("eeeeeeee", e.features);
+                      console.log("eeeeeeee", e.features);
 
                     //@ts-ignore
                     const title =
                       //@ts-ignore
-                      e.features[0].properties.title || "Заголовок";
+                      e.features[0].properties.title || "Информация";
                     const description =
                       //@ts-ignore
-                      JSON.parse(e.features[0].properties.info || "{}") ||
+                      e.features[0].properties ||
                       "Ничего не найдено";
 
                     // Ensure the description is displayed at the correct coordinates
@@ -492,9 +501,63 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
     }
   };
 
+
+  const [filtered, setFiltered] = useState(false);
+  const filterPolygons = (data: any) => {
+    if (!map.current) return;
+  
+    const layers = map.current.getStyle().layers || [];
+  
+    // Обрабатываем каждый элемент в данных фильтрации
+    data.forEach((item: any) => {
+      const { property_name: propertyName, range, layer: layerId } = item;
+      const [minThreshold, maxThreshold] = range.split(",").map(Number);
+  
+      // Полные идентификаторы слоев
+      const fillLayerId = `polygon-${layerId}`;
+      const borderLayerId = `polygon-border-${layerId}`;
+  
+      // Фильтрация слоя заливки
+      const fillLayerExists = layers.some(layer => layer.id === fillLayerId);
+      if (fillLayerExists) {
+        map.current?.setFilter(
+          fillLayerId,
+          ["all",[">=", propertyName, minThreshold], ['<=', propertyName, maxThreshold]]
+          // [
+          //   'all',
+          //   ['>=', ['get', propertyName], minThreshold],
+          //   // ['<=', ['get', propertyName], maxThreshold]
+          // ]
+        );
+        console.log(`Filter applied to fill layer ${fillLayerId} with range [${minThreshold}, ${maxThreshold}]`);
+      } else {
+        console.warn(`Fill layer ${fillLayerId} does not exist.`);
+      }
+  
+      // Фильтрация слоя обводки
+      const borderLayerExists = layers.some(layer => layer.id === borderLayerId);
+      if (borderLayerExists) {
+        map.current?.setFilter(
+          borderLayerId,
+          [
+            'all',
+            ['>=', ['get', propertyName], minThreshold],
+            ['<=', ['get', propertyName], maxThreshold]
+          ]
+        );
+        console.log(`Filter applied to border layer ${borderLayerId} with range [${minThreshold}, ${maxThreshold}]`);
+      } else {
+        console.warn(`Border layer ${borderLayerId} does not exist.`);
+      }
+    });
+  
+    setFiltered(true);
+  };
+  
+  
   return (
     <Fragment>
-      <Sidebar sbData={sidebarData} pageType={undefined} mapData={mapData} toggleLayerVisibility={(data:any)=>toggleLayerVisibility(data)}/>
+      <Sidebar sbData={sidebarData} pageType={undefined} mapData={mapData} toggleLayerVisibility={(data:any)=>toggleLayerVisibility(data)} toggleFilters={(data:any)=>filterPolygons(data)}/>
       <div className="map-wrap">
         {mapData.layers ? (
           <Fragment>
@@ -512,6 +575,8 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
                   -
                 </button>
               </div>
+            
+            
             </div>
           </Fragment>
         ) : (

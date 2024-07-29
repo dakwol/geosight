@@ -177,7 +177,7 @@
 
     .containerSidebarRight{
         margin-top: 14rem;
-        overflow: auto;
+        overflow-y: scroll;
         height: 87vh;
         scrollbar-width: none; /* для скрытия скроллбара в Firefox */
 
@@ -197,9 +197,15 @@
     height: 5rem;
     display: flex;
     align-items: center;
+    width: 90%;
+    margin: 10rem auto;
+    border-radius: 20rem;
 
     .p-slider-handle{
         width: 20rem;
         height: 20rem;
+        top: -7rem;
+        transform: translateX(-50%);
+        border-color: $blue;
     }
 }

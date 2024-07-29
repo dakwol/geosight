@@ -14,7 +14,7 @@ import MapModal from "../MapModal/MapModal";
 import SheringModal from "../SheringModal/SheringModal";
 import { isAdmin, isManager } from "../../utils";
 
-const Sidebar = ({ sbData, pageType, mapData, toggleLayerVisibility }: any) => {
+const Sidebar = ({ sbData, pageType, mapData, toggleLayerVisibility, toggleFilters }: any) => {
   const [isActive, setIsActive] = useState(() => {
     const storedState = localStorage.getItem("sidebarState");
     return storedState ? JSON.parse(storedState) : false;
@@ -27,7 +27,7 @@ const Sidebar = ({ sbData, pageType, mapData, toggleLayerVisibility }: any) => {
   const { pathname } = useLocation();
   const sidebarRef = useRef(null);
 
-  const active = sbData.findIndex((e: { path: string }) => e.path === pathname);
+  const active = sbData?.findIndex((e: { path: string }) => e.path === pathname);
 
   const [isOpenModal, setIsOpenModal] = useState<string>("");
   const [typeModal, setTypeModal] = useState<string>("");
@@ -51,7 +51,7 @@ const Sidebar = ({ sbData, pageType, mapData, toggleLayerVisibility }: any) => {
     {
       id: 2,
       name: "",
-      component: <SidebarFilter mapDataLayers={mapData.layers} />,
+      component: <SidebarFilter mapDataLayers={mapData.layers} toggleFilters={(data:any)=>toggleFilters(data)}/>,
       active: false,
       ico: icons.filterAlt,
       activeIco: icons.filterAltActive,

@@ -20,14 +20,22 @@
 .sliderStyle{
     width: 90%;
     margin: 0 auto;
+}
 
-    .p-slider-range{
-        height: 5rem;
+.p-slider-range{
+    height: 5rem;
+    background-color: $blue;
+}
+
+.miniFormOpacity{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    .formInput{
+        width: 50rem;
     }
-    .p-slider-handle{
-        height: 10rem;
-        width: 10rem;
-    }
+
 }
 
 .colorPickerContainer{

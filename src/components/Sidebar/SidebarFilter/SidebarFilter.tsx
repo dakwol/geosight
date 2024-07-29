@@ -27,9 +27,10 @@ interface IMapDataLayer {
 interface IMapDataLayers {
   mapDataLayers: IMapDataLayer[];
   mapDataId?: string;
+  toggleFilters?:any;
 }
 
-const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers }) => {
+const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers, toggleFilters }) => {
   const [filters, setFilters] = useState<Filter[]>([]);
   const [layersArray, setLayersArray] = useState<any>([]);
   const [choicesProperti, setChoicesProperty] = useState<any>([]);
@@ -152,6 +153,11 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers }) => {
 
     setLayersArray(newLayers);
   }, [mapDataLayers]);
+
+
+  useEffect(()=>{
+    toggleFilters(filters)
+  },[filters])
 
   return (
     <div className="containerSidebarRight">
