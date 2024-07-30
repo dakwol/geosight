@@ -159,6 +159,9 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers, toggleFilters }) => 
     toggleFilters(filters)
   },[filters])
 
+  console.log('filters',mapDataLayers);
+  
+
   return (
     <div className="containerSidebarRight">
       <div className="containerAddLayer">
@@ -228,7 +231,7 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers, toggleFilters }) => 
                       <p>{filter.range}</p>
                       <Slider
                         //@ts-ignore
-                        value={filter.range.split(",").map(Number)}
+                        value={filter.range ? filter.range.split(",").map(Number) : [0, 100]}
                         step={1}
                         onChange={(e) =>
                           updateFilter(filter.id, "range", `${e.value}`)

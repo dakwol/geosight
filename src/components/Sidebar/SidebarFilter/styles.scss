@@ -6,6 +6,12 @@
     border-radius: 12rem;
 }
 
+.filtersContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 12rem;
+}
+
 .filterLayerContainer{
     display: flex;
     align-items: center;

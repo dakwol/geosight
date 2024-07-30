@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, FC, Fragment } from "react";
+import React, { useRef, useEffect, useState, FC, Fragment, useLayoutEffect } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./styles.scss";
@@ -31,6 +31,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
   const visibilityLayers = useLocalStorage("visibilityLayers");
   const visibleLayers = useSelector((state: RootState) => state.visibilityReducer.visibleLayers);
   const mapApi = new MapsApiRequest();
+  const [toggleLayerId, setToggleLayerId] = useState()
 
   const [zoom] = useState(14);
   const API_KEY = "9qniwKQThKcoBngEU7mE";
@@ -91,10 +92,53 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
       const end = min_val + (i + 1) * step;
       intervals.push([start, end]);
     }
-    console.log("intervals", intervals);
 
     return intervals;
   }
+
+  const toggleLayerVisibility = (layerId: string) => {
+ 
+    //@ts-ignore
+    const layerShouldBeVisible = visibilityLayers.includes(layerId.replace("polygon-", ""));
+    if (layerShouldBeVisible) {
+      map.current?.setLayoutProperty(layerId, "visibility", "visible");
+  
+      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
+      map.current?.setLayoutProperty(borderLayerId, "visibility", "visible");
+  
+      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
+      map.current?.setLayoutProperty(labelLayerId, "visibility", "visible");
+    } else {
+      map.current?.setLayoutProperty(layerId, "visibility", "none");
+  
+      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
+      map.current?.setLayoutProperty(borderLayerId, "visibility", "none");
+  
+      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
+      map.current?.setLayoutProperty(labelLayerId, "visibility", "none");
+    }
+  };
+
+  const hideAllPolygons = (map: any) => {
+    const layers = map.current?.getStyle().layers || [];
+    layers.forEach((layer:any) => {
+      const { id: layerId } = layer;
+      if (layerId.startsWith('polygon-') || layerId.startsWith('polygon-border-') || layerId.startsWith('polygon-label-')) {
+        map.current?.setLayoutProperty(layerId, "visibility", "none");
+      }
+    });
+  };
+  
+  useEffect(() => {
+    if (JSON.parse(visibilityLayers || '{}') && JSON.parse(visibilityLayers || '{}').length > 0) {
+      if (toggleLayerId) {
+        toggleLayerVisibility(toggleLayerId);
+      }
+    } else {
+      hideAllPolygons(map);
+    }
+  }, [visibilityLayers, toggleLayerId]);
+  
 
   useEffect(() => {
     if (!styleMap || map.current) return;
@@ -131,24 +175,17 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
 
         map.current.on("load", () => {
           mapData.layers.forEach((layer: any) => {
-            console.log(
-              'localStorage.getItem("visibilityLayers")',
-              localStorage.getItem("visibilityLayers")
-            );
-
+            console.log('layer4444',layer);
+            
             if (
-              layer.is_active &&
-              JSON.parse(
-                localStorage.getItem("visibilityLayers") || ""
-              )?.includes(layer.id)
+              layer.is_active
             ) {
-              console.log("activeLayer", layer);
 
               const sourceId = `layer-${layer.id}`;
 
               if (!map.current?.getSource(sourceId)) {
                 map.current?.addSource(sourceId, {
-                  type: "vector",
+                  type:'vector',
                   tiles: [
                     `${apiConfig.baseUrlMartin}martin/get_features/{z}/{x}/{y}?map_layer=${layer.id}`,
                   ],
@@ -187,7 +224,6 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
                                     `?property_name=${serialize_styles.polygon.polygon_value_field_name}`
                                   )
                                   .then((resp) => {
-                                    console.log("aaaaaaaaaaaasss", resp.data);
                                     divideIntervals(
                                       resp.data.min_value,
                                       resp.data.max_value,
@@ -203,14 +239,10 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
                     fillColor =
                       serialize_styles.polygon.polygon_color_palette[2] ||
                       fillColor;
-
-                    console.log("Selected fill color from palette:", fillColor);
-
-                    console.log("serialize_styles", serialize_styles);
                     //@ts-ignore
                     const features = map.current?.getSource(sourceId);
 
-                    console.log("features", features);
+                    console.log("sourceId", sourceId);
 
                     map.current?.addLayer({
                       id: polygonLayerId,
@@ -219,7 +251,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
                       filter: ["==", "$type", "Polygon"],
                       "source-layer": "get_features",
                       paint: {
-                        "fill-opacity": serialize_styles.polygon.polygon_opacity,
+                        "fill-opacity":   serialize_styles.polygon.polygon_opacity ,
                         "fill-color": [
                           "interpolate",
                           ["linear"],
@@ -288,13 +320,11 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
 
                   //@ts-ignore
                   map.current.on("click", polygonLayerId, (e) => {
-                    console.log("polygon", e);
 
                     //@ts-ignore
                     const coordinates =
                       //@ts-ignore
                       e.features[0].geometry.coordinates.slice();
-                      console.log("eeeeeeee", e.features);
 
                     //@ts-ignore
                     const title =
@@ -450,29 +480,9 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
       }
     };
   }, [styleMap, zoom, API_KEY, mapData.layers]);
+  
 
-  const toggleLayerVisibility = (layerId: string) => {
-    console.log('layerId',layerId);
-    
-    const visibility = map.current?.getLayoutProperty(`${layerId}`, "visibility");
-    if (visibility === "visible") {
-      map.current?.setLayoutProperty(layerId, "visibility", "none");
-
-      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
-      map.current?.setLayoutProperty(borderLayerId, "visibility", "none");
-
-      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
-      map.current?.setLayoutProperty(labelLayerId, "visibility", "none");
-    } else {
-      map.current?.setLayoutProperty(layerId, "visibility", "visible");
-
-      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
-      map.current?.setLayoutProperty(borderLayerId, "visibility", "visible");
-
-      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
-      map.current?.setLayoutProperty(labelLayerId, "visibility", "visible");
-    }
-  };
+  
 
   const zoomIn = () => {
     if (map.current) {
@@ -502,11 +512,13 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
   };
 
 
-  const [filtered, setFiltered] = useState(false);
   const filterPolygons = (data: any) => {
     if (!map.current) return;
   
     const layers = map.current.getStyle().layers || [];
+  
+    // Словарь для хранения фильтров по слоям
+    const filtersByLayer: { [key: string]: any[] } = {};
   
     // Обрабатываем каждый элемент в данных фильтрации
     data.forEach((item: any) => {
@@ -516,48 +528,63 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
       // Полные идентификаторы слоев
       const fillLayerId = `polygon-${layerId}`;
       const borderLayerId = `polygon-border-${layerId}`;
+      const labelLayerId = `1-label`; // Assuming this is the naming convention for label layers
   
-      // Фильтрация слоя заливки
-      const fillLayerExists = layers.some(layer => layer.id === fillLayerId);
-      if (fillLayerExists) {
-        map.current?.setFilter(
-          fillLayerId,
-          ["all",[">=", propertyName, minThreshold], ['<=', propertyName, maxThreshold]]
-          // [
-          //   'all',
-          //   ['>=', ['get', propertyName], minThreshold],
-          //   // ['<=', ['get', propertyName], maxThreshold]
-          // ]
-        );
-        console.log(`Filter applied to fill layer ${fillLayerId} with range [${minThreshold}, ${maxThreshold}]`);
-      } else {
-        console.warn(`Fill layer ${fillLayerId} does not exist.`);
-      }
+      // Создаем или добавляем условия фильтрации для каждого слоя
+      if (!filtersByLayer[fillLayerId]) filtersByLayer[fillLayerId] = ["all"];
+      filtersByLayer[fillLayerId].push(
+        [">=", ["to-number", ["get", propertyName]], minThreshold],
+        ["<=", ["to-number", ["get", propertyName]], maxThreshold]
+      );
   
-      // Фильтрация слоя обводки
-      const borderLayerExists = layers.some(layer => layer.id === borderLayerId);
-      if (borderLayerExists) {
-        map.current?.setFilter(
-          borderLayerId,
-          [
-            'all',
-            ['>=', ['get', propertyName], minThreshold],
-            ['<=', ['get', propertyName], maxThreshold]
-          ]
-        );
-        console.log(`Filter applied to border layer ${borderLayerId} with range [${minThreshold}, ${maxThreshold}]`);
+      if (!filtersByLayer[borderLayerId]) filtersByLayer[borderLayerId] = ["all"];
+      filtersByLayer[borderLayerId].push(
+        [">=", ["to-number", ["get", propertyName]], minThreshold],
+        ["<=", ["to-number", ["get", propertyName]], maxThreshold]
+      );
+  
+      if (!filtersByLayer[labelLayerId]) filtersByLayer[labelLayerId] = ["all"];
+      filtersByLayer[labelLayerId].push(
+        [">=", ["to-number", ["get", propertyName]], minThreshold],
+        ["<=", ["to-number", ["get", propertyName]], maxThreshold]
+      );
+    });
+  
+    // Применяем фильтры к слоям или сбрасываем фильтры если их нет
+    Object.keys(filtersByLayer).forEach(layerId => {
+      const filter = filtersByLayer[layerId];
+      const layerExists = layers.some(layer => layer.id === layerId);
+      if (layerExists) {
+        if (filter.length > 1) {
+          //@ts-ignore
+          map.current?.setFilter(layerId, filter);
+          console.log(`Filter applied to layer ${layerId} with conditions:`, filter);
+        } else {
+          map.current?.setFilter(layerId, null);
+          console.log(`Filter removed from layer ${layerId}`);
+        }
       } else {
-        console.warn(`Border layer ${borderLayerId} does not exist.`);
+        console.warn(`Layer ${layerId} does not exist.`);
       }
     });
   
-    setFiltered(true);
+    // Сбрасываем фильтры для слоев, которые не были упомянуты в данных фильтрации
+    layers.forEach(layer => {
+      const { id: layerId } = layer;
+      if (!filtersByLayer[layerId] && (layerId.startsWith('polygon-') || layerId.startsWith('polygon-border-') || layerId === '1-label')) {
+        map.current?.setFilter(layerId, null);
+        console.log(`Filter removed from layer ${layerId}`);
+      }
+    });
   };
+  
+  
+  
   
   
   return (
     <Fragment>
-      <Sidebar sbData={sidebarData} pageType={undefined} mapData={mapData} toggleLayerVisibility={(data:any)=>toggleLayerVisibility(data)} toggleFilters={(data:any)=>filterPolygons(data)}/>
+      <Sidebar sbData={sidebarData} pageType={undefined} mapData={mapData} toggleLayerVisibility={(data:any)=>setToggleLayerId(data)} toggleFilters={(data:any)=>filterPolygons(data)}/>
       <div className="map-wrap">
         {mapData.layers ? (
           <Fragment>
