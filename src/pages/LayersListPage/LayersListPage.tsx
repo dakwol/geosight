@@ -61,27 +61,16 @@ const LayersListPage: FC = () => {
     key: string,
     value: string | string[] | boolean | File[]
   ) => {
-    const formData = new FormData();
-    formData.append(
-      key,
-      Array.isArray(value) ? JSON.stringify(value) : String(value)
-    );
-
-    for (const existingKey in newLayer) {
-      if (newLayer.hasOwnProperty(existingKey) && existingKey !== key) {
-        //@ts-ignore
-        formData.append(existingKey, newLayer[existingKey]);
-      }
-    }
-    //@ts-ignore
-    const updatedLayer: ILayersCreateOptions = Object.fromEntries(
-      formData.entries()
-    ) as ILayersCreateOptions;
+    const updatedLayer: any = { ...newLayer };
+  
+    updatedLayer[key] = value;
+  
     setNewLayer(updatedLayer);
-    console.log("2222222222", formData);
-
+    console.log("2222222222", updatedLayer);
+  
     dispatch(TableActionCreators.setTable(updatedLayer));
   };
+  
 
   const handleSearch = (value: string) => {
     mapsApi.getLayers(`?search=${value}`).then((resp) => {
@@ -185,7 +174,7 @@ const LayersListPage: FC = () => {
                     return (
                       <FormInput
                         style={"col-3"}
-                        value={Table ? item.key === 'maps'? JSON.parse(Table['maps'])[0] : Table[item.key] : undefined}
+                        value={Table ? item.key === 'maps'? JSON.parse(Table['maps'] || '{}')[0] : Table[item.key] : undefined}
                         onChange={(e) => {
                           handleNewLayer(
                             item.key,
