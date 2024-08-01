@@ -25,7 +25,7 @@ const HeaderAdmin: FC<IProps> = ({ title, onClick, onSearch }) => {
             )
           }
         >
-          <img src={icons.logoAdmin}></img>
+          <img src={icons.logoAdminNew}></img>
         </div>
         {onSearch && (
           <FormInput

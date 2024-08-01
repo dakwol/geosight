@@ -34,6 +34,7 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers, toggleFilters }) => 
   const [filters, setFilters] = useState<Filter[]>([]);
   const [layersArray, setLayersArray] = useState<any>([]);
   const [choicesProperti, setChoicesProperty] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const mapLayerApi = new MapsApiRequest();
 
   const addFilter = () => {
@@ -71,6 +72,7 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers, toggleFilters }) => 
     });
 
     if (key === "layer") {
+      setIsLoading(true)
       mapLayerApi
         .layersPropertis(value, "?types=integer&types=float&types=string")
         .then((resp) => {
@@ -93,6 +95,7 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers, toggleFilters }) => 
                   : filter
               )
             );
+            setIsLoading(false)
           }
         });
     }
@@ -159,7 +162,7 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers, toggleFilters }) => 
     toggleFilters(filters)
   },[filters])
 
-  console.log('filters',mapDataLayers);
+  console.log('isLoading',isLoading);
   
 
   return (

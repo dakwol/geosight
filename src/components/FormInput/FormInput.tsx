@@ -56,6 +56,8 @@ type FormInputProps = {
   helpText?: string;
   emoji?: boolean;
   copy?: boolean;
+  skeletonHeightProp?: string;
+  skeletonWidthProp?: string;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -88,6 +90,8 @@ const FormInput: React.FC<FormInputProps> = ({
   emoji,
   rightIco,
   copy,
+  skeletonHeightProp = '100%',
+  skeletonWidthProp = '100%'
 }) => {
   const [isLoading, setIsLoading] = useState(loading);
   const [valueSet, setValueSet] = useState(
@@ -193,8 +197,8 @@ const FormInput: React.FC<FormInputProps> = ({
     onChange(getFormattedStandartDate(event));
   };
 
-  const [skeletonHeight, setSkeletonHeight] = useState("100%");
-  const [skeletonWidth, setSkeletonWidth] = useState("100%");
+  const [skeletonHeight, setSkeletonHeight] = useState(skeletonHeightProp);
+  const [skeletonWidth, setSkeletonWidth] = useState(skeletonWidthProp);
 
   useEffect(() => {
     const inputContainer = document.querySelector(".formTextArea, .formInput");

@@ -1,5 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
-import Skeleton from "react-loading-skeleton";
+import { FC, useEffect, useMemo, useState } from "react";
 import icons from "../../../../assets/icons/icons";
 import "./styles.scss";
 import MapsApiRequest from "../../../../api/Maps/Maps";
@@ -7,14 +6,12 @@ import {
   IOptionFormSelector,
   IOptionInput,
 } from "../../../../models/IOptionInput";
-import { ILayersData } from "../../../../models/ILayersData";
 import FormInput from "../../../FormInput/FormInput";
 import { fieldToArray } from "../../../UI/functions/functions";
 import { ColorPicker, ColorPickerChangeEvent } from "primereact/colorpicker";
 import { useDispatch, useSelector } from "react-redux";
 import { DataPressActionCreators } from "../../../../store/reducers/dataPressItem/action-creator";
 import { Slider } from "primereact/slider";
-import { DataPressState } from "../../../../store/reducers/dataPressItem/types";
 
 interface IRedactLayersProps {
   layerData: any;
@@ -34,51 +31,28 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
   const mapLayerApi = new MapsApiRequest();
   const dispatch = useDispatch();
 
-  const dataPress = useSelector(
-    (state: any) => state.dataPressReducer.dataPress
-  );
+  const dataPress = useSelector((state: any) => state.dataPressReducer.dataPress);
   const isUpdate = useSelector((state: any) => state.dataPressReducer.isUpdate);
 
-  console.log("isUpdate", isUpdate);
-
   const typeLayerStyles = [
-    {
-      id: 1,
-      value: "polygon",
-      display_name: "Полигон",
-    },
-    {
-      id: 2,
-      value: "line",
-      display_name: "Линия",
-    },
-    {
-      id: 3,
-      value: "point",
-      display_name: "Точка",
-    },
+    { id: 1, value: "polygon", display_name: "Полигон" },
+    { id: 2, value: "line", display_name: "Линия" },
+    { id: 3, value: "point", display_name: "Точка" },
   ];
 
   const [layersOption, setLayersOption] = useState<ILayersStylesOption>();
   const [isUpdateMap, setIsUpdateMap] = useState(false);
   const [layersFieldName, setLayersFieldName] = useState([]);
+  const [fieldCalculation, setFieldCalculation] = useState([]);
+  const [layersPalitre, setLayersPalitre] = useState([]);
   const [activeTypeLayer, setActiveTypeLayer] = useState("polygon");
 
   const [dataFonts, setDataFonts] = useState([
-    {
-      value: "Open Sans",
-      display_name: "Open Sans",
-    },
+    { value: "Open Sans", display_name: "Open Sans" },
   ]);
   const [dataFontsStyle, setDataFontsStyle] = useState([
-    {
-      value: "Semibold",
-      display_name: "Semibold",
-    },
-    {
-      value: "Bold",
-      display_name: "Bold",
-    },
+    { value: "Semibold", display_name: "Semibold" },
+    { value: "Bold", display_name: "Bold" },
   ]);
 
   useEffect(() => {
@@ -91,6 +65,7 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
         });
       }
     });
+
     mapLayerApi
       .layersPropertis(layerData.id, "?types=integer&types=float")
       .then((resp) => {
@@ -101,16 +76,85 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
             display_name: item.name,
             type: item.type,
           }));
-
           setLayersFieldName(newProperties);
+        }
+      });
+
+    mapLayerApi
+      .layersPropertis(layerData.id, "?types=integer&types=float&types=string")
+      .then((resp) => {
+        if (resp.success && resp.data) {
+          const newProperties = resp.data.map((item: any) => ({
+            id: item.name,
+            value: item.name,
+            display_name: item.name,
+            type: item.type,
+          }));
+          setFieldCalculation(newProperties);
         }
       });
   }, []);
 
+  useEffect(() => {
+    console.log('dataPress', dataPress);
+  
+    // Accessing the polygon_value_field_name property from dataPress
+    const valueFieldName = dataPress.polygon_value_field_name;
+    const valueFieldLabel = dataPress.polygon_label_field_value;
+  
+    if (
+      (valueFieldName !== undefined &&
+      valueFieldName !== "") ||
+      (valueFieldLabel !== undefined &&
+        valueFieldLabel !== "")
+    ) {
+      const currentFilter = fieldCalculation.find(
+        //@ts-ignore
+        (field) => field.value === (valueFieldName || valueFieldLabel)
+      );
+
+      console.log('currentFilter',currentFilter);
+      
+  
+      if (currentFilter) {
+        mapLayerApi
+          .layersPropertyValues(
+            layerData.id,
+            //@ts-ignore
+            'integer/',
+            //@ts-ignore
+            `?property_name=${currentFilter.value}`
+          )
+          .then((resp) => {
+            if (resp.success && resp.data) {
+              console.log('aaaaaa',resp.data);
+              
+              //@ts-ignore
+              if (currentFilter.type === "string") {
+                // const newPropertiesName =
+                //   resp.data.results.length > 0 &&
+                //   resp.data.results.map((item: any) => ({
+                //     id: item.id,
+                //     value: item.id,
+                //     display_name: item.name,
+                //   }));
+                // setLayersPalitre(newPropertiesName);
+                setLayersPalitre(resp.data);
+              } else {
+                setLayersPalitre(resp.data);
+              }
+            }
+          });
+      }
+    }
+  }, [dataPress.polygon_value_field_name]);
+
+  console.log('layersPalitre2222',layersPalitre);
+  
 
   useEffect(() => {
     dispatch(DataPressActionCreators.clearDataPress());
-    fieldToArray(layerData.serialize_styles[activeTypeLayer]).map((item) =>
+    fieldToArray(layerData.serialize_styles[activeTypeLayer]).forEach((item) =>
       handleChange(item.key, item.value, false)
     );
   }, [activeTypeLayer]);
@@ -120,11 +164,8 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
     fieldValue: string | boolean,
     updateMap: boolean = false
   ) => {
-
     if (fieldName.endsWith("opacity")) {
-      dispatch(
-        DataPressActionCreators.setDataPress(fieldName, `${Number(fieldValue)}`)
-      );
+      dispatch(DataPressActionCreators.setDataPress(fieldName, `${Number(fieldValue)}`));
     } else {
       dispatch(DataPressActionCreators.setDataPress(fieldName, fieldValue));
     }
@@ -145,8 +186,9 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
         });
     }
   }, [dataPress]);
+  
 
-  console.log("dataPress", dataPress);
+  
 
   return (
     <div className="containerSidebarRight">
@@ -218,42 +260,85 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
                 </div>
               );
             }
-
-            if (item.key.endsWith("palette")) {
-              const paletteEntries = Object.entries(dataPress[item.key] || "");
-
-              // Заполним массив до 5 элементов пустыми значениями, если текущих меньше 5
-              while (paletteEntries.length < 5) {
-                paletteEntries.push([`empty-${paletteEntries.length}`, ""]);
-              }
-
+            if (item.key.endsWith("value_field_name")) {
               return (
-                <div className="fillInputColor">
-                  {paletteEntries.map(
-                    ([paletteKey, paletteValue]: [string, any], index) => (
-                      <ColorPicker
-                        key={paletteKey || index}
-                        value={paletteValue}
-                        onChange={(e: ColorPickerChangeEvent) =>
-                          handleChange(
-                            item.key,
-                            {
-                              ...dataPress[item.key],
-                              [paletteKey]: `#${e.value}`,
-                            },
-                            true
-                          )
-                        }
-                        panelClassName="colorPickerLayerStyle"
-                        inputClassName="colorPickerInputFill"
-                      >
-                        <div></div>
-                      </ColorPicker>
-                    )
-                  )}
+                <div>
+                  <FormInput 
+                    style={""} 
+                    value={dataPress[item.key]} 
+                    onChange={(value) => handleChange(item.key, value, true)}
+                    subInput={item.value.label} 
+                    required={false}
+                    options={fieldCalculation} 
+                    error={""} 
+                    keyData={""}
+                  />
                 </div>
               );
             }
+            if (item.key.endsWith("label_field_value")) {
+              return (
+                <div>
+                  <FormInput 
+                    style={""} 
+                    value={dataPress[item.key]} 
+                    onChange={(value) => handleChange(item.key, value, true)}
+                    subInput={item.value.label} 
+                    required={false}
+                    options={fieldCalculation} 
+                    error={""} 
+                    keyData={""}
+                  />
+                </div>
+              );
+            }
+
+            if (item.key.endsWith("palette")) {
+              const paletteEntries = Object.entries(dataPress[item.key] || {});
+            
+              // Заполняем массив до 5 элементов пустыми значениями, если текущих меньше 5
+              while (paletteEntries.length < 5) {
+                paletteEntries.push([`empty-${paletteEntries.length}`, { color: '', size: 0 }]); // Изначально size будет 0
+              }
+            
+              // Определяем общий размер палитры
+              const totalSize = 100; // Замените это на любое значение, которое вам нужно
+            
+              // Обновляем paletteEntries, чтобы каждый элемент имел свой размер
+              const updatedPaletteEntries = paletteEntries.map(([paletteKey, paletteValue], index) => {
+                const size = (totalSize / (paletteEntries.length - 1)) * index;
+                //@ts-ignore
+                return [paletteKey, { ...paletteValue, size }];
+              });
+            
+              console.log('updatedPaletteEntries', updatedPaletteEntries);
+            
+              return (
+                <div className="fillInputColor">
+                  {updatedPaletteEntries.map(([paletteKey, paletteValue], index) => (
+                    <ColorPicker
+                      key={paletteKey || index} 
+                      value={paletteValue.color}
+                      onChange={(e: ColorPickerChangeEvent) =>
+                        handleChange(
+                          item.key,
+                          {
+                            ...dataPress[item.key],
+                            [paletteKey]: { color: `#${e.value}`, size: paletteValue.size },
+                          },
+                          true
+                        )
+                      }
+                      panelClassName="colorPickerLayerStyle"
+                      inputClassName="colorPickerInputFill"
+                    >
+                      <div></div>
+                    </ColorPicker>
+                  ))}
+                </div>
+              );
+            }
+            
 
             return (
               <div>

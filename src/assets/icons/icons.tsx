@@ -63,6 +63,7 @@ import map2 from "./map2.svg";
 import mapActive from "./mapActive.svg";
 import layersActive from "./layersActive.svg";
 import logoAdmin from "./logoAdmin.svg";
+import logoAdminNew from "./logoAdminNew.svg";
 import photo_camera from "./photo_camera.svg";
 import visibility from "./visibility.svg";
 import expand_more from "./expand_more.svg";
@@ -138,6 +139,7 @@ export default {
   mapActive,
   layersActive,
   logoAdmin,
+  logoAdminNew,
   photo_camera,
   visibility,
   expand_more,

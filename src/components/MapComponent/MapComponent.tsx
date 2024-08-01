@@ -96,28 +96,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
     return intervals;
   }
 
-  const toggleLayerVisibility = (layerId: string) => {
  
-    //@ts-ignore
-    const layerShouldBeVisible = visibilityLayers.includes(layerId.replace("polygon-", ""));
-    if (layerShouldBeVisible) {
-      map.current?.setLayoutProperty(layerId, "visibility", "visible");
-  
-      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
-      map.current?.setLayoutProperty(borderLayerId, "visibility", "visible");
-  
-      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
-      map.current?.setLayoutProperty(labelLayerId, "visibility", "visible");
-    } else {
-      map.current?.setLayoutProperty(layerId, "visibility", "none");
-  
-      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
-      map.current?.setLayoutProperty(borderLayerId, "visibility", "none");
-  
-      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
-      map.current?.setLayoutProperty(labelLayerId, "visibility", "none");
-    }
-  };
 
   const hideAllPolygons = (map: any) => {
     const layers = map.current?.getStyle().layers || [];
@@ -139,19 +118,20 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
     }
   }, [visibilityLayers, toggleLayerId]);
   
-
   useEffect(() => {
-    if (!styleMap || map.current) return;
+    if (map.current) return; // Initialize map only once
 
+    
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { longitude, latitude } = position.coords;
-
+  
         console.log("position.coords", position.coords);
-
+  
         map.current = new maplibregl.Map({
           container: mapContainer.current ? mapContainer.current : "",
-          style: styleMap.url,
+
+          style: styleMap?.url || '',
           center: sessionStorage?.getItem("positionMap")
             ? JSON.parse(sessionStorage?.getItem("positionMap") || "{}")
             : [longitude, latitude],
@@ -159,7 +139,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
             ? JSON.parse(sessionStorage?.getItem("zoom") || "{}")
             : zoom,
         });
-
+  
         map.current.on("moveend", () => {
           const center = map?.current?.getCenter();
           const zoomSession = map?.current?.getZoom();
@@ -172,278 +152,9 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
             zoomSession ? JSON.stringify(zoomSession) : ""
           );
         });
-
+  
         map.current.on("load", () => {
-          mapData.layers.forEach((layer: any) => {
-            console.log('layer4444',layer);
-            
-            if (
-              layer.is_active
-            ) {
-
-              const sourceId = `layer-${layer.id}`;
-
-              if (!map.current?.getSource(sourceId)) {
-                map.current?.addSource(sourceId, {
-                  type:'vector',
-                  tiles: [
-                    `${apiConfig.baseUrlMartin}martin/get_features/{z}/{x}/{y}?map_layer=${layer.id}`,
-                  ],
-                });
-              }
-
-              const { serialize_styles } = layer;
-
-              if (serialize_styles) {
-                if (serialize_styles.polygon) {
-                  const polygonLayerId = `polygon-${layer.id}`; // use template strings for id
-
-                  let fillColor = serialize_styles.polygon.polygon_solid_color;
-
-                  if (serialize_styles.polygon.polygon_color_palette) {
-                    if (serialize_styles.polygon.polygon_value_field_name) {
-                      mapApi
-                        .layersPropertis(layer.id, "?types=integer&types=float")
-                        .then((resp) => {
-                          if (resp.success && resp.data) {
-                            const newLayers = resp.data.map((item: any) => ({
-                              id: item.name,
-                              value: item.name,
-                              display_name: item.name,
-                              type: item.type,
-                            }));
-                            newLayers.map((item: any) => {
-                              if (
-                                item.name ===
-                                serialize_styles.polygon_value_field_name
-                              ) {
-                                mapApi
-                                  .layersPropertyValues(
-                                    layer.id,
-                                    `${item.type}/`,
-                                    `?property_name=${serialize_styles.polygon.polygon_value_field_name}`
-                                  )
-                                  .then((resp) => {
-                                    divideIntervals(
-                                      resp.data.min_value,
-                                      resp.data.max_value,
-                                      5
-                                    );
-                                  });
-                              }
-                            });
-                          }
-                        });
-                    }
-                    // Ensure the third color in the palette is defined, otherwise fallback to a default color
-                    fillColor =
-                      serialize_styles.polygon.polygon_color_palette[2] ||
-                      fillColor;
-                    //@ts-ignore
-                    const features = map.current?.getSource(sourceId);
-
-                    console.log("sourceId", sourceId);
-
-                    map.current?.addLayer({
-                      id: polygonLayerId,
-                      type: "fill",
-                      source: sourceId,
-                      filter: ["==", "$type", "Polygon"],
-                      "source-layer": "get_features",
-                      paint: {
-                        "fill-opacity":   serialize_styles.polygon.polygon_opacity ,
-                        "fill-color": [
-                          "interpolate",
-                          ["linear"],
-                          ["to-number", ["get", "score"]],
-                          0, serialize_styles.polygon.polygon_color_palette["empty-0"] || serialize_styles.polygon.polygon_solid_color, // color for score 0-20
-                          20, serialize_styles.polygon.polygon_color_palette["empty-1"] || serialize_styles.polygon.polygon_solid_color, // color for score 20-40
-                          40, serialize_styles.polygon.polygon_color_palette["empty-2"] || serialize_styles.polygon.polygon_solid_color, // color for score 40-60
-                          60, serialize_styles.polygon.polygon_color_palette["empty-3"] || serialize_styles.polygon.polygon_solid_color, // color for score 60-80
-                          80, serialize_styles.polygon.polygon_color_palette["empty-4"] || serialize_styles.polygon.polygon_solid_color, // color for score 80-100
-                        ],
-                        "fill-outline-color": serialize_styles.polygon.polygon_border_color,
-                      },
-                    });
-                    
-                    
-                  } else {
-                    console.log(
-                      "No color palette found, using solid color:",
-                      fillColor
-                    );
-
-                    // Add layer with solid color
-                    map.current?.addLayer({
-                      id: polygonLayerId,
-                      type: "fill",
-                      source: sourceId,
-                      filter: ["==", "$type", "Polygon"],
-                      "source-layer": "get_features",
-                      paint: {
-                        "fill-opacity":
-                          serialize_styles.polygon.polygon_opacity,
-                        "fill-color": fillColor,
-                        "fill-outline-color":
-                          serialize_styles.polygon.polygon_border_color,
-                      },
-                    });
-                  }
-
-                  // Adding a layer for the polygon border
-                  const polygonBorderLayerId = `polygon-border-${layer.id}`;
-
-                  const borderPaint = {
-                    "line-color": serialize_styles.polygon.polygon_border_color, // Border color
-                    "line-width":
-                      serialize_styles.polygon.polygon_border_size || 1, // Border width
-                    "line-opacity":
-                      serialize_styles.polygon.polygon_border_opacity || 1, // Border opacity
-                  };
-
-                  // Conditionally add the line-dasharray property
-                  if (
-                    serialize_styles.polygon.polygon_border_style === "dash"
-                  ) {
-                    //@ts-ignore
-                    borderPaint["line-dasharray"] = [1, 2]; // Dash style for the border
-                  }
-
-                  map.current?.addLayer({
-                    id: polygonBorderLayerId,
-                    type: "line",
-                    source: sourceId,
-                    filter: ["==", "$type", "Polygon"],
-                    "source-layer": "get_features",
-                    paint: borderPaint,
-                  });
-
-                  //@ts-ignore
-                  map.current.on("click", polygonLayerId, (e) => {
-
-                    //@ts-ignore
-                    const coordinates =
-                      //@ts-ignore
-                      e.features[0].geometry.coordinates.slice();
-
-                    //@ts-ignore
-                    const title =
-                      //@ts-ignore
-                      e.features[0].properties.title || "Информация";
-                    const description =
-                      //@ts-ignore
-                      e.features[0].properties ||
-                      "Ничего не найдено";
-
-                    // Ensure the description is displayed at the correct coordinates
-                    while (
-                      Math.abs(e.lngLat.lng - coordinates[0][0][0]) > 180
-                    ) {
-                      coordinates[0][0][0] +=
-                        e.lngLat.lng > coordinates[0][0][0] ? 360 : -360;
-                    }
-
-                    new maplibregl.Popup()
-                      .setLngLat(e.lngLat)
-                      .setHTML(
-                        `<h3>${title}</h3>${fieldToArray(description)
-                          .map(
-                            (item: any) => `<p>${item.key}: ${item.value}</p>`
-                          )
-                          .join("")}`
-                      )
-                      //@ts-ignore
-                      .addTo(map.current);
-                  });
-
-                  // Change the cursor to a pointer when the mouse is over the polygon layer.
-                  //@ts-ignore
-                  map.current.on("mouseenter", polygonLayerId, () => {
-                    //@ts-ignore
-                    map.current.getCanvas().style.cursor = "pointer";
-                  });
-
-                  // Change the cursor back to default when it leaves the polygon layer.
-                  //@ts-ignore
-                  map.current.on("mouseleave", polygonLayerId, () => {
-                    //@ts-ignore
-                    map.current.getCanvas().style.cursor = "";
-                  });
-                }
-
-                if (serialize_styles.line) {
-                  const lineLayerId = `line-${layer.id}`;
-                  const linePaint: any = {}; // новый объект paint для линий
-
-                  linePaint["line-opacity"] =
-                    serialize_styles.line.line_opacity;
-
-                  linePaint["line-width"] = serialize_styles.line.line_size;
-                  linePaint["line-color"] =
-                    serialize_styles.line.line_solid_color;
-                  if (serialize_styles.line.line_style === "dash") {
-                    linePaint["line-dasharray"] = [2, 2]; //пунктирная линия
-                  }
-
-                  map.current?.addLayer({
-                    id: lineLayerId,
-                    type: "line",
-                    source: sourceId,
-                    filter: ["==", "$type", "LineString"],
-                    "source-layer": "get_features",
-                    paint: linePaint, // используем linePaint для линий
-                  });
-                }
-                if (serialize_styles.polygon.polygon_label) {
-                  map.current?.addLayer({
-                    id: `${1}-label`,
-                    type: "symbol",
-                    source: sourceId,
-                    filter: ["==", "$type", "Polygon"],
-                    "source-layer": "get_features",
-                    layout: {
-                      "text-field": serialize_styles.polygon.polygon_label,
-                      "text-font": [
-                        `${serialize_styles.polygon.polygon_label_font} ${serialize_styles.polygon.polygon_label_font_style}`,
-                      ] || ["Open Sans Semibold", "Arial Unicode MS Bold"],
-                      "text-size":
-                        serialize_styles.polygon.polygon_label_font_size || 12,
-                      "text-anchor": "center",
-                    },
-                    paint: {
-                      "text-color":
-                        serialize_styles.polygon.polygon_label_font_color ||
-                        "#000000",
-                      "text-opacity":
-                        serialize_styles.polygon.polygon_label_font_opacity ||
-                        1,
-                    },
-                  });
-                }
-
-                if (serialize_styles.point) {
-                  const pointLayerId = `circle-${layer.id}`;
-                  const pointPaint: any = {}; // новый объект paint для точек
-
-                  pointPaint["circle-opacity"] =
-                    serialize_styles.point.point_opacity;
-                  pointPaint["circle-color"] =
-                    serialize_styles.point.point_solid_color;
-                  pointPaint["circle-radius"] =
-                    serialize_styles.point.point_radius;
-
-                  map.current?.addLayer({
-                    id: pointLayerId,
-                    type: "circle",
-                    source: sourceId,
-                    filter: ["==", "$type", "Point"],
-                    "source-layer": "get_features",
-                    paint: pointPaint, // используем pointPaint для точек
-                  });
-                }
-              }
-            }
-          });
+          updateMapLayers();
           toast.current?.show({
             severity: "success",
             summary: "Данные успешно получены",
@@ -458,28 +169,255 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
           summary: "Ошибка",
           detail: `${error}`,
         });
-
-        // Fallback coordinates if geolocation fails
+  
         const defaultLng = 37.6176;
         const defaultLat = 55.7558;
-
+  
         map.current = new maplibregl.Map({
           //@ts-ignore
           container: mapContainer.current,
-          style: `${styleMap.url}?key=${API_KEY}`,
+          style: `${styleMap?.url}?key=${API_KEY}`,
           center: [defaultLng, defaultLat],
           zoom: zoom,
         });
+  
+        map.current.on("load", () => {
+          updateMapLayers();
+          toast.current?.show({
+            severity: "success",
+            summary: "Данные успешно получены",
+            detail: "",
+          });
+        });
       }
     );
-
+  
     return () => {
       if (map.current) {
         map.current.remove();
         map.current = null;
       }
     };
-  }, [styleMap, zoom, API_KEY, mapData.layers]);
+  }, [styleMap?.url]); // Empty dependency array to ensure this effect runs only once
+  
+  useEffect(() => {
+    if (map.current) {
+      updateMapLayers();
+    }
+  }, [mapData.layers]);
+  
+  const updateMapLayers = () => {
+    if (!map.current) return;
+  
+    mapData.layers.forEach((layer:any) => {
+      if (layer.is_active) {
+        const sourceId = `layer-${layer.id}`;
+  
+        if (!map.current?.getSource(sourceId)) {
+          map.current?.addSource(sourceId, {
+            type: 'vector',
+            tiles: [
+              `${apiConfig.baseUrlMartin}martin/get_features/{z}/{x}/{y}?map_layer=${layer.id}`,
+            ],
+          });
+        }
+  
+        const { serialize_styles } = layer;
+  
+        if (serialize_styles) {
+          if (serialize_styles.polygon) {
+            const polygonLayerId = `polygon-${layer.id}`;
+            const polygonBorderLayerId = `polygon-border-${layer.id}`;
+            const existingPolygonLayer = map.current?.getLayer(polygonLayerId);
+            const existingBorderLayer = map.current?.getLayer(polygonBorderLayerId);
+  
+            if (existingPolygonLayer) {
+              map.current?.removeLayer(polygonLayerId);
+            }
+            if (existingBorderLayer) {
+              map.current?.removeLayer(polygonBorderLayerId);
+            }
+  
+            let fillColor = serialize_styles.polygon.polygon_solid_color;
+  
+            if (serialize_styles.polygon.polygon_color_palette) {
+              fillColor = serialize_styles.polygon.polygon_color_palette[2] || fillColor;
+  
+              map.current?.addLayer({
+                id: polygonLayerId,
+                type: "fill",
+                source: sourceId,
+                filter: ["==", "$type", "Polygon"],
+                "source-layer": "get_features",
+                paint: {
+                  "fill-opacity": serialize_styles.polygon.polygon_opacity,
+                  "fill-color": [
+                    "interpolate",
+                    ["linear"],
+                    ["to-number", ["get", serialize_styles.polygon.polygon_value_field_name]],
+                    serialize_styles.polygon.polygon_color_palette["empty-0"]?.size, serialize_styles.polygon.polygon_color_palette["empty-0"]?.color || serialize_styles.polygon.polygon_solid_color,
+                    serialize_styles.polygon.polygon_color_palette["empty-1"]?.size, serialize_styles.polygon.polygon_color_palette["empty-1"]?.color || serialize_styles.polygon.polygon_solid_color,
+                    serialize_styles.polygon.polygon_color_palette["empty-2"]?.size, serialize_styles.polygon.polygon_color_palette["empty-2"]?.color || serialize_styles.polygon.polygon_solid_color,
+                    serialize_styles.polygon.polygon_color_palette["empty-3"]?.size, serialize_styles.polygon.polygon_color_palette["empty-3"]?.color || serialize_styles.polygon.polygon_solid_color,
+                    serialize_styles.polygon.polygon_color_palette["empty-4"]?.size, serialize_styles.polygon.polygon_color_palette["empty-4"]?.color || serialize_styles.polygon.polygon_solid_color,
+                  ],
+                  "fill-outline-color": serialize_styles.polygon.polygon_border_color,
+                },
+              });
+            } else {
+              map.current?.addLayer({
+                id: polygonLayerId,
+                type: "fill",
+                source: sourceId,
+                filter: ["==", "$type", "Polygon"],
+                "source-layer": "get_features",
+                paint: {
+                  "fill-opacity": serialize_styles.polygon.polygon_opacity,
+                  "fill-color": fillColor,
+                  "fill-outline-color": serialize_styles.polygon.polygon_border_color,
+                },
+              });
+            }
+  
+            const borderPaint = {
+              "line-color": serialize_styles.polygon.polygon_border_color,
+              "line-width": serialize_styles.polygon.polygon_border_size || 1,
+              "line-opacity": serialize_styles.polygon.polygon_border_opacity || 1,
+            };
+  
+            if (serialize_styles.polygon.polygon_border_style === "dash") {
+              //@ts-ignore
+              borderPaint["line-dasharray"] = [1, 2];
+            }
+  
+            map.current?.addLayer({
+              id: polygonBorderLayerId,
+              type: "line",
+              source: sourceId,
+              filter: ["==", "$type", "Polygon"],
+              "source-layer": "get_features",
+              paint: borderPaint,
+            });
+  
+            map.current?.on("click", polygonLayerId, (e) => {
+              //@ts-ignore
+              const coordinates = e.features[0].geometry.coordinates.slice();
+              //@ts-ignore
+              const title = e.features[0].properties.title || "Информация";
+              //@ts-ignore
+              const description = e.features[0].properties || "Ничего не найдено";
+  
+              while (Math.abs(e.lngLat.lng - coordinates[0][0][0]) > 180) {
+                coordinates[0][0][0] += e.lngLat.lng > coordinates[0][0][0] ? 360 : -360;
+              }
+  
+              new maplibregl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(
+                  `<h3>${title}</h3>${fieldToArray(description)
+                    .map((item) => `<p>${item.key}: ${item.value}</p>`)
+                    .join("")}`
+                )
+                //@ts-ignore
+                .addTo(map.current);
+            });
+  
+            map.current?.on("mouseenter", polygonLayerId, () => {
+              
+              map.current?.getCanvas();
+            });
+  
+            map.current?.on("mouseleave", polygonLayerId, () => {
+              //@ts-ignore
+              map.current?.getCanvas();
+            });
+          }
+  
+          if (serialize_styles.line) {
+            const lineLayerId = `line-${layer.id}`;
+            const existingLineLayer = map.current?.getLayer(lineLayerId);
+  
+            if (existingLineLayer) {
+              map.current?.removeLayer(lineLayerId);
+            }
+  
+            const linePaint = {
+              "line-opacity": serialize_styles.line.line_opacity,
+              "line-width": serialize_styles.line.line_size,
+              "line-color": serialize_styles.line.line_solid_color,
+            };
+  
+            if (serialize_styles.line.line_style === "dash") {
+              //@ts-ignore
+              linePaint["line-dasharray"] = [2, 2];
+            }
+  
+            map.current?.addLayer({
+              id: lineLayerId,
+              type: "line",
+              source: sourceId,
+              filter: ["==", "$type", "LineString"],
+              "source-layer": "get_features",
+              paint: linePaint,
+            });
+          }
+  
+          if (serialize_styles.polygon.polygon_label) {
+            const labelLayerId = `${layer.id}-label`;
+            const existingLabelLayer = map.current?.getLayer(labelLayerId);
+  
+            if (existingLabelLayer) {
+              map.current?.removeLayer(labelLayerId);
+            }
+            console.log('serialize_styles.polygon.polygon_label_field_value',serialize_styles.polygon.polygon_label_field_value);
+            
+            map.current?.addLayer({
+              id: labelLayerId,
+              type: "symbol",
+              source: sourceId,
+              filter: ["==", "$type", "Polygon"],
+              "source-layer": "get_features",
+              layout: {
+                "text-field": serialize_styles.polygon.polygon_label,
+                "text-font": [`${serialize_styles.polygon.polygon_label_font} ${serialize_styles.polygon.polygon_label_font_style}`] || ["Open Sans Semibold"],
+                "text-size": serialize_styles.polygon.polygon_label_font_size || 12,
+                "text-anchor": "center",
+              },
+              paint: {
+                "text-color": serialize_styles.polygon.polygon_label_font_color || "#000000",
+                "text-opacity": serialize_styles.polygon.polygon_label_font_opacity || 1,
+              },
+            });
+          }
+  
+          if (serialize_styles.point) {
+            const pointLayerId = `circle-${layer.id}`;
+            const existingPointLayer = map.current?.getLayer(pointLayerId);
+  
+            if (existingPointLayer) {
+              map.current?.removeLayer(pointLayerId);
+            }
+  
+            const pointPaint = {
+              "circle-opacity": serialize_styles.point.point_opacity,
+              "circle-color": serialize_styles.point.point_solid_color,
+              "circle-radius": serialize_styles.point.point_radius,
+            };
+  
+            map.current?.addLayer({
+              id: pointLayerId,
+              type: "circle",
+              source: sourceId,
+              filter: ["==", "$type", "Point"],
+              "source-layer": "get_features",
+              paint: pointPaint,
+            });
+          }
+        }
+      }
+    });
+  };
+  
   
 
   
@@ -519,6 +457,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
   
     // Словарь для хранения фильтров по слоям
     const filtersByLayer: { [key: string]: any[] } = {};
+    console.log('layerslayerslayerslayers', layers);
   
     // Обрабатываем каждый элемент в данных фильтрации
     data.forEach((item: any) => {
@@ -528,7 +467,6 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
       // Полные идентификаторы слоев
       const fillLayerId = `polygon-${layerId}`;
       const borderLayerId = `polygon-border-${layerId}`;
-      const labelLayerId = `1-label`; // Assuming this is the naming convention for label layers
   
       // Создаем или добавляем условия фильтрации для каждого слоя
       if (!filtersByLayer[fillLayerId]) filtersByLayer[fillLayerId] = ["all"];
@@ -543,11 +481,16 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
         ["<=", ["to-number", ["get", propertyName]], maxThreshold]
       );
   
-      if (!filtersByLayer[labelLayerId]) filtersByLayer[labelLayerId] = ["all"];
-      filtersByLayer[labelLayerId].push(
-        [">=", ["to-number", ["get", propertyName]], minThreshold],
-        ["<=", ["to-number", ["get", propertyName]], maxThreshold]
-      );
+      // Обработка всех label слоев
+      layers.forEach(layer => {
+        if (layer.id.endsWith('-label')) {
+          if (!filtersByLayer[layer.id]) filtersByLayer[layer.id] = ["all"];
+          filtersByLayer[layer.id].push(
+            [">=", ["to-number", ["get", propertyName]], minThreshold],
+            ["<=", ["to-number", ["get", propertyName]], maxThreshold]
+          );
+        }
+      });
     });
   
     // Применяем фильтры к слоям или сбрасываем фильтры если их нет
@@ -571,7 +514,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
     // Сбрасываем фильтры для слоев, которые не были упомянуты в данных фильтрации
     layers.forEach(layer => {
       const { id: layerId } = layer;
-      if (!filtersByLayer[layerId] && (layerId.startsWith('polygon-') || layerId.startsWith('polygon-border-') || layerId === '1-label')) {
+      if (!filtersByLayer[layerId] && (layerId.startsWith('polygon-') || layerId.startsWith('polygon-border-') || layerId.endsWith('-label'))) {
         map.current?.setFilter(layerId, null);
         console.log(`Filter removed from layer ${layerId}`);
       }
@@ -580,6 +523,28 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
   
   
   
+  const toggleLayerVisibility = (layerId: string) => {
+    
+    //@ts-ignore
+    const layerShouldBeVisible = visibilityLayers.includes(layerId.replace("polygon-", ""));
+    if (layerShouldBeVisible) {
+      map.current?.setLayoutProperty(layerId, "visibility", "visible");
+  
+      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
+      map.current?.setLayoutProperty(borderLayerId, "visibility", "visible");
+  
+      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
+      map.current?.setLayoutProperty(labelLayerId, "visibility", "visible");
+    } else {
+      map.current?.setLayoutProperty(layerId, "visibility", "none");
+  
+      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
+      map.current?.setLayoutProperty(borderLayerId, "visibility", "none");
+  
+      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
+      map.current?.setLayoutProperty(labelLayerId, "visibility", "none");
+    }
+  };
   
   
   return (
