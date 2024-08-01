@@ -151,6 +151,33 @@ const LayersListPage: FC = () => {
     dispatch(TableActionCreators.setTable(undefined));
   };
 
+  const [formData, setFormData] = useState({});
+
+  const handleInputChange = (key: string, value: string | File[]) => {
+    setFormData((prevFormData) => ({ ...prevFormData, [key]: value }));
+  };
+
+  const createLayer = async () => {
+    const newFormData = new FormData();
+    fieldToArray(formData).forEach((item) => {
+      if (Array.isArray(item.value)) {
+        item.value.forEach((file) => newFormData.append(item.key, file));
+      } else {
+        newFormData.append(item.key, item.value);
+      }
+    });
+    // newFormData.append("maps", mapDataId);
+
+    try {
+      const resp = await mapsApi.createLayers(newFormData);
+      if (resp.success) {
+        setIsOpenModal(false);
+      }
+    } catch (error) {
+      console.error("Error creating layer:", error);
+    }
+  };
+
   return (
     <Fragment>
       {error.message && error.message !== "" && (
@@ -176,10 +203,7 @@ const LayersListPage: FC = () => {
                         style={"col-3"}
                         value={Table ? item.key === 'maps'? JSON.parse(Table['maps'] || '{}')[0] : Table[item.key] : undefined}
                         onChange={(e) => {
-                          handleNewLayer(
-                            item.key,
-                            item.key === "maps" ? [e] : e
-                          );
+                          handleInputChange(item.key,e)
                         }}
                         subInput={item.value.label}
                         required={item.value.required}
@@ -199,7 +223,7 @@ const LayersListPage: FC = () => {
                 })}
               {!isRedact && (
                 <FilePicker
-                  onFilesSelected={(e) => handleNewLayer("file", e)}
+                  onFilesSelected={(e) => handleInputChange("file", e)}
                   title={
                     Table?.file
                       ? "Файл выбран"
@@ -214,7 +238,7 @@ const LayersListPage: FC = () => {
               <Buttons
                 text={isRedact ? "Редактировать" : "Создать слой"}
                 onClick={() => {
-                  isRedact ? layerUpdate() : newLayerCreate();
+                  isRedact ? layerUpdate() : createLayer();
                 }}
               />
             </div>

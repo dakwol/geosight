@@ -448,7 +448,9 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
       );
     }
   };
-
+  const layers = map.current?.getStyle().layers || [];
+  console.log('dddddd', layers);
+  
 
   const filterPolygons = (data: any) => {
     if (!map.current) return;
@@ -524,28 +526,48 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
   
   
   const toggleLayerVisibility = (layerId: string) => {
+    console.log('visibilityLayers', layerId);
     
-    //@ts-ignore
-    const layerShouldBeVisible = visibilityLayers.includes(layerId.replace("polygon-", ""));
-    if (layerShouldBeVisible) {
-      map.current?.setLayoutProperty(layerId, "visibility", "visible");
+    const layerShouldBeVisible = visibilityLayers?.includes(layerId.replace("polygon-", ""));
+    const layers = map.current?.getStyle().layers || [];
+    
+    const setLayerVisibility = (id: string, visibility: 'visible' | 'none') => {
+        if (map.current?.getLayer(id)) {
+            map.current?.setLayoutProperty(id, 'visibility', visibility);
+        }
+    };
+
+    // Toggle visibility for polygon layers
+    setLayerVisibility(layerId, layerShouldBeVisible ? 'visible' : 'none');
+    
+    // Toggle visibility for polygon border layers
+    const borderLayerId = layerId.replace("polygon-", "polygon-border-");
+    setLayerVisibility(borderLayerId, layerShouldBeVisible ? 'visible' : 'none');
+    
+    // Toggle visibility for polygon label layers
+    const labelLayerId = layerId.replace("polygon-", "polygon-label-");
+    setLayerVisibility(labelLayerId, layerShouldBeVisible ? 'visible' : 'none');
+    
+    // Toggle visibility for point layers
+    const pointLayerId = layerId.replace("polygon-", "circle-");
+    setLayerVisibility(pointLayerId, layerShouldBeVisible ? 'visible' : 'none');
+
+    // Toggle visibility for all label layers
+    layers.forEach(layer => {
+        if (layer.id.endsWith('-label')) {
+            setLayerVisibility(layer.id, layerShouldBeVisible ? 'visible' : 'none');
+        }
+    });
+
+    // Optionally, handle line layers if needed
+    const lineLayerId = layerId.replace("polygon-", "line-");
+    setLayerVisibility(lineLayerId, layerShouldBeVisible ? 'visible' : 'none');
+};
+
   
-      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
-      map.current?.setLayoutProperty(borderLayerId, "visibility", "visible");
-  
-      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
-      map.current?.setLayoutProperty(labelLayerId, "visibility", "visible");
-    } else {
-      map.current?.setLayoutProperty(layerId, "visibility", "none");
-  
-      const borderLayerId = layerId.replace("polygon-", "polygon-border-");
-      map.current?.setLayoutProperty(borderLayerId, "visibility", "none");
-  
-      const labelLayerId = layerId.replace("polygon-", "polygon-label-");
-      map.current?.setLayoutProperty(labelLayerId, "visibility", "none");
-    }
-  };
-  
+  useEffect(()=>{
+    localStorage.setItem('visibilityLayers','[]');
+  },[])
   
   return (
     <Fragment>
