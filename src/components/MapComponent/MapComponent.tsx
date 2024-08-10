@@ -28,10 +28,6 @@ interface IMapProps {
 const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, setFoundAddresses }) => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<maplibregl.Map | null>(null);
-  const visibilityLayers = useLocalStorage("visibilityLayers");
-  const visibleLayers = useSelector((state: RootState) => state.visibilityReducer.visibleLayers);
-  const mapApi = new MapsApiRequest();
-  const [toggleLayerId, setToggleLayerId] = useState()
 
   const [zoom] = useState(14);
   const API_KEY = "9qniwKQThKcoBngEU7mE";
@@ -79,23 +75,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
     };
   }, [address]);
 
-  function divideIntervals(
-    min_val: number,
-    max_val: number,
-    n: number
-  ): [number, number][] {
-    const step = (max_val - min_val) / n;
-    const intervals: [number, number][] = [];
-
-    for (let i = 0; i < n; i++) {
-      const start = min_val + i * step;
-      const end = min_val + (i + 1) * step;
-      intervals.push([start, end]);
-    }
-
-    return intervals;
-  }
-
+ 
  
 
   const hideAllPolygons = (map: any) => {
@@ -103,20 +83,14 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
     layers.forEach((layer:any) => {
       const { id: layerId } = layer;
       if (layerId.startsWith('polygon-') || layerId.startsWith('polygon-border-') || layerId.startsWith('polygon-label-')) {
-        map.current?.setLayoutProperty(layerId, "visibility", "none");
+        map.current?.setLayoutProperty(layerId, "visibility", "visible");
       }
     });
   };
   
   useEffect(() => {
-    if (JSON.parse(visibilityLayers || '{}') && JSON.parse(visibilityLayers || '{}').length > 0) {
-      if (toggleLayerId) {
-        toggleLayerVisibility(toggleLayerId);
-      }
-    } else {
       hideAllPolygons(map);
-    }
-  }, [visibilityLayers, toggleLayerId]);
+  }, []);
   
   useEffect(() => {
     if (map.current) return; // Initialize map only once
@@ -200,17 +174,13 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
     };
   }, [styleMap?.url]); // Empty dependency array to ensure this effect runs only once
   
-  useEffect(() => {
-    if (map.current) {
-      updateMapLayers();
-    }
-  }, [mapData.layers]);
+
   
   const updateMapLayers = () => {
     if (!map.current) return;
-  
+    const localStorageVisibility = JSON.parse(localStorage.getItem('visibilityLayers') || '{}');
     mapData.layers.forEach((layer:any) => {
-      if (layer.is_active) {
+      if (layer.is_active && !localStorageVisibility.includes(layer.id)) {
         const sourceId = `layer-${layer.id}`;
   
         if (!map.current?.getSource(sourceId)) {
@@ -221,7 +191,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
             ],
           });
         }
-  
+   
         const { serialize_styles } = layer;
   
         if (serialize_styles) {
@@ -417,10 +387,10 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
       }
     });
   };
-  
-  
 
-  
+  useEffect(() => {
+    updateMapLayers();
+}, [mapData.layers]);
 
   const zoomIn = () => {
     if (map.current) {
@@ -448,7 +418,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
       );
     }
   };
-  const layers = map.current?.getStyle().layers || [];
+  const layers = map.current?.getStyle()?.layers || [];
   console.log('dddddd', layers);
   
 
@@ -526,43 +496,48 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
   
   
   const toggleLayerVisibility = (layerId: string) => {
-    console.log('visibilityLayers', layerId);
-    
-    const layerShouldBeVisible = visibilityLayers?.includes(layerId.replace("polygon-", ""));
-    const layers = map.current?.getStyle().layers || [];
-    
-    const setLayerVisibility = (id: string, visibility: 'visible' | 'none') => {
-        if (map.current?.getLayer(id)) {
-            map.current?.setLayoutProperty(id, 'visibility', visibility);
-        }
-    };
+    const storageKey = 'visibilityLayers';
+    const localStorageVisibility = JSON.parse(localStorage.getItem(storageKey) || '{}');
 
-    // Toggle visibility for polygon layers
-    setLayerVisibility(layerId, layerShouldBeVisible ? 'visible' : 'none');
-    
-    // Toggle visibility for polygon border layers
-    const borderLayerId = layerId.replace("polygon-", "polygon-border-");
-    setLayerVisibility(borderLayerId, layerShouldBeVisible ? 'visible' : 'none');
-    
-    // Toggle visibility for polygon label layers
-    const labelLayerId = layerId.replace("polygon-", "polygon-label-");
-    setLayerVisibility(labelLayerId, layerShouldBeVisible ? 'visible' : 'none');
-    
-    // Toggle visibility for point layers
-    const pointLayerId = layerId.replace("polygon-", "circle-");
-    setLayerVisibility(pointLayerId, layerShouldBeVisible ? 'visible' : 'none');
+    console.log('layerId', layerId.replace('polygon-', ''));
 
-    // Toggle visibility for all label layers
-    layers.forEach(layer => {
-        if (layer.id.endsWith('-label')) {
-            setLayerVisibility(layer.id, layerShouldBeVisible ? 'visible' : 'none');
+    const layerIds = [
+      `${layerId}`,
+      `polygon-border-${layerId.replace('polygon-', '')}`,
+      `${layerId.replace('polygon-', '')}-label`,
+      `circle-${layerId.replace('polygon-', '')}`,
+      `line-${layerId.replace('polygon-', '')}`,
+    ];
+
+    console.log('aaaaaaaaaaaa', layerIds);
+
+    layerIds.forEach(id => {
+        const layer = map.current?.getLayer(id);
+        if (layer) {
+            const visibility = map.current?.getLayoutProperty(id, 'visibility') || 'visible';
+            console.log(`visibility`, visibility);
+            
+            // Toggle visibility
+            const newVisibility = visibility === 'visible' ? 'none' : 'visible';
+            map.current?.setLayoutProperty(id, 'visibility', newVisibility);
+
+            // Update localStorage with the new visibility state
+            if (newVisibility === 'visible') {
+                localStorageVisibility[id] = true;
+            } else {
+                delete localStorageVisibility[id];  // remove the key if the layer is hidden
+            }
+
+        } else {
+            console.warn(`Layer ${id} not found`);
         }
     });
 
-    // Optionally, handle line layers if needed
-    const lineLayerId = layerId.replace("polygon-", "line-");
-    setLayerVisibility(lineLayerId, layerShouldBeVisible ? 'visible' : 'none');
+    // Update localStorage
+    localStorage.setItem(storageKey, JSON.stringify(localStorageVisibility));
 };
+
+
 
   
   useEffect(()=>{
@@ -571,7 +546,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
   
   return (
     <Fragment>
-      <Sidebar sbData={sidebarData} pageType={undefined} mapData={mapData} toggleLayerVisibility={(data:any)=>setToggleLayerId(data)} toggleFilters={(data:any)=>filterPolygons(data)}/>
+      <Sidebar sbData={sidebarData} pageType={undefined} mapData={mapData} toggleLayerVisibility={(data:any)=>toggleLayerVisibility(data)} toggleFilters={(data:any)=>filterPolygons(data)}/>
       <div className="map-wrap">
         {mapData.layers ? (
           <Fragment>
