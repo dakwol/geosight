@@ -89,7 +89,6 @@ const CompanyListPage: FC = () => {
   };
 
   const handleRedactCompany = (item: any) => {
-    console.log("dddddd", item);
 
     companyApi.getByIdCompany(item.id ).then((resp) => {
       if (resp.success && resp.data) {

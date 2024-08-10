@@ -56,7 +56,6 @@ const RedactContent: FC<any> = ({userData, isType}) => {
   const redactUser = () => {
     userApi.update({ id: `${userData.id}/`, body: localDataPress }).then((resp) => {
       if (resp.success && resp.data) {
-        console.log(resp.data);
         localStorage.setItem('account', JSON.stringify(resp.data))
         setLocalDataPress(resp.data)
       }
@@ -91,8 +90,6 @@ const RedactContent: FC<any> = ({userData, isType}) => {
             if (item.key === "id" || item.key === "avatar") {
               return;
             }
-
-            console.log('item',item);
             
 
             return (

@@ -17,35 +17,34 @@ export const AuthActionCreators = {
         const mockUser = { email, password };
         const userToken = new TokenApiRequest();
         const userData = new UserApiRequest();
-       
-            if (mockUser.email.length === 0 || mockUser.password.length === 0) {
-                dispatch(AuthActionCreators.setErr('Некорректный логин или пароль'));
-                dispatch(AuthActionCreators.setIsLoading(false));
-                return;
-            }
-            try {
-                userToken.create({ body: mockUser }).then((resp)=>{
-                    if (resp.success) {
-                        const tokens = resp.data as IToken;
-                        dispatch(AuthActionCreators.setToken(tokens));
-                        localStorage.setItem('access', tokens.access || '')
-                        localStorage.setItem('refresh', tokens.refresh || '')
-                       //@ts-ignore
-                        const decodeJwt = jwtDecode(tokens.refresh) || '';
-                    console.log('localStorage.getItem', localStorage.getItem('access'));
-                    
-                       if(localStorage.getItem('access')){
-                           //@ts-ignore
-                            userData.getById({id: decodeJwt.user_id + '/'}).then((resp)=>{
-                                    
-                                if(resp.success){
-                                    localStorage.setItem('auth', "true");
-                                    localStorage.setItem('email', mockUser.email);
-                            
-                                    if (resp.data) {
-                                        const data: { id?: string, email?: string, first_name?: string, last_name?: string, patronymic?: string, phone_number?:string, avatar?:string,role?:string } = resp.data;
-                                    
-                                        const user = {
+
+        if (mockUser.email.length === 0 || mockUser.password.length === 0) {
+            dispatch(AuthActionCreators.setErr('Некорректный логин или пароль'));
+            dispatch(AuthActionCreators.setIsLoading(false));
+            return;
+        }
+        try {
+            userToken.create({ body: mockUser }).then((resp) => {
+                if (resp.success) {
+                    const tokens = resp.data as IToken;
+                    dispatch(AuthActionCreators.setToken(tokens));
+                    localStorage.setItem('access', tokens.access || '')
+                    localStorage.setItem('refresh', tokens.refresh || '')
+                    //@ts-ignore
+                    const decodeJwt = jwtDecode(tokens.refresh) || '';
+
+                    if (localStorage.getItem('access')) {
+                        //@ts-ignore
+                        userData.getById({ id: decodeJwt.user_id + '/' }).then((resp) => {
+
+                            if (resp.success) {
+                                localStorage.setItem('auth', "true");
+                                localStorage.setItem('email', mockUser.email);
+
+                                if (resp.data) {
+                                    const data: { id?: string, email?: string, first_name?: string, last_name?: string, patronymic?: string, phone_number?: string, avatar?: string, role?: string } = resp.data;
+
+                                    const user = {
                                         id: data.id,
                                         email: data.email,
                                         phone_number: data.phone_number,
@@ -54,41 +53,40 @@ export const AuthActionCreators = {
                                         patronymic: data.patronymic,
                                         avatar: data.avatar,
                                         role: data.role
-                                        };
-                                    
-                                        localStorage.setItem('account', JSON.stringify(user));
-                                        dispatch(AuthActionCreators.setIsAuth(true));
-                                        dispatch(AuthActionCreators.setIsLoading(false));
-                                    }
-                                    
-                                    
-                                    //@ts-ignore
-                                    dispatch(AuthActionCreators.setUser({id: resp.data.id, email: resp.data.email, password: mockUser.password, first_name: resp.data.first_name, last_name: resp.data.last_name, patronymic: resp.data.patronymic, phone_number: resp.data.phone_number, role:resp.data.role}));
-                                    dispatch(AuthActionCreators.setIsLoading(false));
-                                
-                                } else {
-                                    dispatch(AuthActionCreators.setErr('Ошибка получения пользователя'));
+                                    };
+
+                                    localStorage.setItem('account', JSON.stringify(user));
+                                    dispatch(AuthActionCreators.setIsAuth(true));
                                     dispatch(AuthActionCreators.setIsLoading(false));
                                 }
-                            })
-                       }
-                          
-                        
-                      
-                    } else {
-                        console.log(resp);
-                        dispatch(AuthActionCreators.setErr('Произошла ошибка авторизации'));
-                        dispatch(AuthActionCreators.setIsLoading(false));
+
+
+                                //@ts-ignore
+                                dispatch(AuthActionCreators.setUser({ id: resp.data.id, email: resp.data.email, password: mockUser.password, first_name: resp.data.first_name, last_name: resp.data.last_name, patronymic: resp.data.patronymic, phone_number: resp.data.phone_number, role: resp.data.role }));
+                                dispatch(AuthActionCreators.setIsLoading(false));
+
+                            } else {
+                                dispatch(AuthActionCreators.setErr('Ошибка получения пользователя'));
+                                dispatch(AuthActionCreators.setIsLoading(false));
+                            }
+                        })
                     }
-                });
-               
-            } catch (e) {
-                dispatch(AuthActionCreators.setErr('Произошла ошибка при авторизации'));
-                dispatch(AuthActionCreators.setIsLoading(false));
-            }
-        
-   
-      
+
+
+
+                } else {
+                    dispatch(AuthActionCreators.setErr('Произошла ошибка авторизации'));
+                    dispatch(AuthActionCreators.setIsLoading(false));
+                }
+            });
+
+        } catch (e) {
+            dispatch(AuthActionCreators.setErr('Произошла ошибка при авторизации'));
+            dispatch(AuthActionCreators.setIsLoading(false));
+        }
+
+
+
     },
     logout: () => async (dispatch: AppDispatch) => {
         dispatch(AuthActionCreators.setIsLoading(true));

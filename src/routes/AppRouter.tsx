@@ -25,15 +25,15 @@ const AppRouter = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  // useEffect(() => {
-  //   const storedRoute = localStorage.getItem("currentRoute");
+  useEffect(() => {
+    const storedRoute = localStorage.getItem("currentRoute");
 
-  //   if (storedRoute) {
-  //     setInitialRoute(storedRoute);
-  //   } else {
-  //     navigate(RouteNames.LOGIN);
-  //   }
-  // }, [isAuthenticated]);
+    if (storedRoute) {
+      setInitialRoute(storedRoute);
+    } else {
+      navigate(RouteNames.LOGIN);
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -84,23 +84,26 @@ const AppRouter = () => {
     },
   ];
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      const match = location.pathname.match(/^\/map\/(\d+)$/);
-      if (match) {
-        const mapId = match[1];
-        localStorage.setItem("activeMap", mapId);
-        navigate(`${RouteNames.MAP}/${mapId}`);
-      }
-    } else {
-      const match = location.pathname.match(/^\/map\/(\d+)$/);
-      if (match) {
-        const mapId = match[1];
-        localStorage.setItem("activeMap", mapId);
-        navigate(RouteNames.LOGIN);
-      }
-    }
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  
+    
+  //   if (isAuthenticated) {
+  //     const match = location.pathname.match(/^\/map\/(\d+)$/);
+  //     console.log('isAuthenticated',isAuthenticated);
+  //     if (match) {
+  //       const mapId = match[1];
+  //       localStorage.setItem("activeMap", mapId);
+  //       navigate(`${RouteNames.MAP}/${mapId}`);
+  //     }
+  //   } else {
+  //     const match = location.pathname.match(/^\/map\/(\d+)$/);
+  //     if (match) {
+  //       const mapId = match[1];
+  //       localStorage.setItem("activeMap", mapId);
+  //       navigate(RouteNames.LOGIN);
+  //     }
+  //   }
+  // }, [isAuthenticated]);
 
   return (
     <>

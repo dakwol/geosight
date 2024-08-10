@@ -120,7 +120,6 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers, toggleFilters }) => 
           )
           .then((resp) => {
             if (resp.success && resp.data) {
-              console.log("API response data:", resp.data);
               if (fieldType === "string") {
                 const newPropertiesName =
                   resp.data.results.length > 0 &&
@@ -141,8 +140,6 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers, toggleFilters }) => 
     setFilters(updatedFilters);
   };
 
-  console.log("filters", filters);
-
   const removeFilter = (id: number) => {
     setFilters(filters.filter((filter) => filter.id !== id));
   };
@@ -161,8 +158,6 @@ const SidebarFilter: FC<IMapDataLayers> = ({ mapDataLayers, toggleFilters }) => 
   useEffect(()=>{
     toggleFilters(filters)
   },[filters])
-
-  console.log('isLoading',isLoading);
   
 
   return (

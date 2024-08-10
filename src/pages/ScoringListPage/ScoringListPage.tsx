@@ -124,7 +124,6 @@ const ScoringListPage: FC = () => {
     });
   };
 
-  console.log("TABLES", Table);
 
   return (
     <Fragment>
@@ -146,7 +145,6 @@ const ScoringListPage: FC = () => {
               {optionCreate &&
                 fieldToArray(optionCreate).map((item) => {
                   if (item.key === "poi") {
-                    console.log("itemitem", item);
 
                     return (
                       <div className="col-3">

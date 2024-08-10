@@ -12,6 +12,7 @@ import { ColorPicker, ColorPickerChangeEvent } from "primereact/colorpicker";
 import { useDispatch, useSelector } from "react-redux";
 import { DataPressActionCreators } from "../../../../store/reducers/dataPressItem/action-creator";
 import { Slider } from "primereact/slider";
+import Checkbox from "../../../Checkbox/Checkbox";
 
 interface IRedactLayersProps {
   layerData: any;
@@ -46,6 +47,7 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
   const [fieldCalculation, setFieldCalculation] = useState([]);
   const [layersPalitre, setLayersPalitre] = useState([]);
   const [activeTypeLayer, setActiveTypeLayer] = useState("polygon");
+  const [selectedPaletteIndex, setSelectedPaletteIndex] = useState(null);
 
   const [dataFonts, setDataFonts] = useState([
     { value: "Open Sans", display_name: "Open Sans" },
@@ -96,7 +98,6 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
   }, []);
 
   useEffect(() => {
-    console.log('dataPress', dataPress);
   
     // Accessing the polygon_value_field_name property from dataPress
     const valueFieldName = dataPress.polygon_value_field_name;
@@ -112,8 +113,6 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
         //@ts-ignore
         (field) => field.value === (valueFieldName || valueFieldLabel)
       );
-
-      console.log('currentFilter',currentFilter);
       
   
       if (currentFilter) {
@@ -127,7 +126,6 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
           )
           .then((resp) => {
             if (resp.success && resp.data) {
-              console.log('aaaaaa',resp.data);
               
               //@ts-ignore
               if (currentFilter.type === "string") {
@@ -148,8 +146,6 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
       }
     }
   }, [dataPress.polygon_value_field_name]);
-
-  console.log('layersPalitre2222',layersPalitre);
   
 
   useEffect(() => {
@@ -216,7 +212,6 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
           dataPress &&
           //@ts-ignore
           fieldToArray(layersOption[activeTypeLayer]).map((item) => {
-            console.log("item", item);
 
             if (item.key === "id") {
               return null;
@@ -294,50 +289,71 @@ const RedactLayersComponent: FC<IRedactLayersProps> = ({
             }
 
             if (item.key.endsWith("palette")) {
-              const paletteEntries = Object.entries(dataPress[item.key] || {});
+              const dataColors = [
+                {
+                  'empty-0': { size: 0, color: "#FFDFD6" }, 
+                  'empty-1': { size: 25, color: "#E3A5C7" }, 
+                  'empty-2': { size: 50, color: "#B692C2" }, 
+                  'empty-3': { size: 75, color: "#694F8E" }, 
+                  'empty-4': { size: 100, color: "#F7EFE5" }
+                },
+                {
+                  'empty-0': { size: 0, color: "#201E43" }, 
+                  'empty-1': { size: 25, color: "#071952" }, 
+                  'empty-2': { size: 50, color: "#134B70" }, 
+                  'empty-3': { size: 75, color: "#508C9B" }, 
+                  'empty-4': { size: 100, color: "#EEEEEE" }
+                },
+                {
+                  'empty-0': { size: 0, color: "#006769" }, 
+                  'empty-1': { size: 25, color: "#538392" }, 
+                  'empty-2': { size: 50, color: "#40A578" }, 
+                  'empty-3': { size: 75, color: "#9DDE8B" }, 
+                  'empty-4': { size: 100, color: "#E6FF94" }
+                },
+                {
+                  'empty-0': { size: 0, color: "#1F2544" }, 
+                  'empty-1': { size: 25, color: "#2D3250" }, 
+                  'empty-2': { size: 50, color: "#424769" }, 
+                  'empty-3': { size: 75, color: "#7077A1" }, 
+                  'empty-4': { size: 100, color: "#F6B17A" }
+                },
+                {
+                  'empty-0': { size: 0, color: "#EADBC8" }, 
+                  'empty-1': { size: 25, color: "#E4C59E" }, 
+                  'empty-2': { size: 50, color: "#AF8260" }, 
+                  'empty-3': { size: 75, color: "#803D3B" }, 
+                  'empty-4': { size: 100, color: "#322C2B" }
+                }
+              ];
             
-              // Заполняем массив до 5 элементов пустыми значениями, если текущих меньше 5
-              while (paletteEntries.length < 5) {
-                paletteEntries.push([`empty-${paletteEntries.length}`, { color: '', size: 0 }]); // Изначально size будет 0
-              }
-            
-              // Определяем общий размер палитры
-              const totalSize = 100; // Замените это на любое значение, которое вам нужно
-            
-              // Обновляем paletteEntries, чтобы каждый элемент имел свой размер
-              const updatedPaletteEntries = paletteEntries.map(([paletteKey, paletteValue], index) => {
-                const size = (totalSize / (paletteEntries.length - 1)) * index;
-                //@ts-ignore
-                return [paletteKey, { ...paletteValue, size }];
-              });
-            
-              console.log('updatedPaletteEntries', updatedPaletteEntries);
+              const handleCheckboxChange = (index: any, palette: any) => {
+                setSelectedPaletteIndex(index);
+                
+                handleChange(item.key, palette, true); // Передаем выбранный массив цветов
+              };
             
               return (
                 <div className="fillInputColor">
-                  {updatedPaletteEntries.map(([paletteKey, paletteValue], index) => (
-                    <ColorPicker
-                      key={paletteKey || index} 
-                      value={paletteValue.color}
-                      onChange={(e: ColorPickerChangeEvent) =>
-                        handleChange(
-                          item.key,
-                          {
-                            ...dataPress[item.key],
-                            [paletteKey]: { color: `#${e.value}`, size: paletteValue.size },
-                          },
-                          true
-                        )
-                      }
-                      panelClassName="colorPickerLayerStyle"
-                      inputClassName="colorPickerInputFill"
-                    >
-                      <div></div>
-                    </ColorPicker>
+                  {dataColors.map((palette, paletteIndex) => (
+                    <div key={paletteIndex} className={`checkboxContainerFill ${selectedPaletteIndex === paletteIndex && 'focus'}`} onClick={() => handleCheckboxChange(paletteIndex, palette)}>
+                     
+                      <div className="colorPalette">
+                        {Object.values(palette).map((colorObj, colorIndex) => (
+                          <div
+                            key={colorIndex}
+                            className="colorPickerInputFill"
+                            style={{ backgroundColor: colorObj.color }}
+                          ></div>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               );
             }
+            
+          
             
 
             return (

@@ -109,7 +109,6 @@ const MapListPage: FC = () => {
   };
 
   const handleRedactMap = (item: any) => {
-    console.log("dddddd", item);
 
     mapsApi.getById({ id: item.id, urlParams: `/data` }).then((resp) => {
       if (resp.success && resp.data) {
@@ -131,7 +130,6 @@ const MapListPage: FC = () => {
     });
   };
 
-  console.log("Table", Table);
 
   return (
     <Fragment>
@@ -153,7 +151,6 @@ const MapListPage: FC = () => {
               {optionCreate &&
                 fieldToArray(optionCreate).map((item) => {
                   if (isAdmin || item.key !== "company") {
-                    console.log("ssss", isAdmin);
 
                     return (
                       <FormInput

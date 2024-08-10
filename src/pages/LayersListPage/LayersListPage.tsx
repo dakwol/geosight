@@ -66,7 +66,6 @@ const LayersListPage: FC = () => {
     updatedLayer[key] = value;
   
     setNewLayer(updatedLayer);
-    console.log("2222222222", updatedLayer);
   
     dispatch(TableActionCreators.setTable(updatedLayer));
   };
@@ -123,7 +122,6 @@ const LayersListPage: FC = () => {
   };
 
   const handleRedactLayer = (item: any) => {
-    console.log("dddddd", item);
 
     mapsApi.getByIdLayer(item.id).then((resp) => {
       if (resp.success && resp.data) {

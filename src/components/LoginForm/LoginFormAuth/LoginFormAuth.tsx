@@ -45,7 +45,6 @@ const LoginFormAuth: FC<LoginFormProps> = ({
     };
   }, [username, password, isLoading]);
 
-  console.log("isLoading", isLoading);
 
   return (
     <>

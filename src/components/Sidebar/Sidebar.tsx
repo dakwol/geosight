@@ -85,7 +85,6 @@ const Sidebar = ({ sbData, pageType, mapData, toggleLayerVisibility, toggleFilte
     <Fragment>
       <Modal
         content={(() => {
-          console.log("isOpenModal", isOpenModal);
 
           switch (isOpenModal) {
             case "profile":

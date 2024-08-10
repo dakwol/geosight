@@ -83,13 +83,33 @@
 .fillInputColor{
     padding: 15rem;
     border-radius: 12rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 40rem));
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
     border: 1rem solid $gray-200;
 
+   .checkboxContainerFill{
+    display: flex;
+    align-items: center;
+    border: 1rem solid $gray-200;
+    border-radius: 8rem;
+    cursor: pointer;
+    &.focus{
+        border: 1rem solid $blue;
+
+    }
+   }
+
+    .colorPalette{
+        width: 100%;   
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    
+        
+        padding: 4rem;
+    }
     .colorPickerInputFill{
         height: 15rem;
-        width: 100%;
         border-radius: 0;
     
     }

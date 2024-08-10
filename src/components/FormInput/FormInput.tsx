@@ -195,7 +195,6 @@ const FormInput: React.FC<FormInputProps> = ({
 
   const handleChangeData = (event: string) => {
     setDate(event);
-    console.log("event", event);
     onChange(getFormattedStandartDate(event));
   };
 

@@ -126,7 +126,6 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, enterAddress,
       (position) => {
         const { longitude, latitude } = position.coords;
   
-        console.log("position.coords", position.coords);
   
         map.current = new maplibregl.Map({
           container: mapContainer.current ? mapContainer.current : "",
@@ -237,6 +236,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, enterAddress,
             let fillColor = serialize_styles.polygon.polygon_solid_color;
   
             if (serialize_styles.polygon.polygon_color_palette) {
+              
               fillColor = serialize_styles.polygon.polygon_color_palette[2] || fillColor;
   
               map.current?.addLayer({
@@ -452,7 +452,6 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, enterAddress,
     }
   };
   const layers = map.current?.getStyle()?.layers || [];
-  console.log('dddddd', layers);
   
 
   const filterPolygons = (data: any) => {
@@ -462,7 +461,6 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, enterAddress,
   
     // Словарь для хранения фильтров по слоям
     const filtersByLayer: { [key: string]: any[] } = {};
-    console.log('layerslayerslayerslayers', layers);
   
     // Обрабатываем каждый элемент в данных фильтрации
     data.forEach((item: any) => {
@@ -506,10 +504,8 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, enterAddress,
         if (filter.length > 1) {
           //@ts-ignore
           map.current?.setFilter(layerId, filter);
-          console.log(`Filter applied to layer ${layerId} with conditions:`, filter);
         } else {
           map.current?.setFilter(layerId, null);
-          console.log(`Filter removed from layer ${layerId}`);
         }
       } else {
         console.warn(`Layer ${layerId} does not exist.`);
@@ -521,7 +517,6 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, enterAddress,
       const { id: layerId } = layer;
       if (!filtersByLayer[layerId] && (layerId.startsWith('polygon-') || layerId.startsWith('polygon-border-') || layerId.endsWith('-label'))) {
         map.current?.setFilter(layerId, null);
-        console.log(`Filter removed from layer ${layerId}`);
       }
     });
   };
@@ -532,8 +527,6 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, enterAddress,
     const storageKey = 'visibilityLayers';
     const localStorageVisibility = JSON.parse(localStorage.getItem(storageKey) || '{}');
 
-    console.log('layerId', layerId.replace('polygon-', ''));
-
     const layerIds = [
       `${layerId}`,
       `polygon-border-${layerId.replace('polygon-', '')}`,
@@ -542,13 +535,11 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, enterAddress,
       `line-${layerId.replace('polygon-', '')}`,
     ];
 
-    console.log('aaaaaaaaaaaa', layerIds);
 
     layerIds.forEach(id => {
         const layer = map.current?.getLayer(id);
         if (layer) {
             const visibility = map.current?.getLayoutProperty(id, 'visibility') || 'visible';
-            console.log(`visibility`, visibility);
             
             // Toggle visibility
             const newVisibility = visibility === 'visible' ? 'none' : 'visible';

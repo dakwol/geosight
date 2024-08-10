@@ -6,7 +6,6 @@ const getFormatedDate = (date: string): string => {
   const year = get_date.getFullYear();
 
   formated = `${day}.${month}.${year}`;
-  console.log(formated);
   return formated;
 };
 
