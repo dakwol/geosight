@@ -21,11 +21,12 @@ interface IMapProps {
   styleMap: iStyleMap | null;
   mapData: any;
   address: string;
+  enterAddress: string;
   sidebarData: any;
   setFoundAddresses:(data:[])=> void;
 }
 
-const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, setFoundAddresses }) => {
+const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, enterAddress, sidebarData, setFoundAddresses }) => {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<maplibregl.Map | null>(null);
 
@@ -42,6 +43,26 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
       const data = await response.json();
       if (data.length > 0) {
         setFoundAddresses(data); // Store the found addresses
+      
+      } else {
+        toast.current?.show({
+          severity: "error",
+          summary: "Завершено",
+          detail: "Адрес не найден",
+          life: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching address coordinates:", error);
+    }
+  };
+  const handelEnterAddress = async () => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${address}`
+      );
+      const data = await response.json();
+      if (data.length > 0) {
         const { lon, lat } = data[0];
         map.current?.setCenter([parseFloat(lon), parseFloat(lat)]);
         map.current?.setZoom(14);
@@ -75,6 +96,11 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
     };
   }, [address]);
 
+  useEffect(()=>{
+    if(enterAddress !== ''){
+      handelEnterAddress()
+    }
+  },[enterAddress])
  
  
 
@@ -174,12 +200,12 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
     };
   }, [styleMap?.url]); // Empty dependency array to ensure this effect runs only once
   
-
+  const [choisecPropperty, setChoicesProperty] = useState()
   
   const updateMapLayers = () => {
     if (!map.current) return;
     const localStorageVisibility = JSON.parse(localStorage.getItem('visibilityLayers') || '{}');
-    mapData.layers.forEach((layer:any) => {
+    mapData?.layers?.forEach((layer:any) => {
       if (layer.is_active && !localStorageVisibility.includes(layer.id)) {
         const sourceId = `layer-${layer.id}`;
   
@@ -335,11 +361,10 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
           if (serialize_styles.polygon.polygon_label) {
             const labelLayerId = `${layer.id}-label`;
             const existingLabelLayer = map.current?.getLayer(labelLayerId);
-  
+          
             if (existingLabelLayer) {
               map.current?.removeLayer(labelLayerId);
             }
-            console.log('serialize_styles.polygon.polygon_label_field_value',serialize_styles.polygon.polygon_label_field_value);
             
             map.current?.addLayer({
               id: labelLayerId,
@@ -348,7 +373,12 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
               filter: ["==", "$type", "Polygon"],
               "source-layer": "get_features",
               layout: {
-                "text-field": serialize_styles.polygon.polygon_label,
+                "text-field":serialize_styles.polygon.polygon_label_field_value ? [
+                  "case",
+                  ["has", serialize_styles.polygon.polygon_label_field_value],
+                  ["get", serialize_styles.polygon.polygon_label_field_value],
+                  serialize_styles.polygon.polygon_label || ""
+                ] : serialize_styles.polygon.polygon_label,
                 "text-font": [`${serialize_styles.polygon.polygon_label_font} ${serialize_styles.polygon.polygon_label_font_style}`] || ["Open Sans Semibold"],
                 "text-size": serialize_styles.polygon.polygon_label_font_size || 12,
                 "text-anchor": "center",
@@ -359,6 +389,7 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
               },
             });
           }
+          
   
           if (serialize_styles.point) {
             const pointLayerId = `circle-${layer.id}`;
@@ -389,7 +420,9 @@ const MapComponent: FC<IMapProps> = ({ styleMap, mapData, address, sidebarData, 
   };
 
   useEffect(() => {
-    updateMapLayers();
+    if(map.current){
+      updateMapLayers();
+    }
 }, [mapData.layers]);
 
   const zoomIn = () => {

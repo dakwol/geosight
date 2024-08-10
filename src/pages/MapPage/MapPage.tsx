@@ -18,6 +18,7 @@ const MapPage: FC = () => {
   const [mapData, setMapData] = useState<any>({});
   const isUpdate = useSelector((state: any) => state.dataPressReducer.isUpdate);
   const [address, setAddress] = useState<string>("");
+  const [enteredAddress, setEnteredAddress] = useState<string>("");
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
   const sydgestAddressRef = useRef<HTMLDivElement>(null);
@@ -58,7 +59,7 @@ const MapPage: FC = () => {
       });
   }, [isUpdate, localStorage.getItem("activeMap")]);
 
-  const handleAddressArray = (data:any) => {
+  const handleAddressArray = (data: any) => {
     const newAddress = data.map((item: any) => ({
       id: item.place_id,
       value: item.display_name,
@@ -66,7 +67,7 @@ const MapPage: FC = () => {
     }));
     setFoundAddresses(newAddress);
     setShowSuggestions(true);
-  }
+  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -84,15 +85,22 @@ const MapPage: FC = () => {
     };
   }, []);
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      setEnteredAddress(address);
+      setShowSuggestions(false);
+    }
+  };
+
   return (
     <Fragment>
-    
       <div className="MapPageContainer">
         <div className="searchContainer">
           <FormInput
             style={"inputSearch"}
             value={address}
             onChange={(value) => setAddress(value)}
+            onKeyDown={handleKeyDown}
             subInput={undefined}
             required={false}
             error={""}
@@ -102,12 +110,13 @@ const MapPage: FC = () => {
           />
           {showSuggestions && (
             <div className="sydgestAddress" ref={sydgestAddressRef}>
-              {foundAddresses.map((item:any) => (
+              {foundAddresses.map((item: any) => (
                 <div
                   key={item.id}
                   className="sidgestItem"
                   onClick={() => {
                     setAddress(item.value);
+                    setEnteredAddress(item.value); // Immediately set entered address on click
                     setShowSuggestions(false);
                   }}
                 >
@@ -120,6 +129,7 @@ const MapPage: FC = () => {
         <MapComponent
           styleMap={styleMap}
           mapData={mapData}
+          enterAddress={enteredAddress}
           address={address}
           sidebarData={sidebarData}
           setFoundAddresses={(data) => handleAddressArray(data)}

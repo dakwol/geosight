@@ -58,6 +58,7 @@ type FormInputProps = {
   copy?: boolean;
   skeletonHeightProp?: string;
   skeletonWidthProp?: string;
+  onKeyDown?: any;
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -91,7 +92,8 @@ const FormInput: React.FC<FormInputProps> = ({
   rightIco,
   copy,
   skeletonHeightProp = '100%',
-  skeletonWidthProp = '100%'
+  skeletonWidthProp = '100%',
+  onKeyDown
 }) => {
   const [isLoading, setIsLoading] = useState(loading);
   const [valueSet, setValueSet] = useState(
@@ -443,6 +445,7 @@ const FormInput: React.FC<FormInputProps> = ({
                           <input
                             id={id}
                             type={type}
+                            onKeyDown={onKeyDown}
                             placeholder={placeholder}
                             className={`formInput ${isErr ? "error" : ""} ${
                               ico ? "paddingIco" : ""
