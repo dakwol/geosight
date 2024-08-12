@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useLayoutEffect, useState } from "react";
 import "./styles.scss";
 import FormInput from "../FormInput/FormInput";
 import Checkbox from "../Checkbox/Checkbox";
@@ -56,10 +56,10 @@ const LoginForm: FC = () => {
   //   };
   // }, [isAuthState, isResetPassword]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isAuth) {
       navigate(
-        `${RouteNames.MAP}${`/${localStorage.getItem("activeMap")}` || "/0"}`
+        `${RouteNames.MAP}${`/1` || "/0"}`
       );
     }
   }, [isAuth]);
