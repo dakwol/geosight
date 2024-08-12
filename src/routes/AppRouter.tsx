@@ -45,7 +45,7 @@ const AppRouter = () => {
     return () => {
       window.removeEventListener("popstate", handleRouteChange);
     };
-  }, []);
+  }, [window.location.href]);
 
   const sidebarData = [
     {
