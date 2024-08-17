@@ -1,12 +1,8 @@
-import React, { FC, useEffect, useLayoutEffect, useState } from "react";
+import React, { FC, useLayoutEffect, useState } from "react";
 import "./styles.scss";
-import FormInput from "../FormInput/FormInput";
-import Checkbox from "../Checkbox/Checkbox";
-import Buttons from "../Buttons/Buttons";
 import { useDispatch } from "react-redux";
 import { AuthActionCreators } from "../../store/reducers/auth/action-creator";
 import { useTypeSelector } from "../../hooks/useTypedSelector";
-import icons from "../../assets/icons/icons";
 import ErrorMessage from "../UI/ErrorMassage/ErrorMassage";
 import LoginFormAuth from "./LoginFormAuth/LoginFormAuth";
 import LoginFormForgot from "./LoginFormForgot/LoginFormForgot";
